@@ -1,0 +1,91 @@
+# Ultimate MEV Bot Configuration
+# Simplified structure to match MEVConfig class
+
+# Core Settings
+live_trading: false
+rust_enabled: false
+profit_threshold: 0.01
+max_concurrent_executions: 5
+
+# Network Settings
+rpc_url: "https://eth-mainnet.g.alchemy.com/v2/RAJ8A4mZpCBwXdEGHd__0Rity4GaLKzl"
+chain_id: 1
+gas_price_gwei: 20
+max_gas_limit: 500000
+priority_fee_gwei: 2
+
+# Account Settings
+private_key: ""  # Set via PRIVATE_KEY environment variable
+account_address: ""
+
+# MEV Protection
+flashbots_enabled: true
+flashbots_auth_key: ""  # Set via FLASHBOTS_AUTH_KEY environment variable
+protect_mempool: true
+use_private_pool: true
+
+# Strategy Settings
+strategies:
+  flashloan_arbitrage:
+    enabled: true
+    rust_enabled: false  # Disabled due to compilation issues, using Python scanning
+    rust_bin_path: "./rust_mev_core/target/release/mev_rust_core.exe"
+    scan_interval_seconds: 3  # Faster scanning for real opportunities
+    min_profit_threshold: 0.005  # 0.5% minimum profit in ETH
+    max_hops: 4
+    chain: "mainnet"
+    base_token_symbol: "WETH"
+    scan_loan_amount_usd: 10000.0
+    rpc_url: "https://eth-mainnet.g.alchemy.com/v2/RAJ8A4mZpCBwXdEGHd__0Rity4GaLKzl"
+    
+  sandwich_attack:
+    enabled: true
+    max_slippage: 0.02
+    min_profit_threshold: 0.003  # 0.3% minimum profit
+    gas_limit_multiplier: 1.1
+    
+  liquidation:
+    enabled: true
+    health_factor_threshold: 1.05
+    protocols: ["aave", "compound"]
+    min_profit_threshold: 0.002  # 0.2% minimum profit
+
+# Rust Settings
+rust_bin_path: "./rust_mev_core.exe"
+rust_max_hops: 4
+rust_timeout_seconds: 30
+rust_memory_limit_mb: 512
+
+# ML Settings
+ml_model_path: "./models/"
+ml_confidence_threshold: 0.6
+ml_retrain_interval_hours: 24
+ml_feature_window_blocks: 10
+
+# Monitoring
+metrics_enabled: true
+websocket_enabled: true
+alert_threshold_profit: 1.0
+history_retention_hours: 24
+
+# Logging
+log_level: "INFO"
+log_file_enabled: true
+log_file_path: "./logs/mev_bot.log"
+log_max_file_size_mb: 100
+log_backup_count: 5
+
+# Contract Addresses (Mainnet)
+aave_v3_flashloan_provider: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"
+balancer_flashloan_provider: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+uniswap_v2_dex_router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
+uniswap_v3_dex_router: "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+sushiswap_dex_router: "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F"
+chainlink_eth_usd_oracle: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
+chainlink_btc_usd_oracle: "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c"
+
+# Risk Management
+max_position_size_eth: 10.0
+stop_loss_percentage: 5.0
+max_daily_loss: 2.0
+cooldown_after_loss_seconds: 300

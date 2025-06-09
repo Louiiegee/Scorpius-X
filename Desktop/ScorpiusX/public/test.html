@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Server Test</title>
+    <style>
+      body {
+        background: #000000;
+        color: #00ffff;
+        font-family: monospace;
+        padding: 50px;
+        text-align: center;
+      }
+      .banner {
+        background: #00ff88;
+        color: #000000;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 20px 0;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎯 CORRECT SERVER VERIFICATION</h1>
+    <div class="banner">✅ YOU ARE ON THE RIGHT SERVER!</div>
+    <p>This is localhost:8080 - Our development server</p>
+    <p>If you see this page, the server is working correctly.</p>
+    <p>
+      <a href="/" style="color: #00ffff"
+        >Click here to go to the main dashboard</a
+      >
+    </p>
+    <script>
+      console.log("✅ Correct server loaded!");
+      console.log("Server port: 8080");
+      console.log("This is NOT Builder.io preview");
+    </script>
+  </body>
+</html>
