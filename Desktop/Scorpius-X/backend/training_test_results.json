@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-06-06T10:42:43.762246",
+  "tests": {
+    "health": {
+      "endpoint": "/api/training/health",
+      "status_code": 200,
+      "success": true,
+      "service": "CyberDefender Academy",
+      "status": "healthy",
+      "version": "1.0.0"
+    },
+    "modules": {
+      "endpoint": "/api/training/modules",
+      "status_code": 200,
+      "success": true,
+      "modules_count": 6,
+      "modules": [
+        "Security Fundamentals",
+        "Threat Detection & Analysis",
+        "Incident Response & Digital Forensics"
+      ],
+      "all_module_types": true
+    },
+    "badges": {
+      "endpoint": "/api/training/badges",
+      "status_code": 200,
+      "success": true,
+      "badges_count": 12,
+      "sample_badges": [
+        "Cyber Foundation Specialist",
+        "Cyber Hero",
+        "Digital Detective"
+      ],
+      "key_badges_found": 9
+    },
+    "leaderboard": {
+      "endpoint": "/api/training/leaderboard",
+      "status_code": 200,
+      "success": true,
+      "leaderboard_entries": 3,
+      "top_users": [
+        "carol_expert",
+        "bob_hunter",
+        "alice_analyst"
+      ]
+    },
+    "courses": {
+      "endpoint": "/api/training/modules/5b247744-762d-455b-8f21-7532eedc2355/courses",
+      "status_code": 200,
+      "success": true,
+      "courses_count": 2,
+      "course_names": [
+        "Cybersecurity Principles",
+        "Network Defense Essentials (N|DE)"
+      ]
+    }
+  },
+  "summary": {
+    "total_tests": 5,
+    "successful_tests": 5,
+    "success_rate": 100.0,
+    "overall_status": "PASS"
+  }
+}

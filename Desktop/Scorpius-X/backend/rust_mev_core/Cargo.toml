@@ -1,0 +1,26 @@
+[package]
+name = "mev_rust_core"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <you@example.com>"]
+description = "Core arbitrage/MEV finding logic in Rust"
+license = "MIT"
+
+[dependencies]
+tokio = { version = "1.36", features = ["full"] } # Asynchronous runtime
+futures = "0.3" # Asynchronous programming utilities
+log = "0.4" # Logging facade
+env_logger = "0.11" # Environment-based logger
+dotenvy = "0.15" # Environment variable loader
+eyre = "0.6" # Error handling library
+clap = { version = "4.4", features = ["derive"] } # Command-line argument parser
+serde = { version = "1.0", features = ["derive"] } # Serialization/deserialization framework
+serde_json = "1.0" # JSON serialization/deserialization
+reqwest = { version = "0.11", features = ["json"] } # HTTP client
+
+[profile.release]
+lto = true # Link-time optimization for smaller binaries
+opt-level = 3 # Maximum optimization level for performance
+codegen-units = 1 # Single codegen unit for better optimization
+strip = true # Remove debugging symbols in release builds
+panic = "abort" # Optimize panic handling for embedded or performance-critical applications

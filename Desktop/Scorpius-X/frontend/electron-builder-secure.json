@@ -1,0 +1,96 @@
+{
+  "appId": "com.scorpius.cybersecurity.dashboard",
+  "productName": "Scorpius Cybersecurity Dashboard",
+  "copyright": "Copyright © 2024 Scorpius Security",
+  "directories": {
+    "output": "dist-electron-secure",
+    "buildResources": "electron/assets"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/main-secure.js",
+    "electron/preload-secure.js",
+    "!node_modules/**/*",
+    "node_modules/**/*.node",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "electron/assets",
+      "to": "assets"
+    }
+  ],
+  "asar": true,
+  "asarUnpack": ["node_modules/**/*.node", "electron/secure/**/*"],
+  "compression": "maximum",
+  "beforeBuild": "scripts/secure-build-prep.js",
+  "afterSign": "scripts/secure-post-build.js",
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "electron/assets/icon.ico",
+    "artifactName": "Scorpius-Secure-${version}-${arch}.${ext}",
+    "requestedExecutionLevel": "asInvoker",
+    "signAndEditExecutable": true,
+    "certificateFile": "certificates/scorpius-code-signing.p12",
+    "certificatePassword": "${env.CODE_SIGNING_PASSWORD}",
+    "verifyUpdateCodeSignature": true,
+    "publisherName": "Scorpius Security Inc."
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "installerIcon": "electron/assets/icon.ico",
+    "uninstallerIcon": "electron/assets/icon.ico",
+    "installerHeaderIcon": "electron/assets/icon.ico",
+    "deleteAppDataOnUninstall": false,
+    "runAfterFinish": true,
+    "menuCategory": "Security",
+    "shortcutName": "Scorpius Dashboard",
+    "include": "installer/windows/nsis-custom-security.nsh"
+  },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "electron/assets/icon.icns",
+    "artifactName": "Scorpius-Secure-${version}-${arch}.${ext}",
+    "category": "public.app-category.developer-tools",
+    "darkModeSupport": true,
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "electron/entitlements-secure.mac.plist",
+    "entitlementsInherit": "electron/entitlements-secure.mac.plist",
+    "notarize": {
+      "appBundleId": "com.scorpius.cybersecurity.dashboard",
+      "appPath": "${appOutDir}/${productFilename}.app",
+      "ascProvider": "SCORPIUS_TEAM_ID"
+    }
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "electron/assets/icon.png",
+    "artifactName": "Scorpius-Secure-${version}-${arch}.${ext}",
+    "category": "Security"
+  },
+  "buildVersion": "1.0.0",
+  "compression": "maximum",
+  "removePackageScripts": true,
+  "buildDependenciesFromSource": false,
+  "nodeGypRebuild": false,
+  "npmRebuild": false
+}

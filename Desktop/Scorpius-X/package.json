@@ -1,0 +1,36 @@
+{
+  "name": "scorpius-x",
+  "version": "1.0.0",
+  "description": "ScorpiusX - Advanced Real-time Trading Platform with WebSocket Integration and Electron Desktop App",
+  "type": "module",
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File scripts/startup.ps1",
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "backend": "cd backend && python websocket_server.py",
+    "frontend:dev": "npm run dev --prefix frontend",
+    "frontend:build": "npm run build --prefix frontend",
+    "electron": "npm run electron --prefix frontend",
+    "electron-dev": "npm run electron-dev --prefix frontend",
+    "install-all": "npm install --prefix frontend && pip install -r backend/requirements.txt",
+    "test": "npm run test --prefix frontend"
+  },
+  "keywords": [
+    "trading",
+    "electron",
+    "websocket",
+    "react",
+    "typescript",
+    "real-time",
+    "desktop-app"
+  ],
+  "author": "ScorpiusX Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "frontend"
+  ]
+}

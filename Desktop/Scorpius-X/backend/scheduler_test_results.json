@@ -1,0 +1,72 @@
+{
+  "total_tests": 13,
+  "passed_tests": 13,
+  "failed_tests": 0,
+  "test_details": [
+    {
+      "test": "1\ufe0f\u20e3 Testing Health Check",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:06.740222"
+    },
+    {
+      "test": "2\ufe0f\u20e3 Testing Scheduled Jobs",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:07.003560"
+    },
+    {
+      "test": "3\ufe0f\u20e3 Testing Job Executions",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:07.268028"
+    },
+    {
+      "test": "4\ufe0f\u20e3 Testing System Metrics",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:07.531527"
+    },
+    {
+      "test": "5\ufe0f\u20e3 Testing Compute Clusters",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:07.798019"
+    },
+    {
+      "test": "6\ufe0f\u20e3 Testing Resource Usage",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:08.068790"
+    },
+    {
+      "test": "7\ufe0f\u20e3 Testing Job Creation",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:08.347198"
+    },
+    {
+      "test": "8\ufe0f\u20e3 Testing Job Filtering",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:08.608925"
+    },
+    {
+      "test": "9\ufe0f\u20e3 Testing Job Execution Trigger",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:08.894844"
+    },
+    {
+      "test": "\ud83d\udd1f Testing Cluster Status Filtering",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:09.163113"
+    },
+    {
+      "test": "1\ufe0f\u20e31\ufe0f\u20e3 Testing Resource Usage Filtering",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:09.428253"
+    },
+    {
+      "test": "1\ufe0f\u20e32\ufe0f\u20e3 Testing Job Details",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:09.695924"
+    },
+    {
+      "test": "1\ufe0f\u20e33\ufe0f\u20e3 Testing Execution Details",
+      "status": "PASS",
+      "timestamp": "2025-06-06T10:57:09.961325"
+    }
+  ]
+}

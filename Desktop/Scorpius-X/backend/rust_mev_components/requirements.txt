@@ -1,0 +1,12 @@
+web3>=6.0.0
+requests
+python-dotenv
+joblib
+numpy
+pandas
+aiohttp
+gql[all]
+tenacity
+eth-account
+eth-abi
+hexbytes

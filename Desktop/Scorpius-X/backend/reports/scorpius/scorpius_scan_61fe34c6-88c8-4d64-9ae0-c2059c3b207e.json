@@ -1,0 +1,44 @@
+{
+  "scan_id": "61fe34c6-88c8-4d64-9ae0-c2059c3b207e",
+  "contract_address": "0xA69babEF1cA67A37Ffaf7a485DfFF3382056e78C",
+  "timestamp": "2025-06-06T10:14:23.051736",
+  "scan_config": {
+    "contract_address": "0xA69babEF1cA67A37Ffaf7a485DfFF3382056e78C",
+    "chain": "ethereum",
+    "scan_type": "deep_analysis",
+    "deep_analysis": true,
+    "include_ai_analysis": true,
+    "generate_exploit_poc": false,
+    "check_supply_chain": false,
+    "analyze_dependencies": true,
+    "custom_patterns": null,
+    "ai_prompt_context": null
+  },
+  "contract_info": {
+    "address": "0xA69babEF1cA67A37Ffaf7a485DfFF3382056e78C",
+    "verified": false,
+    "proxy": false,
+    "balance": "0",
+    "tx_count": 0,
+    "implementation": null
+  },
+  "summary": {
+    "total_vulnerabilities": 0,
+    "critical_count": 0,
+    "high_count": 0,
+    "medium_count": 0,
+    "low_count": 0,
+    "risk_score": 0.0
+  },
+  "vulnerabilities": [],
+  "ai_analysis": {
+    "model_used": "claude-3-opus-20240229",
+    "confidence_score": 0.0,
+    "risk_assessment": "Analysis parsing failed",
+    "attack_vectors": [],
+    "exploitation_complexity": "unknown",
+    "business_impact": "",
+    "recommendations": [],
+    "ai_reasoning": "Failed to parse AI response: No JSON found in AI response"
+  }
+}

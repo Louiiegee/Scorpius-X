@@ -1,0 +1,106 @@
+/* BUILDER.IO CYBERPUNK THEME OVERRIDE */
+/* Force our black cyberpunk background and colors */
+
+* {
+  box-sizing: border-box !important;
+}
+
+/* Force black background everywhere */
+body,
+html,
+#root,
+[data-loc*="AppShell"],
+[data-loc*="Sidebar"],
+.dashboard-container {
+  background-color: #000000 !important;
+  background: #000000 !important;
+}
+
+/* Force cyberpunk colors */
+[data-loc*="Sidebar"] {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border-right: 2px solid rgba(0, 255, 255, 0.4) !important;
+  box-shadow: 2px 0 20px rgba(0, 255, 255, 0.2) !important;
+  border-radius: 0 32px 32px 0 !important;
+}
+
+/* System Vitals styling */
+[data-name="SystemVitals"] {
+  background-color: #1a1a1a !important;
+  border: 2px solid rgba(0, 255, 255, 0.5) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 0 25px rgba(0, 255, 255, 0.2),
+    inset 0 0 20px rgba(0, 255, 255, 0.05) !important;
+}
+
+/* Force text colors */
+div[data-loc*="Dashboard"] {
+  color: #e5e5e5 !important;
+}
+
+/* Cyan glow effects */
+.cyber-glow {
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.6) !important;
+  color: #00ffff !important;
+}
+
+/* Statistics cards */
+[data-name*="stat"],
+[data-name*="card"] {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  border-radius: 16px !important;
+}
+
+/* Button overrides */
+button {
+  transition: all 0.2s ease !important;
+}
+
+button:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Animation overrides */
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5) !important;
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.8) !important;
+  }
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
+  }
+  50% {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+/* Force our verification banner */
+.verification-banner {
+  animation: flash 1s infinite !important;
+}
+
+/* Override Builder.io's color system */
+[css*="rgb(24, 26, 27)"] {
+  background-color: #000000 !important;
+}
+
+[css*="rgb(123, 114, 101)"] {
+  border-color: rgba(0, 255, 255, 0.4) !important;
+}
+
+/* Force our sidebar logo area */
+[data-loc*="UserLogo"] {
+  filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.6)) !important;
+}

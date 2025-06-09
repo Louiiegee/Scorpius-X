@@ -1,0 +1,81 @@
+# Example config.yaml - Values here are DEFAULTS
+# Environment variables will override these if set.
+# Sensitive values (like PRIVATE_KEY) should ONLY be set via environment variables.
+
+RPC_URL: http://localhost:8545
+# RPC_URLS can be defined here, but better via ENV for flexibility
+# RPC_URLS:
+#   ethereum: https://eth-mainnet.alchemyapi.io/v2/YOUR_ALCHEMY_KEY
+#   arbitrum: https://arb-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_KEY
+
+ENABLE_MULTI_CHAIN: true
+ENABLED_CHAINS:
+  - 1    # Ethereum Mainnet
+  - 42161 # Arbitrum One
+
+MONITORED_PROTOCOLS:
+  - UniswapV2
+  - UniswapV3
+  - SushiSwap
+  - Curve
+
+PROFIT_THRESHOLD: 0.015 # Check this unit, e.g., ETH or USD value
+MIN_PROFIT_THRESHOLD: 0.1 # Minimum Execution Profit (ETH)
+MIN_PREDICTION_THRESHOLD: 0.7 # ML Confidence
+
+GAS_LIMIT: 600000
+MAX_GAS_PRICE_GWEI: 150
+# TARGET_GAS_PRICE: 50000000000 # 50 Gwei in Wei (Can be set here or calculated dynamically)
+
+LOG_LEVEL: INFO
+# LOG_FILE: bot.log # Uncomment to log to a file
+
+SIMULATION_CACHE_SIZE: 1000
+# SIMULATION_RPC: http://localhost:8545 # RPC URL for simulation node (Anvil/Hardhat/Ganache)
+
+BRIDGE_DATA_UPDATE_INTERVAL: 3600
+
+# MEV Protection (Endpoints should preferably come from ENV)
+# FLASHBOTS_RELAY: https://relay.flashbots.net
+# TAICHI_ENDPOINT: https://api.taichi.network/rpc
+# BLOXROUTE_ENDPOINT: https://api.blxr.net/tx
+# EDEN_ENDPOINT: https://api.edennetwork.io/v1/rpc
+
+# Defender (Credentials MUST come from ENV)
+# DEFENDER_TEAM_ID: YOUR_TEAM_ID
+# DEFENDER_RELAYER_ID: YOUR_RELAYER_ID
+NETWORK_NAME: mainnet # e.g., mainnet, goerli, sepolia
+
+AUTO_RESPOND_TO_EXPLOITS: false
+
+VULNERABILITY_UPDATE_FREQUENCY: 86400 # Daily
+
+ML_MODEL_DIR: models
+MODEL_DIR: models # Consolidate these?
+RL_ENABLED: true
+RL_UPDATE_FREQUENCY: 100
+
+BRIDGE_HISTORY_PATH: data/bridge_history.json
+HISTORICAL_ATTACKS_PATH: data/historical_attacks.json
+
+# CUDA (Optional)
+# CUDA_KERNEL_PATH: kernels/arbitrage_sim.cu
+# GPU_BATCH_SIZE: 128
+# CUDA_DEVICE_ID: 0
+
+# ZK/DP (Advanced/Optional)
+# ZK_CIRCUIT_PATH: circuits/model_integrity.circom
+# ZK_PROVING_KEY: keys/model_integrity.zkey
+# ZK_VERIFICATION_KEY: keys/model_integrity_vk.json
+# DP_EPSILON: 0.5
+# DP_DELTA: 1e-5
+# DP_SENSITIVITY: 1.0
+
+# Redis (Credentials preferably from ENV)
+# REDIS_CONFIG:
+#   host: localhost
+#   port: 6379
+#   db: 0
+
+# Add contract addresses if not using registry or for specific overrides
+# ARBITRAGE_CONTRACT: '0x...'

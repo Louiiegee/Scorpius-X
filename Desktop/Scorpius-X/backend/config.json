@@ -1,0 +1,87 @@
+{
+  "chains": {
+    "ethereum": {
+      "chain_id": 1,
+      "enabled": true,
+      "rpc_url": "https://eth-mainnet.g.alchemy.com/v2/KQDdqBIVP39M0b1A_2nwMXvFAFyYNfzT",
+      "ws_url": "wss://eth-mainnet.g.alchemy.com/v2/KQDdqBIVP39M0b1A_2nwMXvFAFyYNfzT",
+      "gas_price_strategy": "eip1559",
+      "max_gas_price_gwei": 100,
+      "min_profit_usd": 25.0
+    },
+    "polygon": {
+      "chain_id": 137,
+      "enabled": true,
+      "rpc_url": "https://polygon-mainnet.g.alchemy.com/v2/gdgTkaWuifB5DuOCzb7rNF2OEYUQtqom",
+      "ws_url": "wss://polygon-mainnet.g.alchemy.com/v2/gdgTkaWuifB5DuOCzb7rNF2OEYUQtqom",
+      "gas_price_strategy": "eip1559",
+      "max_gas_price_gwei": 50,
+      "min_profit_usd": 15.0
+    },
+    "arbitrum": {
+      "chain_id": 42161,
+      "enabled": true,
+      "rpc_url": "https://arb-mainnet.g.alchemy.com/v2/FaPsxFDGIsKzc3euLmwyijhkNO2G08RR",
+      "ws_url": "wss://arb-mainnet.g.alchemy.com/v2/KQDdqBIVP39M0b1A_2nwMXvFAFyYNfzT",
+      "gas_price_strategy": "legacy",
+      "max_gas_price_gwei": 20,
+      "min_profit_usd": 10.0
+    },
+    "base": {
+      "chain_id": 8453,
+      "enabled": true,
+      "rpc_url": "https://base-mainnet.g.alchemy.com/v2/djFog5toDpzey6v2g_VttWEZ3vcyC2z9",
+      "ws_url": "wss://base-mainnet.g.alchemy.com/v2/djFog5toDpzey6v2g_VttWEZ3vcyC2z9",
+      "gas_price_strategy": "eip1559",
+      "max_gas_price_gwei": 30,
+      "min_profit_usd": 12.0
+    }
+  },
+  "ml_config": {
+    "enable_reinforcement_learning": true,
+    "enable_traditional_ml": true,
+    "model_update_frequency": 100,
+    "feature_scaling": true,
+    "confidence_threshold": 0.7
+  },
+  "gas_optimization": {
+    "target_confirm_time_seconds": 30,
+    "max_gas_multiplier": 1.5,
+    "priority_fee_multiplier": 1.2,
+    "enable_flashbots": true,
+    "flashbots_rpc": "https://rpc.flashbots.net"
+  },
+  "liquidation": {
+    "protocols": ["aave", "compound", "makerdao"],
+    "health_factor_threshold": 1.05,
+    "min_collateral_usd": 1000,
+    "max_execution_time_seconds": 300
+  },
+  "database": {
+    "path": "elite_mev_data.db",
+    "max_records": 100000,
+    "cleanup_interval_hours": 24
+  },
+  "monitoring": {
+    "dashboard_port": 8000,
+    "enable_alerts": true,
+    "alert_webhook_url": "",
+    "metrics_retention_days": 30
+  },
+  "execution": {
+    "max_concurrent_opportunities": 5,
+    "execution_timeout_seconds": 120,
+    "retry_failed_transactions": true,
+    "max_retries": 3,
+    "private_key_env": "PRIVATE_KEY"
+  },
+  "security": {
+    "max_gas_limit": 500000,
+    "max_slippage_percent": 1.0,
+    "enable_transaction_simulation": true,
+    "require_profitable_simulation": true,
+    "tenderly_account": "cryptocrackerjacker",
+    "tenderly_project": "project",
+    "tenderly_access_key_env": "TENDERLY_ACCESS_KEY"
+  }
+}

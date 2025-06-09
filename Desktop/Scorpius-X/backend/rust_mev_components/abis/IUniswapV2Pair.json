@@ -1,0 +1,31 @@
+[
+  {
+    "type": "function",
+    "name": "token0",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "internalType": "address", "name": "", "type": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "token1",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "internalType": "address", "name": "", "type": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getReserves",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "internalType": "uint112", "name": "_reserve0", "type": "uint112" },
+      { "internalType": "uint112", "name": "_reserve1", "type": "uint112" },
+      { "internalType": "uint32",  "name": "_blockTimestampLast", "type": "uint32" }
+    ]
+  }
+]
