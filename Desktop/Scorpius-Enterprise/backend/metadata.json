@@ -1,0 +1,6 @@
+{
+  "description": "Scorpius Security Dashboard for blockchain analysis.",
+  "prompt": "Create a new React application for the Scorpius Security Dashboard using the provided file structure and components.",
+  "requestFramePermissions": [],
+  "name": "Scorpius Dashboard"
+}

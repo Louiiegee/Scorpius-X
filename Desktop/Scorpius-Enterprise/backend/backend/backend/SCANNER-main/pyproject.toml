@@ -1,0 +1,77 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scorpius-scanner"
+version = "1.0.0"
+description = "Enterprise blockchain vulnerability scanner with sandboxing"
+authors = [{name = "Scorpius Team", email = "team@scorpius.dev"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.0.0",
+    "typer[all]>=0.9.0",
+    "rich>=13.0.0",
+    "asyncpg>=0.29.0",
+    "redis[hiredis]>=4.2.0",
+    "rq>=1.15.0",
+    "websockets>=12.0",
+    "httpx>=0.25.0",
+    "pyyaml>=6.0.1",
+    "alembic>=1.12.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "docker>=6.1.0",
+    "requests>=2.31.0",
+    "opentelemetry-sdk==1.32.0",
+    "opentelemetry-api==1.32.0", 
+    "opentelemetry-exporter-otlp==1.32.0",
+    "opentelemetry-instrumentation-fastapi==0.44b0",
+    "opentelemetry-instrumentation-redis==0.44b0",
+    "opentelemetry-instrumentation-asyncpg==0.44b0",
+    "prometheus-fastapi-instrumentator>=6.1.0",
+    "wasmtime-py>=24.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+    "pre-commit>=3.0.0",
+    "pytest-cov>=4.1.0"
+]
+
+simulation = [
+    "py-evm>=0.7.0",
+    "web3>=6.11.0"
+]
+
+[project.scripts]
+scorpius = "scorpius_scanner.cli:app"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+select = ["E", "F", "UP", "B", "SIM", "I"]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--cov=scorpius_scanner --cov-report=html --cov-report=term"

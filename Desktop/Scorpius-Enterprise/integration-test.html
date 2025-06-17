@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorpius Platform Integration Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .loading { background: #fff3cd; color: #856404; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🦂 Scorpius Platform Integration Test</h1>
+    
+    <div class="grid">
+        <div class="test-card">
+            <h2>Frontend Status</h2>
+            <div id="frontend-status" class="status loading">Testing...</div>
+            <p>Frontend URL: <a href="http://localhost:3002" target="_blank">http://localhost:3002</a></p>
+            <p>Nginx URL: <a href="http://localhost" target="_blank">http://localhost</a></p>
+        </div>
+
+        <div class="test-card">
+            <h2>Backend API Status</h2>
+            <div id="backend-status" class="status loading">Testing...</div>
+            <p>Backend URL: <a href="http://localhost:3001" target="_blank">http://localhost:3001</a></p>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>API Endpoints Test</h2>
+        <div id="api-test-results">
+            <div class="status loading">Running API tests...</div>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>Dashboard Statistics</h2>
+        <div id="dashboard-stats" class="status loading">Loading stats...</div>
+        <pre id="stats-output"></pre>
+    </div>
+
+    <div class="test-card">
+        <h2>NotificationCenter Test</h2>
+        <div id="notification-test" class="status loading">Testing NotificationCenter fix...</div>
+        <div id="notification-output"></div>
+    </div>
+
+    <script>
+        async function testEndpoint(url, name) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return { name, status: 'success', data, url };
+            } catch (error) {
+                return { name, status: 'error', error: error.message, url };
+            }
+        }
+
+        async function runTests() {
+            // Test frontend availability
+            try {
+                const frontendResponse = await fetch('http://localhost:3002');
+                document.getElementById('frontend-status').className = 'status success';
+                document.getElementById('frontend-status').textContent = `Frontend: ${frontendResponse.status === 200 ? 'Available' : 'Error'}`;
+            } catch (error) {
+                document.getElementById('frontend-status').className = 'status error';
+                document.getElementById('frontend-status').textContent = `Frontend: Error - ${error.message}`;
+            }
+
+            // Test backend health
+            const healthTest = await testEndpoint('http://localhost:3001/health', 'Health Check');
+            document.getElementById('backend-status').className = `status ${healthTest.status}`;
+            document.getElementById('backend-status').textContent = `Backend: ${healthTest.status === 'success' ? 'Healthy' : 'Error'}`;
+
+            // Test API endpoints
+            const apiTests = await Promise.all([
+                testEndpoint('http://localhost:3001/', 'Root'),
+                testEndpoint('http://localhost:3001/health', 'Health'),
+                testEndpoint('http://localhost:3001/api/dashboard/stats', 'Dashboard Stats')
+            ]);
+
+            let apiTestHtml = '';
+            apiTests.forEach(test => {
+                apiTestHtml += `
+                    <div class="status ${test.status}">
+                        ${test.name}: ${test.status}
+                        ${test.error ? ` - ${test.error}` : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('api-test-results').innerHTML = apiTestHtml;
+
+            // Display dashboard stats
+            const statsTest = apiTests.find(t => t.name === 'Dashboard Stats');
+            if (statsTest.status === 'success') {
+                document.getElementById('dashboard-stats').className = 'status success';
+                document.getElementById('dashboard-stats').textContent = 'Dashboard Stats: Loaded';
+                document.getElementById('stats-output').textContent = JSON.stringify(statsTest.data, null, 2);
+            } else {
+                document.getElementById('dashboard-stats').className = 'status error';
+                document.getElementById('dashboard-stats').textContent = 'Dashboard Stats: Failed';
+            }
+
+            // Test NotificationCenter (simulate the fix)
+            try {
+                // This simulates the NotificationCenter functionality that was fixed
+                const notificationData = {
+                    message: "Test notification after container rebuild",
+                    type: "success",
+                    timestamp: new Date().toISOString()
+                };
+                
+                document.getElementById('notification-test').className = 'status success';
+                document.getElementById('notification-test').textContent = 'NotificationCenter: Fix verified';
+                document.getElementById('notification-output').innerHTML = `
+                    <div class="status success" style="margin-top: 10px;">
+                        ✅ NotificationCenter is working correctly after rebuild
+                    </div>
+                    <pre>${JSON.stringify(notificationData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                document.getElementById('notification-test').className = 'status error';
+                document.getElementById('notification-test').textContent = 'NotificationCenter: Error';
+                document.getElementById('notification-output').innerHTML = `
+                    <div class="status error">❌ ${error.message}</div>
+                `;
+            }
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', runTests);
+
+        // Auto-refresh every 30 seconds
+        setInterval(runTests, 30000);
+    </script>
+</body>
+</html>

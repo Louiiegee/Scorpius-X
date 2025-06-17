@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../new-dash-main"
+		},
+		{
+			"name": "new-dash",
+			"path": "../../new-dash"
+		}
+	]
+}

@@ -1,0 +1,48 @@
+{
+    "folders": [
+        {
+            "name": "Scorpius Backend",
+            "path": "./backend"
+        },
+        {
+            "name": "Scorpius Frontend", 
+            "path": "./frontend"
+        },
+        {
+            "name": "Docker Config",
+            "path": "./docker"
+        },
+        {
+            "name": "Scripts",
+            "path": "./scripts"
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "./backend/venv/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "docker.dockerComposeDetached": true,
+        "files.associations": {
+            "docker-compose.yml": "dockercompose",
+            "*.dockerfile": "dockerfile"
+        },
+        "emmet.includeLanguages": {
+            "typescript": "html",
+            "typescriptreact": "html"
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.flake8",
+            "ms-python.black-formatter",
+            "bradlc.vscode-tailwindcss",
+            "ms-vscode.vscode-typescript-next",
+            "ms-azuretools.vscode-docker",
+            "github.copilot",
+            "github.copilot-chat",
+            "ms-vscode.powershell"
+        ]
+    }
+}

@@ -1,0 +1,49 @@
+# helm/scorpius/values.yaml
+replicaCount:
+  api: 2
+  worker: 3
+
+image:
+  repository: ghcr.io/yourorg/scorpius-scanner
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: scorpius.yourdomain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: scorpius-tls
+      hosts:
+        - scorpius.yourdomain.com
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+postgresql:
+  enabled: true
+  auth:
+    database: scorpius
+    username: scorpius
+
+redis:
+  enabled: true
+  auth:
+    enabled: false

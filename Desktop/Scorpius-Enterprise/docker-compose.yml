@@ -1,0 +1,119 @@
+services:
+  # Backend Service (Python/FastAPI)
+  scorpius-backend:
+    build:
+      context: ./backend/backend/backend
+      dockerfile: ../../../docker/Dockerfile.backend
+    container_name: scorpius-backend
+    ports:
+      - "3001:3001"  # Backend API port
+      - "8001:8001"  # WebSocket port
+    environment:
+      - PYTHONPATH=/app
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://scorpius:scorpius123@scorpius-db:5432/scorpius
+      - REDIS_URL=redis://scorpius-redis:6379
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock  # For Foundry/Anvil
+    depends_on:
+      - scorpius-db
+      - scorpius-redis
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Service (React/Next.js)
+  scorpius-frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+      args:
+        - VITE_API_BASE_URL=http://localhost:3001
+        - VITE_WS_URL=ws://localhost:8001
+    container_name: scorpius-frontend
+    ports:
+      - "3002:3000"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3001
+      - VITE_WS_URL=ws://localhost:8001
+      - NODE_ENV=production
+    volumes:
+      - /app/node_modules
+    depends_on:
+      - scorpius-backend
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  scorpius-db:
+    image: postgres:15-alpine
+    container_name: scorpius-db
+    environment:
+      - POSTGRES_DB=scorpius
+      - POSTGRES_USER=scorpius
+      - POSTGRES_PASSWORD=scorpius123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+
+  # Redis Cache
+  scorpius-redis:
+    image: redis:7-alpine
+    container_name: scorpius-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Nginx Reverse Proxy
+  scorpius-nginx:
+    image: nginx:alpine
+    container_name: scorpius-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/ssl:/etc/nginx/ssl
+    depends_on:
+      - scorpius-frontend
+      - scorpius-backend
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+
+  # Foundry/Anvil for Blockchain Simulation
+  scorpius-anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: scorpius-anvil
+    ports:
+      - "8545:8545"
+    command: anvil --host 0.0.0.0 --port 8545 --chain-id 31337
+    networks:
+      - scorpius-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  scorpius-network:
+    driver: bridge

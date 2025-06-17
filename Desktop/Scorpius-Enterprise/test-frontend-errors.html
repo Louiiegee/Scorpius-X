@@ -1,0 +1,43 @@
+ccccccccccccccccccccccccccccccccccccccc                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test - Scorpius</title>
+</head>
+<body>
+    <div id="app">Loading frontend...</div>
+    <script>
+        console.log('🧪 Frontend test page loaded');
+        console.log('🔍 Checking for HMAC errors...');
+        
+        // Override console.error to catch HMAC errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            if (args.some(arg => typeof arg === 'string' && arg.includes('HMAC'))) {
+                console.log('❌ HMAC Error detected:', ...args);
+            }
+            originalError.apply(console, args);
+        };
+        
+        // Load the actual frontend assets
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3002/assets/index-CtdIpeVK.css';
+        document.head.appendChild(link);
+        
+        const script = document.createElement('script');
+        script.src = 'http://localhost:3002/assets/index-CwCvwx7Y.js';
+        script.onload = () => {
+            console.log('✅ Frontend script loaded successfully');
+            setTimeout(() => {
+                console.log('🏁 Test complete - checking for client integrity service status...');
+            }, 2000);
+        };
+        script.onerror = (error) => {
+            console.error('❌ Error loading frontend script:', error);
+        };
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>

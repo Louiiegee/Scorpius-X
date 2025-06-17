@@ -1,0 +1,36 @@
+# Frontend Dockerfile for Scorpius Security Platform
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies for native modules
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies with --force to resolve peer dependency conflicts
+RUN npm install --force
+
+# Copy the rest of the frontend application code
+COPY . ./
+
+# Explicitly copy index.html to public directory before build
+COPY index.html /app/public/index.html
+
+# Build the application
+RUN npm run build
+
+# Install serve to run the built application
+RUN npm install -g serve
+
+# Expose port
+EXPOSE 3000
+
+# Start the application using serve
+CMD ["npx", "serve", "-s", "dist", "-l", "3000"]

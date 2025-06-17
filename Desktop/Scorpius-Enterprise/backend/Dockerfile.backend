@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy backend source code
+COPY server/ ./server/
+COPY service/ ./service/
+
+EXPOSE 3001
+
+CMD ["node", "server/index.js"]

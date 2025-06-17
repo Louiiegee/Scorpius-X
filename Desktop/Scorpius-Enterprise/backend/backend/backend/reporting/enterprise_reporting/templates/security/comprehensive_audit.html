@@ -1,0 +1,194 @@
+{% extends "base/report_base.html" %}
+
+{% block additional_styles %}
+<style>
+    .security-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .metric-card {
+        background: var(--color-surface, #ffffff);
+        border: 1px solid var(--color-border, #e5e7eb);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .metric-value {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .metric-label {
+        font-size: 12px;
+        color: var(--color-text-muted, #6b7280);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .vulnerability-category {
+        margin: 25px 0;
+        border: 1px solid var(--color-border, #e5e7eb);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .category-header {
+        background: var(--color-muted, #f9fafb);
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--color-border, #e5e7eb);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .category-title {
+        font-weight: 600;
+        color: var(--color-text-dark, #1f2937);
+    }
+    
+    .category-count {
+        background: var(--color-primary, #2563eb);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block summary %}
+<section class="section">
+    <h2 class="section-title">Executive Summary</h2>
+    <p>This comprehensive security audit analyzed the smart contract for potential vulnerabilities, 
+    gas optimization opportunities, and compliance with security best practices.</p>
+    
+    <div class="security-metrics">
+        <div class="metric-card">
+            <div class="metric-value" style="color: var(--color-critical, #dc2626);">{{ audit_stats.critical_count | default(0) }}</div>
+            <div class="metric-label">Critical Issues</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" style="color: var(--color-high, #ea580c);">{{ audit_stats.high_count | default(0) }}</div>
+            <div class="metric-label">High Severity</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" style="color: var(--color-medium, #d97706);">{{ audit_stats.medium_count | default(0) }}</div>
+            <div class="metric-label">Medium Severity</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" style="color: var(--color-low, #16a34a);">{{ audit_stats.low_count | default(0) }}</div>
+            <div class="metric-label">Low Severity</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ audit_stats.gas_optimizations | default(0) }}</div>
+            <div class="metric-label">Gas Optimizations</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.1f" | format(audit_stats.code_coverage | default(0)) }}%</div>
+            <div class="metric-label">Code Coverage</div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block detailed_findings %}
+<section class="section">
+    <h2 class="section-title">Security Findings by Category</h2>
+    
+    {% set vulnerability_categories = findings | groupby('category') %}
+    {% for category, category_findings in vulnerability_categories %}
+    <div class="vulnerability-category">
+        <div class="category-header">
+            <div class="category-title">{{ category | title | default('General') }}</div>
+            <div class="category-count">{{ category_findings | length }}</div>
+        </div>
+        <div style="padding: 20px;">
+            {% for finding in category_findings %}
+            <div style="border-left: 4px solid {% if finding.severity == 'critical' %}var(--color-critical, #dc2626){% elif finding.severity == 'high' %}var(--color-high, #ea580c){% elif finding.severity == 'medium' %}var(--color-medium, #d97706){% else %}var(--color-low, #16a34a){% endif %}; padding-left: 15px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0; color: var(--color-text-dark, #1f2937);">{{ finding.title }}</h4>
+                    <span class="risk-badge {% if finding.severity == 'critical' %}risk-critical{% elif finding.severity == 'high' %}risk-high{% elif finding.severity == 'medium' %}risk-medium{% else %}risk-low{% endif %}">
+                        {{ finding.severity | title }}
+                    </span>
+                </div>
+                
+                {% if finding.function_name %}
+                <p style="font-size: 12px; color: var(--color-text-muted, #6b7280); margin-bottom: 10px;">
+                    <strong>Function:</strong> <code>{{ finding.function_name }}</code>
+                    {% if finding.location %} | <strong>Location:</strong> {{ finding.location }}{% endif %}
+                </p>
+                {% endif %}
+                
+                <p>{{ finding.description }}</p>
+                
+                {% if finding.impact %}
+                <div style="margin-top: 10px;">
+                    <strong>Impact:</strong> {{ finding.impact }}
+                </div>
+                {% endif %}
+                
+                {% if finding.recommendation %}
+                <div style="margin-top: 10px; padding: 10px; background: var(--color-muted, #f9fafb); border-radius: 4px;">
+                    <strong>Recommendation:</strong> {{ finding.recommendation }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}
+
+{% block additional_sections %}
+<!-- Gas Optimization Section -->
+{% if gas_optimizations %}
+<section class="section">
+    <h2 class="section-title">Gas Optimization Recommendations</h2>
+    {% for optimization in gas_optimizations %}
+    <div style="border: 1px solid var(--color-border, #e5e7eb); border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+        <h4>{{ optimization.title }}</h4>
+        <p>{{ optimization.description }}</p>
+        {% if optimization.potential_savings %}
+        <div style="color: var(--color-success, #16a34a); font-weight: 600;">
+            Potential Gas Savings: {{ optimization.potential_savings }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+<!-- Compliance Check Section -->
+<section class="section">
+    <h2 class="section-title">Security Best Practices Compliance</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Check</th>
+                <th>Status</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for check in compliance_checks | default([]) %}
+            <tr>
+                <td>{{ check.name }}</td>
+                <td>
+                    <span style="color: {% if check.status == 'pass' %}var(--color-success, #16a34a){% else %}var(--color-error, #dc2626){% endif %};">
+                        {% if check.status == 'pass' %}✓ Pass{% else %}✗ Fail{% endif %}
+                    </span>
+                </td>
+                <td>{{ check.description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

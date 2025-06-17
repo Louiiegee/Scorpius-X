@@ -1,0 +1,80 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Setup Scorpius Platform",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"./setup-scorpius.ps1"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Complete Platform",
+			"type": "shell",
+			"command": "pwsh",
+			"args": ["-ExecutionPolicy", "Bypass", "-File", "./scripts/start-scorpius.ps1"],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Backend Only",
+			"type": "shell",
+			"command": "pwsh",
+			"args": ["-ExecutionPolicy", "Bypass", "-File", "./scripts/start-scorpius.ps1", "-BackendOnly"],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Stop Platform",
+			"type": "shell",
+			"command": "pwsh",
+			"args": ["-ExecutionPolicy", "Bypass", "-File", "./scripts/start-scorpius.ps1", "-Stop"],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "View Platform Logs",
+			"type": "shell",
+			"command": "pwsh",
+			"args": ["-ExecutionPolicy", "Bypass", "-File", "./scripts/start-scorpius.ps1", "-Logs"],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		}
+	]
+}

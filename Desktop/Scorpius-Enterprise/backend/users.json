@@ -1,0 +1,21 @@
+{
+  "admin@scorpiusx.io": {
+    "password_hash": "1f928aa96e304012f5a756149ff0d90226230dde319d3aacb3d059b075ee0d1c",
+    "role": "admin",
+    "name": "Admin",
+    "avatar": "\ud83e\udd82",
+    "tier": "enterprise",
+    "created_at": 1750146343.1304777,
+    "email_verified": true
+  },
+  "test@example.com": {
+    "password_hash": "3bc8d4f2f0b5fe3fad7c1c2882d027d4ec4baac1e012a1404c2516546e71cdf4:282f83164f70ba7d70de1b87b708c8b0fc21007f8b0605f6a7c7bc2550e91722",
+    "role": "user",
+    "name": "Test User",
+    "avatar": "\ud83d\udc64",
+    "tier": "community",
+    "organization": null,
+    "created_at": 1750146420.040264,
+    "email_verified": false
+  }
+}

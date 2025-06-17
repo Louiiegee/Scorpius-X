@@ -1,0 +1,47 @@
+# scorpius_scanner/core/stream_queue.py (fix the consume method)
+async def consume(self, block_timeout: int = 1000) -> AsyncIterator[tuple[str, Dict[str, Any]]]:
+    """Consume messages from queue with exactly-once delivery"""
+    redis = await self._get_redis()
+    await self.setup_consumer_group()
+    
+    consumer_id = f"{CONSUMER_NAME}-{uuid.uuid4().hex[:8]}"
+    logger.info(f"Starting consumer {consumer_id}")
+    
+    while True:
+        try:
+            # Read new messages
+            response = await redis.xreadgroup(
+                CONSUMER_GROUP,
+                consumer_id,
+                {STREAM_NAME: ">"},
+                count=1,
+                block=block_timeout
+            )
+            
+            if response:
+                # Fix: response is a list, take first stream
+                stream_name, messages = response[0]
+                for message_id, fields in messages:
+                    try:
+                        payload = json.loads(fields["payload"])
+                        logger.debug(f"Processing message {message_id}")
+                        
+                        # Yield message for processing
+                        yield message_id, payload
+                        
+                        # Acknowledge successful processing with back-pressure handling
+                        try:
+                            await redis.xack(STREAM_NAME, CONSUMER_GROUP, message_id)
+                            logger.debug(f"Acknowledged message {message_id}")
+                        except Exception as ack_err:
+                            logger.warning(f"Failed to ack message {message_id}: {ack_err}")
+                            # Message remains unacknowledged for retry
+                        
+                    except Exception as e:
+                        logger.error(f"Failed to process message {message_id}: {e}")
+                        # Message remains unacknowledged for retry
+                        
+        except Exception as e:
+            logger.error(f"Consumer error: {e}")
+            await asyncio.sleep(5)  # Brief pause before retry
+

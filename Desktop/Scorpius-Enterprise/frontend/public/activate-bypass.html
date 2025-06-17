@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorpius Bypass Activator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+        }
+        p {
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.3);
+            border: 2px solid #22c55e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner">🔓</div>
+        <h1>Activating Authentication Bypass</h1>
+        <p>Setting up development authentication...</p>
+        <div id="status">Please wait...</div>
+        
+        <div id="success" class="success" style="display: none;">
+            <strong>✅ Bypass Activated!</strong><br>
+            Redirecting to dashboard...
+        </div>
+    </div>
+
+    <script>
+        // Activate the bypass
+        function activateBypass() {
+            try {
+                // Set the bypass flag
+                localStorage.setItem('scorpius_dev_bypass', 'true');
+                
+                // Update status
+                document.getElementById('status').textContent = 'Bypass activated successfully!';
+                document.getElementById('success').style.display = 'block';
+                
+                console.log('🔓 Development authentication bypass activated');
+                
+                // Wait a moment then redirect
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Failed to activate bypass:', error);
+                document.getElementById('status').textContent = 'Failed to activate bypass. Please try manually.';
+                document.getElementById('status').style.color = '#ef4444';
+            }
+        }
+
+        // Run on page load
+        window.addEventListener('load', () => {
+            setTimeout(activateBypass, 1000);
+        });
+    </script>
+</body>
+</html>

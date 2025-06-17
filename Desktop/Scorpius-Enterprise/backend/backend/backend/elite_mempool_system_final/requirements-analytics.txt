@@ -1,0 +1,30 @@
+# Elite Mempool System - Analytics Dependencies
+# Install these after core requirements for advanced analytics features
+
+# Data processing and analysis
+numpy==1.24.3
+pandas==2.0.3
+scipy==1.11.4
+
+# Machine learning (optional)
+scikit-learn==1.3.2
+
+# Plotting and visualization (optional)
+matplotlib==3.7.3
+plotly==5.17.0
+
+# Database connectors (optional)
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9  # PostgreSQL
+pymongo==4.6.0  # MongoDB
+
+# Performance monitoring
+psutil==5.9.6
+
+# Additional MEV and DeFi libraries
+# Note: These may not be available via pip and might need manual installation
+# flashbots  # Install from GitHub if needed
+# uniswap-python  # For Uniswap-specific interactions
+
+# Performance optimization
+cython==3.0.6

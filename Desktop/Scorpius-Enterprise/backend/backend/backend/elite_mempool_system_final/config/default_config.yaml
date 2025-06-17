@@ -1,0 +1,107 @@
+# Elite Mempool System - Default Configuration
+
+# General Application Settings
+app_name: "EliteMempoolSystem"
+environment: "development" # development, staging, production
+log_level: "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+# API Server Configuration
+api:
+  host: "127.0.0.1"
+  port: 8000
+  # In production, use a strong, randomly generated API key
+  # Consider storing this in a secrets manager or environment variable
+  admin_api_key: "your_super_secret_admin_api_key" 
+  viewer_api_key: "your_viewer_api_key"
+
+# Blockchain Network Configuration (can have multiple entries for multi-chain)
+networks:
+  ethereum_mainnet: # A key for this network configuration
+    chain_id: 1
+    is_active: true # Whether to monitor this network on startup
+    rpc_urls: # Primary RPC/WS URLs for EnhancedMempoolMonitor
+      - "wss://mainnet.infura.io/ws/v3/YOUR_INFURA_PROJECT_ID"
+      - "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"
+    http_rpc_for_sync: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID" # For sync Web3 instances & some async
+    # Optional: Specialized RPC for bundle simulation (eth_callBundle) / sending (eth_sendBundle)
+    flashbots_rpc_url: "https://rpc.flashbots.net" # Or your private MEV-Geth, or simulation service URL
+
+# Mempool Monitor (EnhancedMempoolMonitor) Configuration
+mempool_monitor:
+  poll_interval_seconds: 0.05 # Very aggressive, ensure your node can handle it
+  request_timeout_seconds: 5
+  max_stored_txs: 15000
+  cleanup_interval_seconds: 15.0
+  reconnect_delay_seconds: 3.0
+  # Default filters (can be overridden via API or specific strategy needs)
+  default_min_tx_value_eth: 0.001
+
+# Network Monitor Configuration
+network_monitor:
+  update_interval_seconds: 10 # How often to refresh network stats
+  max_historical_blocks: 100
+  # GasPredictionConfig defaults can be added here if needed
+
+# Price Oracle Configuration
+price_oracle:
+  cache_ttl_seconds: 60
+  chainlink_eth_usd_feed_mainnet: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
+  # Add other oracle addresses per chain if needed
+
+# Simulation Engine Configuration
+simulation_engine:
+  # If using local EVM fork manager
+  use_local_fork: false
+  local_fork_node_command: ["anvil", "--fork-url", "YOUR_MAINNET_ARCHIVE_NODE_URL", "--port", "8545"]
+  local_fork_rpc_url: "http://127.0.0.1:8545"
+  # (timeout settings for simulations can go here)
+
+# Execution Engine Configuration
+execution_engine:
+  # BOT_WALLET_ADDRESS and BOT_WALLET_PRIVATE_KEY should be set via environment variables for security
+  # default_gas_buffer_multiplier: 1.25 # Multiplier for gas estimates
+  default_submission_method: "flashbots" # "flashbots" or "public"
+  flashbots_max_retries: 3
+  flashbots_retry_delay_seconds: 2
+
+# Opportunity Manager Configuration
+opportunity_manager:
+  opportunity_ttl_seconds: 120 # How long to keep an opportunity before expiring if not finalized
+  max_active_opportunities: 300
+  execution_concurrency: 1 # How many opportunities to try executing in parallel (start low)
+  min_execution_profit_usd: 5.0 # Minimum USD profit to attempt execution
+
+# Analytics Engine Configuration
+analytics_engine:
+  stats_dir: "./mempool_analytics_data_final"
+  write_interval_seconds: 60
+  retention_days: 7
+  max_recent_events_buffer: 2000
+
+# Alert Dispatcher Configuration
+alert_dispatcher:
+  channels:
+    console_critical:
+      type: "console"
+      min_severity: "CRITICAL" # Corresponds to MempoolEventSeverity
+    # slack_mev_high_profit:
+    #   type: "slack"
+    #   webhook_url: "YOUR_SLACK_WEBHOOK_URL"
+    #   min_profit_usd_for_alert: 100
+
+# MEV Detector Configuration (general thresholds, specific detectors might have own internal logic)
+mev_detector:
+  # Sandwich Detector
+  sandwich_min_victim_value_eth: 0.1
+  sandwich_min_net_profit_eth: 0.001
+  # Liquidation Monitor
+  liquidation_min_value_usd: 500
+  liquidation_min_net_profit_usd: 10
+  # Arbitrage Detector
+  arbitrage_min_start_amount_eth: 0.5 # e.g., start scanning arbs with 0.5 ETH
+  arbitrage_min_net_profit_eth: 0.002
+
+# Learning/Feedback Configuration (conceptual)
+feedback_updater:
+  enabled: true
+  # database_connection_string: "your_db_connection_string"

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorpius Dev Bypass</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status.enabled {
+            background: rgba(34, 197, 94, 0.3);
+            border: 2px solid #22c55e;
+        }
+        .status.disabled {
+            background: rgba(239, 68, 68, 0.3);
+            border: 2px solid #ef4444;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .enable-btn {
+            background: #22c55e;
+            color: white;
+        }
+        .enable-btn:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+        .disable-btn {
+            background: #ef4444;
+            color: white;
+        }
+        .disable-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        .info {
+            background: rgba(59, 130, 246, 0.3);
+            border: 2px solid #3b82f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: rgba(245, 158, 11, 0.3);
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .link {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔓 Scorpius Development Bypass</h1>
+        
+        <div id="status" class="status disabled">
+            Authentication Bypass: DISABLED
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Development Only!</strong><br>
+            This bypass only works in development mode and will be automatically disabled in production builds.
+        </div>
+
+        <button id="enableBtn" class="enable-btn" onclick="enableBypass()">
+            🚀 Enable Authentication Bypass
+        </button>
+        
+        <button id="disableBtn" class="disable-btn" onclick="disableBypass()">
+            🛑 Disable Authentication Bypass
+        </button>
+
+        <div class="info">
+            <strong>📋 Instructions:</strong><br>
+            1. Click "Enable Authentication Bypass" above<br>
+            2. Navigate to the main application<br>
+            3. You'll be automatically logged in as an Enterprise user<br>
+            4. Use "Disable" to return to normal login flow
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="http://localhost:3002" class="link">🏠 Go to Dashboard</a>
+            <a href="http://localhost:3001/docs" class="link">📚 API Docs</a>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; opacity: 0.8; font-size: 14px;">
+            <strong>Mock User Profile:</strong><br>
+            Email: dev@scorpius.test<br>
+            Tier: Enterprise<br>
+            Permissions: Full Access
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const isEnabled = localStorage.getItem('scorpius_dev_bypass') === 'true';
+            const statusEl = document.getElementById('status');
+            const enableBtn = document.getElementById('enableBtn');
+            const disableBtn = document.getElementById('disableBtn');
+            
+            if (isEnabled) {
+                statusEl.textContent = 'Authentication Bypass: ENABLED ✅';
+                statusEl.className = 'status enabled';
+                enableBtn.style.display = 'none';
+                disableBtn.style.display = 'block';
+            } else {
+                statusEl.textContent = 'Authentication Bypass: DISABLED ❌';
+                statusEl.className = 'status disabled';
+                enableBtn.style.display = 'block';
+                disableBtn.style.display = 'none';
+            }
+        }
+
+        function enableBypass() {
+            localStorage.setItem('scorpius_dev_bypass', 'true');
+            console.log('🔓 Authentication bypass enabled');
+            updateStatus();
+            
+            // Show success message
+            const originalText = document.getElementById('enableBtn').textContent;
+            document.getElementById('enableBtn').textContent = '✅ Bypass Enabled!';
+            setTimeout(() => {
+                updateStatus();
+            }, 1000);
+        }
+
+        function disableBypass() {
+            localStorage.removeItem('scorpius_dev_bypass');
+            console.log('🔒 Authentication bypass disabled');
+            updateStatus();
+            
+            // Show success message
+            const originalText = document.getElementById('disableBtn').textContent;
+            document.getElementById('disableBtn').textContent = '✅ Bypass Disabled!';
+            setTimeout(() => {
+                updateStatus();
+            }, 1000);
+        }
+
+        // Initialize on page load
+        updateStatus();
+    </script>
+</body>
+</html>
