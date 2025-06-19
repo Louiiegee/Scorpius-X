@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { TopNavigation } from "./TopNavigation";
+import TopNavigation from "./TopNavigation";
 import WebChat from "./WebChat";
 import Footer from "./Footer";
 
