@@ -9,29 +9,32 @@ interface AppShellProps {
   children: ReactNode;
 }
 
-// Global animation variants for Fortune-500 polish
+// Professional page transition variants
 const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,
-    scale: 0.98,
+    scale: 0.95,
+    filter: "blur(4px)",
   },
   in: {
     opacity: 1,
     y: 0,
     scale: 1,
+    filter: "blur(0px)",
   },
   out: {
     opacity: 0,
-    y: -20,
+    y: -10,
     scale: 1.02,
+    filter: "blur(2px)",
   },
 };
 
 const pageTransition = {
   type: "tween",
-  ease: "anticipate",
-  duration: 0.4,
+  ease: [0.25, 0.1, 0.25, 1], // Professional cubic-bezier curve
+  duration: 0.5,
 };
 
 // Stagger children animation for cohesive cascade
