@@ -696,14 +696,11 @@ const Monitoring = () => {
 
         {/* Main Content */}
         <motion.div
-          className="bg-surface border-2 border-[#333] rounded-3xl p-6"
+          className="p-6 rounded-2xl border border-gray-700 bg-black/40"
           variants={itemVariants}
           style={{
-            background:
-              "linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(42, 42, 42, 0.9) 100%)",
+            boxShadow: "0 0 20px rgba(0, 255, 255, 0.1)",
             backdropFilter: "blur(10px)",
-            boxShadow:
-              "0 8px 32px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
           }}
         >
           {/* Tab Navigation */}
