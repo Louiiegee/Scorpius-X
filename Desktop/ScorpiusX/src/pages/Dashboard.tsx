@@ -35,6 +35,12 @@ import {
   UserPlus,
   Filter,
   Search,
+  BarChart3,
+  LineChart,
+  PieChart,
+  Radar,
+  Network,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveCounter } from "@/components/ui/live-counter";
