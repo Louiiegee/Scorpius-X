@@ -730,7 +730,7 @@ const TopNavigation = () => {
                 }}
               >
                 <User
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                   style={{
                     color: showProfileDropdown ? "#00ffff" : "#cccccc",
                     filter: showProfileDropdown
