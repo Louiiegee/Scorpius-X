@@ -344,7 +344,10 @@ const WebChat = () => {
             </div>
 
             {/* Online Users */}
-            <div className="px-4 py-2 border-t border-gray-700">
+            <div
+              className="px-4 py-2 border-t border-gray-700"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center gap-2 overflow-x-auto">
                 {onlineUsers.slice(0, 6).map((user) => (
                   <div
