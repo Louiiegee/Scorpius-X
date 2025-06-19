@@ -296,24 +296,24 @@ const Dashboard = () => {
                         key={activity.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center justify-between p-3 bg-gray-900/50 rounded border-l-2 border-blue-500/50"
+                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-900/50 rounded border-l-2 border-blue-500/50 space-y-2 sm:space-y-0"
                       >
-                        <div>
-                          <div className="text-white font-medium">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-white font-medium text-sm sm:text-base truncate">
                             {activity.action}
                           </div>
-                          <div className="text-gray-400 text-sm">
+                          <div className="text-gray-400 text-xs sm:text-sm truncate">
                             {activity.target}
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div className="flex items-center justify-between sm:flex-col sm:text-right sm:justify-start flex-shrink-0">
                           <Badge
                             variant="outline"
-                            className="text-green-400 border-green-500/30"
+                            className="text-green-400 border-green-500/30 text-xs"
                           >
                             {activity.result}
                           </Badge>
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 sm:mt-1">
                             {formatTime(activity.timestamp)}
                           </div>
                         </div>
