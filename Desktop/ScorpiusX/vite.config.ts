@@ -8,15 +8,13 @@ export default defineConfig(({ mode }) => ({
     host: "0.0.0.0",
     port: 8080,
     strictPort: true,
-    hmr: {
-      port: 8080,
-      overlay: false, // Disable error overlay to prevent WebSocket conflicts
-      clientPort: 8080, // Ensure client connects to the right port
-    },
+    hmr: false, // Disable HMR completely to avoid WebSocket issues
     watch: {
-      usePolling: false, // Use native file watching for better performance
+      usePolling: true, // Use polling for file watching in proxy environments
+      interval: 1000, // Check for changes every second
     },
     cors: true, // Enable CORS for development
+    force: true, // Force dependency pre-bundling
   },
   plugins: [react()],
   resolve: {
