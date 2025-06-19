@@ -412,8 +412,9 @@ export const EnhancedToast = ({
     info: "#00ffff",
   };
 
-  const Icon = icons[type];
-  const color = colors[type];
+  // Ensure Icon is never undefined by providing fallback
+  const Icon = icons[type] || Info;
+  const color = colors[type] || "#00ffff";
 
   useEffect(() => {
     const timer = setTimeout(onClose, 4000);
