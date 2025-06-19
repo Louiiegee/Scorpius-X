@@ -255,10 +255,11 @@ const HiveAlert = () => {
                   style={{
                     fontSize: "32px",
                     fontWeight: "700",
-                    color: "#ff4444",
+                    color: "rgba(51, 41, 25, 1)",
                     margin: "0",
                     letterSpacing: "2px",
-                    textShadow: "0 0 20px rgba(255, 68, 68, 0.6)",
+                    textShadow: "0 0 18px rgba(255, 68, 68, 0.6)",
+                    marginRight: "auto",
                   }}
                 >
                   HONEY POT DETECTOR
