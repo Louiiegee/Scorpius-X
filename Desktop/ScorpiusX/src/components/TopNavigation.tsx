@@ -527,8 +527,7 @@ const TopNavigation = () => {
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                filter:
-                  "drop-shadow(0 0 12px rgba(192, 192, 192, 0.6)) drop-shadow(0 0 24px rgba(248, 248, 255, 0.4)) drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.7))",
+
                 textShadow:
                   "0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.15), 0 0 8px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.3), 0 3px 6px rgba(0,0,0,.25), 0 5px 12px rgba(0,0,0,.3)",
                 transform: "perspective(600px) rotateX(12deg)",
