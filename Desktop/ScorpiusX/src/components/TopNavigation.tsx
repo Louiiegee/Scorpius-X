@@ -478,6 +478,27 @@ const TopNavigation = () => {
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+          @keyframes metallicShine {
+            0% {
+              background: linear-gradient(135deg, #C0C0C0 0%, #F8F8FF 20%, #E5E4E2 40%, #BCC6CC 60%, #98FB98 80%, #C0C0C0 100%);
+              filter: drop-shadow(0 0 10px rgba(192, 192, 192, 0.5)) drop-shadow(0 0 20px rgba(248, 248, 255, 0.3)) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+            }
+            50% {
+              background: linear-gradient(135deg, #F8F8FF 0%, #E5E4E2 20%, #C0C0C0 40%, #F0F0F0 60%, #D3D3D3 80%, #F8F8FF 100%);
+              filter: drop-shadow(0 0 15px rgba(248, 248, 255, 0.7)) drop-shadow(0 0 25px rgba(192, 192, 192, 0.4)) drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6));
+            }
+            100% {
+              background: linear-gradient(135deg, #E5E4E2 0%, #C0C0C0 20%, #F8F8FF 40%, #BCC6CC 60%, #F0F0F0 80%, #E5E4E2 100%);
+              filter: drop-shadow(0 0 12px rgba(229, 228, 226, 0.6)) drop-shadow(0 0 22px rgba(192, 192, 192, 0.3)) drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.7));
+            }
+          }
+
+          .metallic-title {
+            background-clip: text !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+          }
         `}
       </style>
 
