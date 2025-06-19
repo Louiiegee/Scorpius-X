@@ -70,6 +70,27 @@ const Dashboard = () => {
   const [isLive, setIsLive] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
 
+  // Chart data states
+  const [threatData, setThreatData] = useState<number[]>([]);
+  const [networkData, setNetworkData] = useState<number[]>([]);
+  const [performanceData, setPerformanceData] = useState<number[]>([]);
+  const [timeLabels, setTimeLabels] = useState<string[]>([]);
+  const [securityMetrics, setSecurityMetrics] = useState({
+    firewall: 98,
+    encryption: 95,
+    monitoring: 92,
+    compliance: 89,
+    vulnerability: 94,
+    authentication: 96,
+  });
+  const [networkActivity, setNetworkActivity] = useState([
+    { name: "Ethereum", value: 45, color: "#00ff88" },
+    { name: "Polygon", value: 25, color: "#8b5cf6" },
+    { name: "BSC", value: 15, color: "#f59e0b" },
+    { name: "Arbitrum", value: 10, color: "#06b6d4" },
+    { name: "Avalanche", value: 5, color: "#ef4444" },
+  ]);
+
   // Auto-update stats periodically when not in live mode
   useEffect(() => {
     const interval = setInterval(() => {
