@@ -194,6 +194,33 @@ export const AppShell = ({ children }: AppShellProps) => {
             width: "100%",
           }}
         >
+          {/* Professional transition overlay */}
+          <AnimatePresence>
+            <motion.div
+              key={`overlay-${location.pathname}`}
+              initial={{ scaleY: 0, transformOrigin: "top" }}
+              animate={{ scaleY: 0, transformOrigin: "top" }}
+              exit={{
+                scaleY: 1,
+                transformOrigin: "top",
+                transition: {
+                  duration: 0.3,
+                  ease: [0.4, 0, 0.2, 1],
+                },
+              }}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "#000000",
+                zIndex: 9999,
+                pointerEvents: "none",
+              }}
+            />
+          </AnimatePresence>
+
           {/* Global route wrapper with AnimatePresence */}
           <AnimatePresence
             mode="wait"
