@@ -34,31 +34,33 @@ interface User {
 
 const WebChat = () => {
   const { user } = useAuth();
-  const { 
-    isConnected, 
-    messages: wsMessages, 
-    onlineUsers: wsOnlineUsers, 
-    sendMessage, 
-    sendTyping 
+  const {
+    isConnected,
+    messages: wsMessages,
+    onlineUsers: wsOnlineUsers,
+    sendMessage,
+    sendTyping,
   } = useWebSocket();
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [message, setMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Convert WebSocket messages to local format
-  const messages: Message[] = wsMessages.map(msg => ({
+  const messages: Message[] = wsMessages.map((msg) => ({
     ...msg,
-    timestamp: new Date(msg.timestamp)
+    timestamp: new Date(msg.timestamp),
   }));
 
   // Convert WebSocket users to local format
-  const onlineUsers: User[] = wsOnlineUsers.map(user => ({
+  const onlineUsers: User[] = wsOnlineUsers.map((user) => ({
     ...user,
-    status: user.status as "online" | "away" | "busy" | "offline"
+    status: user.status as "online" | "away" | "busy" | "offline",
   }));
 
   const scrollToBottom = () => {
@@ -87,17 +89,17 @@ const WebChat = () => {
 
   const handleTyping = (value: string) => {
     setMessage(value);
-    
+
     if (!isTyping && value.length > 0) {
       setIsTyping(true);
       sendTyping(true);
     }
-    
+
     // Clear previous timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    
+
     // Set new timeout to stop typing indicator
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
