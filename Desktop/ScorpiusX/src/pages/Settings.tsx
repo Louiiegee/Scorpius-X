@@ -155,14 +155,14 @@ export const Settings = () => {
     setStorageStats(getStorageStats());
 
     // Initialize user profile if it's empty
-    if (userData?.profile && !userData.profile.username) {
+    if (currentUserData?.profile && !currentUserData.profile.username) {
       updateProfile({
-        username: "user",
-        email: "user@example.com",
-        role: "user",
+        username: "alice",
+        email: "alice@scorpius.com",
+        role: "admin",
       });
     }
-  }, [getStorageStats, userData, updateProfile]);
+  }, [getStorageStats, updateProfile]);
 
   const togglePasswordVisibility = (field) => {
     setShowPasswords((prev) => ({
