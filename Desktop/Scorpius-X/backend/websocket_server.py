@@ -374,12 +374,12 @@ async def start_websocket_server():
     server = await serve(
         websocket_handler,
         "localhost",
-        8081,
+        8000,
         ping_interval=30,
         ping_timeout=10
     )
     
-    logger.info("🌐 ScorpiusX WebSocket Server started on ws://localhost:8081")
+    logger.info("🌐 ScorpiusX WebSocket Server started on ws://localhost:8000")
     
     # Start background tasks for live data simulation
     asyncio.create_task(live_data_simulator())
