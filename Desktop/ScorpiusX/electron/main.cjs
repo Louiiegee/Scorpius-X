@@ -219,11 +219,53 @@ if (!gotTheLock) {
   });
 }
 
+// Windows-specific app setup
+if (process.platform === "win32") {
+  // Set Windows app user model ID for proper taskbar grouping
+  app.setAppUserModelId("com.scorpius.cybersecurity.dashboard");
+
+  // Handle Windows notifications
+  app.setAsDefaultProtocolClient("scorpius");
+
+  // Windows file association handling
+  if (process.argv.length >= 2) {
+    // Handle file associations or protocol calls
+    console.log("Windows launch args:", process.argv);
+  }
+}
+
 // Handle app updates (future implementation)
 ipcMain.handle("check-for-updates", () => {
-  // TODO: Implement auto-updater
+  // TODO: Implement auto-updater for Windows
   return { updateAvailable: false };
 });
+
+// Windows-specific IPC handlers
+ipcMain.handle("get-windows-info", () => {
+  if (process.platform !== "win32") return null;
+
+  return {
+    isWindows: true,
+    version: require("os").release(),
+    arch: process.arch,
+    userInfo: require("os").userInfo(),
+  };
+});
+
+// Handle Windows sleep/wake events
+if (process.platform === "win32") {
+  const { powerMonitor } = require("electron");
+
+  powerMonitor.on("suspend", () => {
+    console.log("System is going to sleep");
+    // Handle sleep event
+  });
+
+  powerMonitor.on("resume", () => {
+    console.log("System is waking up");
+    // Handle wake event
+  });
+}
 
 // Export for testing
 module.exports = { createWindow };
