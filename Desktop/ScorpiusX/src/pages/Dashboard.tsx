@@ -103,8 +103,7 @@ const Dashboard = () => {
         sendCustomMessage("request_stats", {});
       } else {
         // Fallback to mock data if WebSocket not available
-        const currentStats = dashboardData.stats;
-        const newStats = {
+        updateStats((currentStats) => ({
           ...currentStats,
           systemUptime: currentStats.systemUptime + 5,
           threatsDetected:
@@ -121,19 +120,12 @@ const Dashboard = () => {
             currentStats.activeBots +
               (Math.random() < 0.15 ? (Math.random() < 0.6 ? 1 : -1) : 0),
           ),
-        };
-        updateStats(newStats);
+        }));
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [
-    isLive,
-    isConnected,
-    sendCustomMessage,
-    dashboardData.stats,
-    updateStats,
-  ]);
+  }, [isLive, isConnected, sendCustomMessage, updateStats]); // Removed dashboardData.stats to prevent infinite loop
 
   // Initialize stats if empty (first time user)
   useEffect(() => {
