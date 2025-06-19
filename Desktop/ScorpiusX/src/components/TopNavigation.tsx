@@ -568,7 +568,7 @@ const TopNavigation = () => {
                 >
                   {isMenuOpen ? (
                     <X
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       style={{
                         color: "#00ffff",
                         filter: "drop-shadow(0 0 4px #00ffff)",
@@ -576,7 +576,7 @@ const TopNavigation = () => {
                     />
                   ) : (
                     <Menu
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       style={{
                         color: "#00ffff",
                         filter: "drop-shadow(0 0 4px #00ffff)",
