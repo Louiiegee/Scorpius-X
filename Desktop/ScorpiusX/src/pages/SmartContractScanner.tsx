@@ -2301,7 +2301,6 @@ const SmartContractScanner = () => {
               </div>
             </div>
           </ScrollReveal>
-            </motion.div>
           )}
 
           {activeTab === "simulations" && (
