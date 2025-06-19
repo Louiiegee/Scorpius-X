@@ -162,7 +162,7 @@ export const LicenseVerification = ({
                     className="w-16 h-16"
                     style={{
                       filter:
-                        "drop-shadow(0 0 12px #ff4444) drop-shadow(0 0 20px #ffaa00)",
+                        "drop-shadow(0 0 15px #ff4444) drop-shadow(0 0 25px #ffaa00) drop-shadow(0 0 35px #00ffff)",
                     }}
                   />
 
