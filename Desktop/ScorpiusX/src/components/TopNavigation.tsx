@@ -494,18 +494,26 @@ const TopNavigation = () => {
           {/* Responsive SCORPIUS Title */}
           <div className="flex flex-col items-center mb-3 sm:mb-4 lg:mb-6">
             <h1
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-1 sm:mb-2 text-center"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl mb-1 sm:mb-2 text-center"
               style={{
                 fontFamily: "Orbitron, sans-serif",
-                fontWeight: "700",
-                letterSpacing: "2px",
-                color: "#ffffff",
-                backgroundColor: "#000000",
-                padding: "8px 12px",
-                borderRadius: "4px",
-                border: "1px solid #333333",
+                fontWeight: "900",
+                letterSpacing: "4px",
+                background:
+                  "linear-gradient(135deg, #C0C0C0 0%, #F8F8FF 20%, #E5E4E2 40%, #BCC6CC 60%, #98FB98 80%, #C0C0C0 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter:
+                  "drop-shadow(0 0 10px rgba(192, 192, 192, 0.5)) drop-shadow(0 0 20px rgba(248, 248, 255, 0.3)) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8))",
+                textShadow:
+                  "0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25)",
+                transform: "perspective(500px) rotateX(15deg)",
+                animation: "metallicShine 3s ease-in-out infinite alternate",
+                position: "relative",
+                zIndex: 10,
               }}
-              className="responsive-title"
+              className="responsive-title metallic-title"
             >
               SCORPIUS
             </h1>
