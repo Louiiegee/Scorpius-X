@@ -1011,14 +1011,11 @@ const Monitoring = () => {
                       key={component.component}
                       variants={itemVariants}
                       whileHover={{ scale: 1.02, y: -5 }}
-                      className="p-6 rounded-2xl"
+                      className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                        border: `2px solid ${getStatusColor(component.status)}40`,
                         borderLeft: `6px solid ${getStatusColor(component.status)}`,
+                        boxShadow: `0 0 20px ${getStatusColor(component.status)}20`,
                         backdropFilter: "blur(10px)",
-                        boxShadow: `0 8px 32px rgba(${getStatusColor(component.status)}, 0.1)`,
                       }}
                     >
                       <div className="flex items-start justify-between mb-4">
