@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     hmr: {
       port: 8080,
-      host: "localhost",
       overlay: false, // Disable error overlay to prevent WebSocket conflicts
     },
     watch: {
