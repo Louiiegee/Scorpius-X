@@ -59,8 +59,8 @@ export const Settings = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Show loading while userData is not available
-  if (!userData || !userData.profile) {
+  // Show loading only if userData is truly not available
+  if (!userData) {
     return (
       <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
         <div className="text-center">
