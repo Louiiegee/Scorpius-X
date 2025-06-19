@@ -574,12 +574,12 @@ const TopNavigation = () => {
 
           {/* Mobile-Responsive Navigation */}
           <div className="flex items-center justify-center w-full relative mt-2 sm:mt-3 lg:mt-4 px-2 sm:px-4">
-            {/* Hamburger Menu Button */}
+            {/* War Room Menu Button */}
             <motion.div
-              whileHover={{ scale: 1.1, y: -2 }}
+              whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+              className="px-4 py-2 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
               style={{
                 background: isMenuOpen
                   ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
@@ -593,26 +593,23 @@ const TopNavigation = () => {
               }}
             >
               <motion.div
-                animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                animate={{
+                  scale: isMenuOpen ? 1.1 : 1,
+                  textShadow: isMenuOpen
+                    ? "0 0 8px rgba(0, 255, 255, 1)"
+                    : "0 0 4px rgba(0, 255, 255, 0.6)",
+                }}
                 transition={{ duration: 0.3 }}
+                className="font-mono font-bold text-sm tracking-wider"
+                style={{
+                  color: "#00ffff",
+                  textShadow: isMenuOpen
+                    ? "0 0 8px rgba(0, 255, 255, 1), 0 0 4px rgba(0, 255, 255, 0.8)"
+                    : "0 0 4px rgba(0, 255, 255, 0.6)",
+                  fontFamily: "JetBrains Mono, Space Mono, monospace",
+                }}
               >
-                {isMenuOpen ? (
-                  <X
-                    className="w-4 h-4"
-                    style={{
-                      color: "#00ffff",
-                      filter: "drop-shadow(0 0 4px #00ffff)",
-                    }}
-                  />
-                ) : (
-                  <Menu
-                    className="w-4 h-4"
-                    style={{
-                      color: "#00ffff",
-                      filter: "drop-shadow(0 0 4px #00ffff)",
-                    }}
-                  />
-                )}
+                {isMenuOpen ? "CLOSE" : "WAR ROOM"}
               </motion.div>
 
               {/* Active indicator */}
