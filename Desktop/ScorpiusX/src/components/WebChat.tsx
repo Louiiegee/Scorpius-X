@@ -375,7 +375,10 @@ const WebChat = () => {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-700">
+            <div
+              className="p-4 border-t border-gray-700"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center gap-2">
                 <div className="flex-1 relative">
                   <input
