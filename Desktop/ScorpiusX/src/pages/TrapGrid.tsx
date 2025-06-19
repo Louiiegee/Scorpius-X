@@ -224,65 +224,6 @@ const HiveAlert = () => {
         fontFamily: "JetBrains Mono, Space Mono, monospace",
       }}
     >
-      {/* Animated radar sweep background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Radar circles */}
-        {[1, 2, 3, 4].map((ring) => (
-          <motion.div
-            key={ring}
-            className="absolute inset-0 border border-cyan-400/20 rounded-full"
-            style={{
-              width: `${ring * 200}px`,
-              height: `${ring * 200}px`,
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              delay: ring * 0.5,
-            }}
-          />
-        ))}
-
-        {/* Scanning line */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          style={{
-            background:
-              "conic-gradient(from 0deg, transparent 350deg, rgba(0, 255, 255, 0.3) 360deg)",
-          }}
-        />
-
-        {/* Threat indicators */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-red-400 rounded-full"
-            style={{
-              left: `${20 + (i % 4) * 20}%`,
-              top: `${20 + Math.floor(i / 4) * 20}%`,
-            }}
-            animate={{
-              opacity: [0.3, 1, 0.3],
-              scale: [1, 2, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: i * 0.2,
-            }}
-          />
-        ))}
-      </div>
-
       <motion.div
         className="max-w-7xl mx-auto p-8 relative z-10"
         variants={containerVariants}
