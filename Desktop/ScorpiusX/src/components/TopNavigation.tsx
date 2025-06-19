@@ -510,18 +510,33 @@ const TopNavigation = () => {
               SCORPIUS
             </h1>
 
-            {/* Responsive tagline */}
+            {/* Typewriter Tagline - Smaller than SCORPIUS */}
             <div
-              className="text-xs sm:text-sm md:text-base lg:text-lg font-mono text-[#00ffff] text-center px-2"
+              className="text-xs sm:text-sm md:text-base font-mono text-[#00ffff] text-center px-2 mt-1"
               style={{
                 fontFamily: "JetBrains Mono, Space Mono, monospace",
                 letterSpacing: "1px",
+                fontSize: "clamp(10px, 2.5vw, 14px)", // Much smaller than SCORPIUS
               }}
             >
               <span className="hidden sm:inline">
-                SIMULATE. EXPLOIT. CONTROL.
+                <TypewriterText
+                  text="SIMULATE. EXPLOIT. CONTROL."
+                  delay={150}
+                  style={{
+                    textShadow: "0 0 10px rgba(0, 255, 255, 0.8)",
+                  }}
+                />
               </span>
-              <span className="sm:hidden">CYBER SECURITY</span>
+              <span className="sm:hidden">
+                <TypewriterText
+                  text="CYBER SECURITY"
+                  delay={200}
+                  style={{
+                    textShadow: "0 0 10px rgba(0, 255, 255, 0.8)",
+                  }}
+                />
+              </span>
             </div>
           </div>
 
