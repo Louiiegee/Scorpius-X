@@ -199,16 +199,17 @@ const ToastComponent = ({
     >
       {/* Icon */}
       <div className={cn("flex-shrink-0 mt-0.5", style.icon)}>
-        {toast.type === "loading" ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
+        {Icon &&
+          (toast.type === "loading" ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            >
+              <Icon size={20} />
+            </motion.div>
+          ) : (
             <Icon size={20} />
-          </motion.div>
-        ) : (
-          <Icon size={20} />
-        )}
+          ))}
       </div>
 
       {/* Content */}
