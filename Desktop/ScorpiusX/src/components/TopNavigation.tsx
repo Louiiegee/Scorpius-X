@@ -583,7 +583,7 @@ const TopNavigation = () => {
                               ref={(el) => (iconRefs.current[item.name] = el)}
                               whileHover={{ scale: 1.1, y: -2 }}
                               whileTap={{ scale: 0.95 }}
-                              className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300"
+                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 touch-manipulation"
                               style={{
                                 background: isActive
                                   ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
