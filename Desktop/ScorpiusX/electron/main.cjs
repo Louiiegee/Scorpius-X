@@ -1,4 +1,12 @@
-const { app, BrowserWindow, ipcMain, shell, screen, Menu, MenuItem } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  screen,
+  Menu,
+  MenuItem,
+} = require("electron");
 const path = require("path");
 const isDev = process.env.NODE_ENV === "development";
 
@@ -34,7 +42,7 @@ function createWindow() {
 
   // Load the app - either dev server or built files
   const startUrl = isDev
-    ? "http://localhost:5173" // Vite dev server URL (ScorpiusX frontend)
+    ? "http://localhost:8080" // Vite dev server URL (ScorpiusX frontend)
     : `file://${path.join(__dirname, "../dist/index.html")}`; // Built files
 
   mainWindow.loadURL(startUrl);
