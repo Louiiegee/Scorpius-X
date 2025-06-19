@@ -455,33 +455,37 @@ const TopNavigation = () => {
       >
         {/* Content wrapper */}
         <div className="relative z-10">
-          {/* Centered SCORPIUS Title */}
-          <div className="flex flex-col items-center mb-6">
+          {/* Responsive SCORPIUS Title */}
+          <div className="flex flex-col items-center mb-3 sm:mb-4 lg:mb-6">
             <h1
-              className="text-6xl mb-2"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-1 sm:mb-2 text-center"
               style={{
                 fontFamily: "Orbitron, sans-serif",
                 fontWeight: "700",
-                letterSpacing: "8px",
+                letterSpacing: "2px",
                 color: "#ffffff",
                 backgroundColor: "#000000",
-                padding: "20px 30px",
-                borderRadius: "8px",
-                border: "2px solid #333333",
+                padding: "8px 12px",
+                borderRadius: "4px",
+                border: "1px solid #333333",
               }}
+              className="responsive-title"
             >
               SCORPIUS
             </h1>
 
-            {/* Static tagline */}
+            {/* Responsive tagline */}
             <div
-              className="text-lg font-mono text-[#00ffff] tracking-widest text-center"
+              className="text-xs sm:text-sm md:text-base lg:text-lg font-mono text-[#00ffff] text-center px-2"
               style={{
                 fontFamily: "JetBrains Mono, Space Mono, monospace",
-                letterSpacing: "4px",
+                letterSpacing: "1px",
               }}
             >
-              SIMULATE. EXPLOIT. CONTROL.
+              <span className="hidden sm:inline">
+                SIMULATE. EXPLOIT. CONTROL.
+              </span>
+              <span className="sm:hidden">CYBER SECURITY</span>
             </div>
           </div>
 
