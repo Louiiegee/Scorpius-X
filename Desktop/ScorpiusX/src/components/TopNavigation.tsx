@@ -609,93 +609,177 @@ const TopNavigation = () => {
             </div>
           </div>
 
-          {/* Navigation Icons - Smaller and spread evenly across full width */}
+          {/* Hamburger Menu Navigation */}
           <div className="flex items-center justify-between w-full relative mt-4 px-4">
-            {navigationItems.map((item, index) => {
-              const isActive = location.pathname === item.href;
-              const isHovered = hoveredItem === item.name;
-              const specialStyle = getSpecialStyle(item);
-
-              return (
-                <div key={item.name} className="relative">
-                  <NavLink
-                    to={item.href}
-                    onMouseEnter={() => setHoveredItem(item.name)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    className="block"
-                  >
-                    <motion.div
-                      ref={(el) => (iconRefs.current[item.name] = el)}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300"
+            {/* Left side - Hamburger Menu */}
+            <div className="flex items-center gap-4">
+              {/* Hamburger Menu Button */}
+              <motion.div
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="w-10 h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer"
+                style={{
+                  background: isMenuOpen
+                    ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
+                    : "rgba(26, 26, 26, 0.8)",
+                  border: isMenuOpen
+                    ? "2px solid rgba(0, 255, 255, 0.6)"
+                    : "1px solid rgba(0, 255, 255, 0.4)",
+                  boxShadow: isMenuOpen
+                    ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                    : "0 0 8px rgba(255, 255, 255, 0.1)",
+                }}
+              >
+                <motion.div
+                  animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isMenuOpen ? (
+                    <X
+                      className="w-5 h-5"
                       style={{
-                        background: isActive
-                          ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
-                          : "rgba(26, 26, 26, 0.8)",
-                        border: isActive
-                          ? `2px solid ${specialStyle.borderColor}`
-                          : `1px solid ${specialStyle.iconColor}40`,
-                        boxShadow: isActive
-                          ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
-                          : isHovered
-                            ? `0 0 20px ${specialStyle.glowColor}`
-                            : "0 0 8px rgba(255, 255, 255, 0.1)",
+                        color: "#00ffff",
+                        filter: "drop-shadow(0 0 4px #00ffff)",
                       }}
-                    >
-                      <item.icon
-                        className="w-4 h-4"
-                        style={{
-                          color: isActive ? specialStyle.iconColor : "#cccccc",
-                          filter: isActive
-                            ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
-                            : "none",
-                        }}
-                      />
+                    />
+                  ) : (
+                    <Menu
+                      className="w-5 h-5"
+                      style={{
+                        color: "#00ffff",
+                        filter: "drop-shadow(0 0 4px #00ffff)",
+                      }}
+                    />
+                  )}
+                </motion.div>
 
-                      {/* Active indicator */}
-                      {isActive && (
+                {/* Active indicator */}
+                {isMenuOpen && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -bottom-2 w-2 h-2 rounded-full"
+                    style={{
+                      backgroundColor: "#00ffff",
+                      boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                    }}
+                  />
+                )}
+              </motion.div>
+
+              {/* Expanded Navigation Icons */}
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3, staggerChildren: 0.05 }}
+                    className="flex items-center gap-3"
+                  >
+                    {navigationItems.map((item, index) => {
+                      const isActive = location.pathname === item.href;
+                      const isHovered = hoveredItem === item.name;
+                      const specialStyle = getSpecialStyle(item);
+
+                      return (
                         <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
-                          style={{
-                            backgroundColor: specialStyle.iconColor,
-                            boxShadow: `0 0 12px ${specialStyle.glowColor}`,
-                          }}
-                        />
-                      )}
+                          key={item.name}
+                          initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                          animate={{ opacity: 1, scale: 1, x: 0 }}
+                          exit={{ opacity: 0, scale: 0.8, x: -10 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="relative"
+                        >
+                          <NavLink
+                            to={item.href}
+                            onMouseEnter={() => setHoveredItem(item.name)}
+                            onMouseLeave={() => setHoveredItem(null)}
+                            className="block"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            <motion.div
+                              ref={(el) => (iconRefs.current[item.name] = el)}
+                              whileHover={{ scale: 1.1, y: -2 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300"
+                              style={{
+                                background: isActive
+                                  ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
+                                  : "rgba(26, 26, 26, 0.8)",
+                                border: isActive
+                                  ? `2px solid ${specialStyle.borderColor}`
+                                  : `1px solid ${specialStyle.iconColor}40`,
+                                boxShadow: isActive
+                                  ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
+                                  : isHovered
+                                    ? `0 0 20px ${specialStyle.glowColor}`
+                                    : "0 0 8px rgba(255, 255, 255, 0.1)",
+                              }}
+                            >
+                              <item.icon
+                                className="w-4 h-4"
+                                style={{
+                                  color: isActive
+                                    ? specialStyle.iconColor
+                                    : "#cccccc",
+                                  filter: isActive
+                                    ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
+                                    : "none",
+                                }}
+                              />
 
-                      {/* Special effects for Zero Day Alert */}
-                      {item.name === "Zero Day Alert" && (
-                        <motion.div
-                          className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
-                          animate={{
-                            opacity: [0.3, 1, 0.3],
-                            scale: [1, 1.05, 1],
-                          }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        />
-                      )}
+                              {/* Active indicator */}
+                              {isActive && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                                  style={{
+                                    backgroundColor: specialStyle.iconColor,
+                                    boxShadow: `0 0 12px ${specialStyle.glowColor}`,
+                                  }}
+                                />
+                              )}
 
-                      {/* Notification indicator for Notifications icon */}
-                      {item.name === "Notifications" && (
-                        <motion.div
-                          className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          style={{
-                            boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
-                          }}
-                        />
-                      )}
-                    </motion.div>
-                  </NavLink>
-                </div>
-              );
-            })}
+                              {/* Special effects for Zero Day Alert */}
+                              {item.name === "Zero Day Alert" && (
+                                <motion.div
+                                  className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
+                                  animate={{
+                                    opacity: [0.3, 1, 0.3],
+                                    scale: [1, 1.05, 1],
+                                  }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                  }}
+                                />
+                              )}
 
-            {/* Profile Icon with Dropdown */}
+                              {/* Notification indicator for Notifications icon */}
+                              {item.name === "Notifications" && (
+                                <motion.div
+                                  className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
+                                  animate={{ scale: [1, 1.2, 1] }}
+                                  transition={{ duration: 2, repeat: Infinity }}
+                                  style={{
+                                    boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
+                                  }}
+                                />
+                              )}
+                            </motion.div>
+                          </NavLink>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Right side - Profile Icon */}
             <div className="relative" ref={profileIconRef}>
               <motion.div
                 whileHover={{ scale: 1.1, y: -2 }}
