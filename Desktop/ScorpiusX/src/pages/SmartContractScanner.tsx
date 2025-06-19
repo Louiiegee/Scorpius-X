@@ -99,16 +99,12 @@ const SmartContractScanner = () => {
   const toast = useToastActions();
 
   // Tab system state
-  const [activeTab, setActiveTab] = useState<"scanner" | "simulations">(
-    "scanner",
-  );
+  const [activeTab, setActiveTab] = useState<"scanner" | "simulations">("scanner");
 
   // Simulation state
   const [simulations, setSimulations] = useState<any[]>([]);
   const [activeSimulations, setActiveSimulations] = useState<any[]>([]);
-  const [simulationEnvironments, setSimulationEnvironments] = useState<any[]>(
-    [],
-  );
+  const [simulationEnvironments, setSimulationEnvironments] = useState<any[]>([]);
   const [selectedSimulation, setSelectedSimulation] = useState<any>(null);
   const [isCreatingSimulation, setIsCreatingSimulation] = useState(false);
   const [simulationStats, setSimulationStats] = useState({
@@ -904,8 +900,98 @@ const SmartContractScanner = () => {
           </div>
         </ScrollReveal>
 
-        {/* Scan Mode Toggle */}
-        <ScrollReveal delay={0.2}>
+        {/* Tab Navigation */}
+        <ScrollReveal delay={0.15}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "32px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                border: "1px solid rgba(0, 255, 136, 0.3)",
+                borderRadius: "16px",
+                padding: "6px",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 0 30px rgba(0, 255, 136, 0.2)",
+              }}
+            >
+              {[
+                {
+                  id: "scanner",
+                  label: "Security Scanner",
+                  icon: Shield,
+                  color: "#00ff88",
+                },
+                {
+                  id: "simulations",
+                  label: "Simulation Engine",
+                  icon: Activity,
+                  color: "#00ffff",
+                },
+              ].map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setActiveTab(tab.id as "scanner" | "simulations")}
+                  style={{
+                    padding: "14px 28px",
+                    borderRadius: "12px",
+                    border: "none",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    backgroundColor:
+                      activeTab === tab.id
+                        ? `${tab.color}20`
+                        : "transparent",
+                    color: activeTab === tab.id ? tab.color : "#cccccc",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    transition: "all 0.3s ease",
+                    boxShadow: activeTab === tab.id ? `0 0 20px ${tab.color}30` : "none",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {activeTab === tab.id && (
+                    <motion.div
+                      layoutId="activeTab"
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: `linear-gradient(135deg, ${tab.color}15, ${tab.color}05)`,
+                        borderRadius: "12px",
+                      }}
+                    />
+                  )}
+                  <tab.icon size={18} />
+                  <span style={{ position: "relative", zIndex: 1 }}>{tab.label}</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          {activeTab === "scanner" && (
+            <motion.div
+              key="scanner"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Scan Mode Toggle */}
+              <ScrollReveal delay={0.2}>
           <div
             style={{
               display: "flex",
