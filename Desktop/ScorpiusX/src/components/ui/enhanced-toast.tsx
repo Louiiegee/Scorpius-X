@@ -158,8 +158,8 @@ const ToastComponent = ({
     },
   };
 
-  const Icon = icons[toast.type];
-  const style = colors[toast.type];
+  const Icon = icons[toast.type] || Info;
+  const style = colors[toast.type] || colors.info;
 
   const handleRemove = useCallback(() => {
     if (!isExiting) {
