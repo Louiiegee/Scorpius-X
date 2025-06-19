@@ -756,14 +756,11 @@ const Monitoring = () => {
                         y: -5,
                         transition: { type: "spring", stiffness: 400 },
                       }}
-                      className="relative p-6 rounded-2xl group cursor-pointer"
+                      className="relative p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300 group cursor-pointer"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                        border: `2px solid ${getStatusColor(service.status)}40`,
                         borderLeft: `6px solid ${getStatusColor(service.status)}`,
+                        boxShadow: `0 0 20px ${getStatusColor(service.status)}20`,
                         backdropFilter: "blur(10px)",
-                        boxShadow: `0 8px 32px rgba(${getStatusColor(service.status)}, 0.1)`,
                       }}
                       onClick={() => setSelectedService(service)}
                     >
