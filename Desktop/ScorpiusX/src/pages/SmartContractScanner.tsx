@@ -227,6 +227,11 @@ const SmartContractScanner = () => {
       };
       reader.readAsText(file);
     });
+
+    // Reset file input to prevent controlled/uncontrolled warnings
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }, []);
 
   const removeFile = useCallback((fileId: string) => {
