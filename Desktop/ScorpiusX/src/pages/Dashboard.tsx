@@ -91,17 +91,98 @@ const Dashboard = () => {
     { name: "Avalanche", value: 5, color: "#ef4444" },
   ]);
 
-  // Auto-update stats periodically when not in live mode
+  // Initialize chart data
+  useEffect(() => {
+    const now = new Date();
+    const initialTimeLabels = Array.from({ length: 20 }, (_, i) => {
+      const time = new Date(now.getTime() - (19 - i) * 60000);
+      return time.toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    });
+
+    const initialThreatData = Array.from(
+      { length: 20 },
+      () => Math.floor(Math.random() * 50) + 10,
+    );
+    const initialNetworkData = Array.from(
+      { length: 20 },
+      () => Math.floor(Math.random() * 100) + 20,
+    );
+    const initialPerformanceData = Array.from(
+      { length: 20 },
+      () => Math.floor(Math.random() * 30) + 70,
+    );
+
+    setTimeLabels(initialTimeLabels);
+    setThreatData(initialThreatData);
+    setNetworkData(initialNetworkData);
+    setPerformanceData(initialPerformanceData);
+  }, []);
+
+  // Auto-update stats and charts periodically
   useEffect(() => {
     const interval = setInterval(() => {
       updateStats((currentStats) => ({
         ...currentStats,
         systemUptime: currentStats.systemUptime + 60,
       }));
+
+      // Update chart data
+      const now = new Date();
+      const newTimeLabel = now.toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      setTimeLabels((prev) => [...prev.slice(1), newTimeLabel]);
+      setThreatData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 50) + 10,
+      ]);
+      setNetworkData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 100) + 20,
+      ]);
+      setPerformanceData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 30) + 70,
+      ]);
+
+      // Update security metrics randomly
+      setSecurityMetrics((prev) => ({
+        firewall: Math.max(
+          85,
+          Math.min(100, prev.firewall + (Math.random() - 0.5) * 4),
+        ),
+        encryption: Math.max(
+          85,
+          Math.min(100, prev.encryption + (Math.random() - 0.5) * 4),
+        ),
+        monitoring: Math.max(
+          85,
+          Math.min(100, prev.monitoring + (Math.random() - 0.5) * 4),
+        ),
+        compliance: Math.max(
+          85,
+          Math.min(100, prev.compliance + (Math.random() - 0.5) * 4),
+        ),
+        vulnerability: Math.max(
+          85,
+          Math.min(100, prev.vulnerability + (Math.random() - 0.5) * 4),
+        ),
+        authentication: Math.max(
+          85,
+          Math.min(100, prev.authentication + (Math.random() - 0.5) * 4),
+        ),
+      }));
     }, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [updateStats]); // Removed dashboardData.stats to prevent infinite loop
+  }, [updateStats]);
 
   // WebSocket connection for live data
   useEffect(() => {
