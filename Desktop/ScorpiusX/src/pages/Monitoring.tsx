@@ -601,13 +601,10 @@ const Monitoring = () => {
                 y: -5,
                 transition: { type: "spring", stiffness: 400 },
               }}
-              className="bg-surface border-2 border-[#333] rounded-2xl p-6 text-center hover:border-[#00ffff] transition-all duration-300 group"
+              className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300 text-center group"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
+                boxShadow: `0 0 20px ${metric.color}20`,
                 backdropFilter: "blur(10px)",
-                boxShadow:
-                  "0 8px 32px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
               }}
             >
               <motion.div
