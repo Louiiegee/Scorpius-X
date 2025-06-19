@@ -16,7 +16,7 @@ import TimeMachine from "@/pages/TimeMachine";
 import Settings from "@/pages/Settings";
 
 // Contexts (existing)
-import { AuthContext } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionContext } from "@/contexts/SubscriptionContext";
 
 import "./App.css";
