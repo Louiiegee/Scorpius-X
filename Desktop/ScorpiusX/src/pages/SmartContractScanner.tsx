@@ -3081,7 +3081,6 @@ const SmartContractScanner = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        )}
       </motion.div>
     </>
   );
