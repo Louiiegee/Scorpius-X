@@ -800,7 +800,7 @@ const SmartContractScanner = () => {
                           style={{
                             width: "100%",
                             padding: "12px 16px",
-                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            backgroundColor: "#000000",
                             border: "1px solid rgba(0, 255, 255, 0.3)",
                             borderRadius: "8px",
                             color: "#ffffff",
