@@ -117,3 +117,162 @@ body:not(.electron-app) #root {
   z-index: 99999;
   pointer-events: none;
 }
+
+/* MOBILE RESPONSIVENESS */
+/* Touch-friendly interactions */
+@media (pointer: coarse) {
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Larger touch targets for mobile */
+  button,
+  [role="button"],
+  .cursor-pointer {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  /* Small mobile devices */
+  .responsive-title {
+    font-size: 1.5rem !important;
+    letter-spacing: 1px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Mobile navigation adjustments */
+  .mobile-nav-container {
+    padding: 8px 12px !important;
+  }
+
+  /* Reduce spacing on mobile */
+  .mobile-spacing {
+    gap: 0.5rem !important;
+    margin: 0.5rem 0 !important;
+  }
+
+  /* Mobile-friendly cards */
+  .mobile-card {
+    padding: 12px !important;
+    margin: 8px !important;
+  }
+
+  /* Hide complex animations on mobile for performance */
+  .mobile-no-animate {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Tablet and mobile adjustments */
+  .responsive-title {
+    font-size: 2rem !important;
+    letter-spacing: 2px !important;
+  }
+
+  /* Responsive grid layouts */
+  .mobile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Mobile-friendly modals and dropdowns */
+  .mobile-modal {
+    margin: 10px !important;
+    max-height: calc(100vh - 20px) !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* Tablet landscape adjustments */
+  .responsive-title {
+    font-size: 2.5rem !important;
+    letter-spacing: 3px !important;
+  }
+}
+
+/* Landscape mobile orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  .responsive-title {
+    font-size: 1.25rem !important;
+    letter-spacing: 1px !important;
+    padding: 4px 8px !important;
+  }
+
+  .mobile-landscape-compact {
+    padding: 4px 8px !important;
+    margin: 4px 0 !important;
+  }
+}
+
+/* Scrollbar styling for mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile-optimized animations */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-no-animate,
+  .motion-safe\:animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Dark mode mobile optimizations */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Improve readability on small screens */
+  .mobile-text {
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Mobile-friendly form elements */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 12px !important;
+    border-radius: 8px !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-fix {
+    -webkit-appearance: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  }
+
+  /* Fix viewport height issues on iOS */
+  .ios-vh-fix {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  .android-fix {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  }
+}
