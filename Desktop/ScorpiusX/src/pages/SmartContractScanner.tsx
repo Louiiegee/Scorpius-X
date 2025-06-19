@@ -189,8 +189,10 @@ const SmartContractScanner = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
       handleFiles(files);
+      // Clear the input to ensure it can be used again and prevent controlled/uncontrolled issues
+      event.target.value = "";
     },
-    [],
+    [handleFiles],
   );
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
