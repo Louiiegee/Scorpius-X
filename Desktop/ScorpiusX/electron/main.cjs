@@ -18,17 +18,22 @@ function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
-  // Create the browser window with cyberpunk-inspired settings
+  // Create the browser window optimized for Windows
   mainWindow = new BrowserWindow({
     width: Math.floor(width * 0.9), // 90% of screen width
     height: Math.floor(height * 0.9), // 90% of screen height
     minWidth: 1200,
     minHeight: 800,
     show: false, // Don't show until ready-to-show
-    icon: path.join(__dirname, "assets/icon.png"), // App icon
-    titleBarStyle: "hidden", // Hide default title bar for custom styling
-    frame: false, // Frameless window for cyberpunk aesthetic
+    icon: path.join(
+      __dirname,
+      "assets",
+      process.platform === "win32" ? "icon.ico" : "icon.png",
+    ),
+    titleBarStyle: process.platform === "win32" ? "hidden" : "hiddenInset", // Windows-optimized title bar
+    frame: false, // Frameless window for modern aesthetic
     backgroundColor: "#000000", // Match Scorpius black background
+    transparent: false, // Disable transparency for better Windows performance
     webPreferences: {
       nodeIntegration: false, // Security: disable node integration
       contextIsolation: true, // Security: enable context isolation
