@@ -206,13 +206,12 @@ export const AppShell = ({ children }: AppShellProps) => {
         {/* Top Navigation */}
         <TopNavigation />
 
-        {/* Main Content Area */}
+        {/* Mobile-Responsive Main Content Area */}
         <main
+          className="flex-1 relative w-full overflow-x-hidden"
           style={{
-            flex: "1",
-            position: "relative",
-            minHeight: "calc(100vh - 140px)", // Account for header height
-            width: "100%",
+            minHeight: "calc(100vh - 120px)", // Responsive header height
+            paddingBottom: "env(safe-area-inset-bottom)", // iOS safe area
           }}
         >
           {/* Professional transition overlay */}
