@@ -877,7 +877,6 @@ const SmartContractScanner = () => {
                           accept=".sol,.vy,.cairo,.move,.js,.ts,.rs,.zip,.json"
                           onChange={handleFileSelect}
                           style={{ display: "none" }}
-                          key={Date.now()} // Force re-render to avoid controlled/uncontrolled issues
                         />
                       </div>
                     )}
