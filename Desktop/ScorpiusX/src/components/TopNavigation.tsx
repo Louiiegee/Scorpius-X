@@ -476,51 +476,15 @@ const TopNavigation = () => {
               SCORPIUS
             </h1>
 
-            {/* SCAN. SIMULATE. STRIKE. with scanning effect */}
-            <div className="relative overflow-hidden">
-              <div
-                className="text-lg font-mono text-[#00ffff] tracking-widest"
-                style={{
-                  fontFamily: "JetBrains Mono, Space Mono, monospace",
-                  letterSpacing: "4px",
-                }}
-              >
-                SIMULATE. EXPLOIT. CONTROL.
-              </div>
-
-              {/* Scanning line effect */}
-              <motion.div
-                className="absolute top-0 left-0 w-full h-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.8) 50%, transparent 100%)",
-                  width: "30%",
-                }}
-                animate={{
-                  x: ["-100%", "350%"],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatDelay: 4,
-                }}
-              />
-
-              {/* Additional scanning bars */}
-              <motion.div
-                className="absolute top-0 left-0 w-0.5 h-full bg-[#00ff88]"
-                animate={{
-                  x: [0, 300],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 6,
-                }}
-              />
+            {/* Static tagline */}
+            <div
+              className="text-lg font-mono text-[#00ffff] tracking-widest text-center"
+              style={{
+                fontFamily: "JetBrains Mono, Space Mono, monospace",
+                letterSpacing: "4px",
+              }}
+            >
+              SIMULATE. EXPLOIT. CONTROL.
             </div>
           </div>
 
