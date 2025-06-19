@@ -93,12 +93,12 @@ export const Login = ({ onLogin }: LoginProps) => {
                 >
                   {/* Scorpius Logo */}
                   <img
-                    src="/scorpius-logo.svg"
+                    src="https://cdn.builder.io/api/v1/assets/2a927ea4537f4619981ed56eb0a0c31e/official-7c4d5c?format=webp&width=800"
                     alt="Scorpius Logo"
                     className="w-20 h-20"
                     style={{
                       filter:
-                        "drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00ff88)",
+                        "drop-shadow(0 0 20px #00ffff) drop-shadow(0 0 30px #00cccc) drop-shadow(0 0 40px #008080)",
                     }}
                   />
 
