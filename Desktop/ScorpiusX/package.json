@@ -1,7 +1,10 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "scorpius-cybersecurity-dashboard",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Advanced Cybersecurity Dashboard for Blockchain Security",
+  "author": "Scorpius Security",
+  "homepage": "https://scorpius.security",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 8080 --force",
