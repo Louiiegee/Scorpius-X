@@ -526,21 +526,15 @@ const TopNavigation = () => {
 
       {/* Main Header */}
       <header
-        className="cyberspace-header"
         style={{
           width: "100%",
           padding: "20px 32px",
           position: "relative",
           zIndex: 1000,
           fontFamily: "JetBrains Mono, Space Mono, monospace",
-          overflow: "hidden",
+          background: "#000000",
         }}
       >
-        {/* Flowing cyberspace background */}
-        <div className="cyberspace-flow absolute inset-0" />
-        <div className="cyberspace-grid absolute inset-0" />
-        <div className="cyberspace-particles absolute inset-0" />
-
         {/* Content wrapper */}
         <div className="relative z-10">
           {/* Centered SCORPIUS Title */}
