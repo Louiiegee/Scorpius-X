@@ -3,7 +3,7 @@
  * Listens for authentication state changes and provides user data
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { authService } from '@/services/auth';
 import { logger } from '@/config/env';
 import type { User } from '@/types/generated';
@@ -138,10 +138,10 @@ export function useAuthChange() {
   // Login function
   const login = async (username: string, password: string, rememberMe?: boolean) => {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       const response = await authService.login({ username, password, rememberMe });
-      
+
       setAuthState({
         user: response.user,
         isAuthenticated: true,
@@ -151,7 +151,7 @@ export function useAuthChange() {
 
       // Emit login event
       window.dispatchEvent(new CustomEvent('auth:login', { detail: response.user }));
-      
+
       return response;
     } catch (error) {
       const authError = error as Error;
@@ -160,10 +160,10 @@ export function useAuthChange() {
         isLoading: false,
         error: authError,
       }));
-      
+
       // Emit error event
       window.dispatchEvent(new CustomEvent('auth:error', { detail: authError }));
-      
+
       throw authError;
     }
   };
@@ -171,10 +171,10 @@ export function useAuthChange() {
   // Logout function
   const logout = async () => {
     setAuthState(prev => ({ ...prev, isLoading: true }));
-    
+
     try {
       await authService.logout();
-      
+
       setAuthState({
         user: null,
         isAuthenticated: false,
@@ -193,7 +193,7 @@ export function useAuthChange() {
         isLoading: false,
         error: error as Error,
       });
-      
+
       window.dispatchEvent(new CustomEvent('auth:logout'));
     }
   };
@@ -201,7 +201,7 @@ export function useAuthChange() {
   // Refresh user data
   const refreshUser = async () => {
     if (!authState.isAuthenticated) return;
-    
+
     try {
       const user = await authService.getCurrentUser();
       setAuthState(prev => ({ ...prev, user }));
