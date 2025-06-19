@@ -170,6 +170,20 @@ const WebChat = () => {
 
   return (
     <motion.div
+      drag
+      dragMomentum={false}
+      dragElastic={0.1}
+      dragConstraints={{
+        top: -window.innerHeight + 100,
+        left: -window.innerWidth + 100,
+        right: window.innerWidth - 100,
+        bottom: window.innerHeight - 100,
+      }}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={(event, info) => {
+        setIsDragging(false);
+        setPosition({ x: info.point.x, y: info.point.y });
+      }}
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
       animate={{
         opacity: 1,
@@ -183,10 +197,13 @@ const WebChat = () => {
         boxShadow:
           "0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1)",
         backdropFilter: "blur(20px)",
+        x: position.x,
+        y: position.y,
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
+      <div className="p-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800 cursor-move">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
