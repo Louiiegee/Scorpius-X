@@ -104,6 +104,27 @@ export const AppShell = ({ children }: AppShellProps) => {
             text-rendering: optimizeLegibility;
           }
 
+          /* Mobile viewport fixes */
+          @media (max-width: 768px) {
+            body {
+              overflow-x: hidden;
+              -webkit-text-size-adjust: 100%;
+              -webkit-overflow-scrolling: touch;
+            }
+
+            /* Prevent zoom on form inputs */
+            input, select, textarea {
+              font-size: 16px !important;
+            }
+          }
+
+          /* iOS Safari fixes */
+          @supports (-webkit-touch-callout: none) {
+            .mobile-app {
+              min-height: -webkit-fill-available;
+            }
+          }
+
           /* Professional focus rings */
           *:focus-visible {
             outline: 2px solid rgba(0, 255, 136, 0.6);
