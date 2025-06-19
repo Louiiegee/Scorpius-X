@@ -1908,6 +1908,8 @@ const SmartContractScanner = () => {
                         </label>
                         <input
                           type="text"
+                          value={targetContract}
+                          onChange={(e) => setTargetContract(e.target.value)}
                           placeholder="0x... or contract name"
                           style={{
                             width: "100%",
