@@ -269,7 +269,7 @@ const Dashboard = () => {
           </div>
         </StaggeredReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Recent Activity */}
           <ScrollReveal>
             <Card className="bg-black/50 border-red-500/30">
