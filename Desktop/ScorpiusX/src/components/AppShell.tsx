@@ -191,7 +191,7 @@ export const AppShell = ({ children }: AppShellProps) => {
       </style>
 
       <motion.div
-        className="cyberpunk-bg"
+        className="cyberpunk-bg mobile-app"
         style={{
           minHeight: "100vh",
           color: "#e5e5e5",
