@@ -205,6 +205,39 @@ const Dashboard = () => {
     if (!isLive) return;
 
     const interval = setInterval(() => {
+      // Update charts in real-time
+      const now = new Date();
+      const newTimeLabel = now.toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      setTimeLabels((prev) => [...prev.slice(1), newTimeLabel]);
+      setThreatData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 80) + 20,
+      ]);
+      setNetworkData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 150) + 30,
+      ]);
+      setPerformanceData((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 40) + 60,
+      ]);
+
+      // Update network activity
+      setNetworkActivity((prev) =>
+        prev.map((network) => ({
+          ...network,
+          value: Math.max(
+            1,
+            Math.min(50, network.value + (Math.random() - 0.5) * 8),
+          ),
+        })),
+      );
+
       if (isConnected && sendCustomMessage) {
         sendCustomMessage("request_stats", {});
       } else {
