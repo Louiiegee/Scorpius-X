@@ -260,53 +260,6 @@ const CyberAcademy = () => {
         fontFamily: "JetBrains Mono, Space Mono, monospace",
       }}
     >
-      {/* Animated neural network background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Neural nodes */}
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
-            style={{
-              left: `${(i % 5) * 20 + 10}%`,
-              top: `${Math.floor(i / 5) * 20 + 10}%`,
-            }}
-            animate={{
-              opacity: [0.3, 1, 0.3],
-              scale: [1, 2, 1],
-            }}
-            transition={{
-              duration: 2 + Math.random(),
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-
-        {/* Connecting lines */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`line-${i}`}
-            className="absolute h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
-            style={{
-              left: `${i * 12}%`,
-              top: `${30 + i * 8}%`,
-              width: "200px",
-              transform: `rotate(${i * 45}deg)`,
-            }}
-            animate={{
-              opacity: [0, 0.6, 0],
-              scaleX: [0, 1, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              delay: i * 0.5,
-            }}
-          />
-        ))}
-      </div>
-
       <motion.div
         className="max-w-7xl mx-auto p-8"
         variants={containerVariants}
