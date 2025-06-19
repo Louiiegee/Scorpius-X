@@ -761,21 +761,21 @@ export const Settings = () => {
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <HardDrive className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.totalSize}
+                      {storageStats?.totalSize || "0 KB"}
                     </p>
                     <p className="text-gray-400 text-sm">Total Storage</p>
                   </div>
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <FileText className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.totalItems}
+                      {storageStats?.totalItems || "0"}
                     </p>
                     <p className="text-gray-400 text-sm">Total Items</p>
                   </div>
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <Clock className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.lastUpdated}
+                      {storageStats?.lastUpdated || "Never"}
                     </p>
                     <p className="text-gray-400 text-sm">Last Updated</p>
                   </div>
