@@ -166,15 +166,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono">
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Header */}
+    <div className="min-h-screen bg-black text-white font-mono overflow-x-hidden">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
+        {/* Mobile-Responsive Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
+          className="flex items-center justify-between flex-wrap gap-2 sm:gap-4"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
             <motion.div
               animate={{
                 rotateY: [0, 360],
@@ -184,19 +184,21 @@ const Dashboard = () => {
                 rotateY: { duration: 4, repeat: Infinity, ease: "linear" },
                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
               }}
+              className="flex-shrink-0"
             >
-              <LayoutDashboard size={24} className="text-red-500" />
+              <LayoutDashboard
+                size={20}
+                className="text-red-500 sm:w-6 sm:h-6"
+              />
             </motion.div>
             <h1
-              className="text-white font-mono"
+              className="text-white font-mono text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-wide sm:tracking-wider truncate"
               style={{
-                fontSize: "32px",
-                fontWeight: "700",
-                letterSpacing: "2px",
                 textShadow: "0 0 20px rgba(255, 68, 68, 0.6)",
               }}
             >
-              THREAT INTELLIGENCE
+              <span className="hidden sm:inline">THREAT INTELLIGENCE</span>
+              <span className="sm:hidden">THREATS</span>
             </h1>
           </div>
 
