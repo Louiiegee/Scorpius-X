@@ -799,7 +799,7 @@ export const Settings = () => {
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="destructive"
-                        className="bg-red-600 hover:bg-red-700"
+                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 backdrop-blur-sm"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Clear All Data
