@@ -660,7 +660,7 @@ export const Settings = () => {
                       onClick={() =>
                         testConnection("Slack", notificationConfig.slack)
                       }
-                      className="border-red-500/30 text-red-400"
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                       disabled={isLoading}
                     >
                       Test Slack
