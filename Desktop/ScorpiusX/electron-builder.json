@@ -44,6 +44,7 @@
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
+    "allowElevation": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
     "installerIcon": "electron/assets/icon.ico",
@@ -52,7 +53,15 @@
     "deleteAppDataOnUninstall": true,
     "runAfterFinish": true,
     "menuCategory": "Security",
-    "shortcutName": "Scorpius Dashboard"
+    "shortcutName": "Scorpius Cybersecurity Dashboard",
+    "displayLanguageSelector": false,
+    "installerLanguages": ["en_US"],
+    "language": "1033",
+    "multiLanguageInstaller": false,
+    "packElevateHelper": true,
+    "perMachine": false,
+    "allowElevation": true,
+    "include": "electron/installer/windows/installer.nsh"
   },
   "mac": {
     "target": [
