@@ -202,30 +202,33 @@ const Dashboard = () => {
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsLive(!isLive)}
-              className={`border-red-500/30 ${isLive ? "text-red-400" : "text-gray-400"}`}
+              className={`border-red-500/30 ${isLive ? "text-red-400" : "text-gray-400"} text-xs sm:text-sm min-h-[40px] touch-manipulation`}
             >
               {isLive ? (
-                <Pause className="h-4 w-4 mr-2" />
+                <Pause className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               ) : (
-                <Play className="h-4 w-4 mr-2" />
+                <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               )}
-              {isLive ? "Live" : "Paused"}
+              <span className="hidden xs:inline">
+                {isLive ? "Live" : "Paused"}
+              </span>
+              <span className="xs:hidden">{isLive ? "●" : "▶"}</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setShowNotifications(!showNotifications)}
-              className="border-red-500/30 text-red-400"
+              className="border-red-500/30 text-red-400 min-h-[40px] min-w-[40px] touch-manipulation"
             >
               {showNotifications ? (
-                <Bell className="h-4 w-4" />
+                <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
               ) : (
-                <BellOff className="h-4 w-4" />
+                <BellOff className="h-3 w-3 sm:h-4 sm:w-4" />
               )}
             </Button>
           </div>
