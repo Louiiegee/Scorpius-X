@@ -410,6 +410,449 @@ const Dashboard = () => {
           </div>
         </StaggeredReveal>
 
+        {/* Enhanced Visual Analytics Section */}
+        <StaggeredReveal>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+            {/* Real-time Threat Detection Chart */}
+            <Card className="bg-black/50 border-red-500/30 overflow-hidden">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-red-400 font-mono flex items-center gap-2">
+                  <LineChart className="h-5 w-5" />
+                  REAL-TIME THREAT DETECTION
+                  {isLive && (
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse ml-2" />
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-red-500/10 to-transparent" />
+                  <svg width="100%" height="100%" className="overflow-visible">
+                    {/* Grid lines */}
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <line
+                        key={`grid-${i}`}
+                        x1="0"
+                        y1={i * 40}
+                        x2="100%"
+                        y2={i * 40}
+                        stroke="rgba(255, 68, 68, 0.1)"
+                        strokeWidth="1"
+                      />
+                    ))}
+
+                    {/* Threat detection line */}
+                    <motion.path
+                      d={`M 0,${240 - (threatData[0] || 0) * 3} ${threatData
+                        .map(
+                          (value, index) =>
+                            `L ${(index / (threatData.length - 1)) * 100}%,${240 - value * 3}`,
+                        )
+                        .join(" ")}`}
+                      stroke="#ff4444"
+                      strokeWidth="3"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, ease: "easeInOut" }}
+                      style={{
+                        filter: "drop-shadow(0 0 8px rgba(255, 68, 68, 0.6))",
+                      }}
+                    />
+
+                    {/* Data points */}
+                    {threatData.map((value, index) => (
+                      <motion.circle
+                        key={`point-${index}`}
+                        cx={`${(index / (threatData.length - 1)) * 100}%`}
+                        cy={240 - value * 3}
+                        r="4"
+                        fill="#ff4444"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                        style={{
+                          filter: "drop-shadow(0 0 4px rgba(255, 68, 68, 0.8))",
+                        }}
+                      />
+                    ))}
+                  </svg>
+
+                  {/* Y-axis labels */}
+                  <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-400 -ml-8">
+                    <span>100</span>
+                    <span>80</span>
+                    <span>60</span>
+                    <span>40</span>
+                    <span>20</span>
+                    <span>0</span>
+                  </div>
+
+                  {/* Current value display */}
+                  <div className="absolute top-2 right-2 bg-red-500/20 px-3 py-1 rounded-lg border border-red-500/30">
+                    <span className="text-red-400 font-mono text-sm">
+                      {threatData[threatData.length - 1] || 0} threats/min
+                    </span>
+                  </div>
+                </div>
+
+                {/* Time labels */}
+                <div className="flex justify-between text-xs text-gray-400 mt-2">
+                  <span>{timeLabels[0] || "--:--"}</span>
+                  <span>
+                    {timeLabels[Math.floor(timeLabels.length / 2)] || "--:--"}
+                  </span>
+                  <span>{timeLabels[timeLabels.length - 1] || "--:--"}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Network Activity Visualization */}
+            <Card className="bg-black/50 border-blue-500/30">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-blue-400 font-mono flex items-center gap-2">
+                  <Network className="h-5 w-5" />
+                  NETWORK ACTIVITY DISTRIBUTION
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 flex items-center justify-center relative">
+                  <div className="relative w-48 h-48">
+                    {/* Animated pie chart */}
+                    <svg
+                      width="192"
+                      height="192"
+                      className="transform -rotate-90"
+                    >
+                      {networkActivity.map((item, index) => {
+                        const total = networkActivity.reduce(
+                          (sum, item) => sum + item.value,
+                          0,
+                        );
+                        const percentage = (item.value / total) * 100;
+                        const startAngle = networkActivity
+                          .slice(0, index)
+                          .reduce(
+                            (sum, item) => sum + (item.value / total) * 360,
+                            0,
+                          );
+                        const endAngle = startAngle + (percentage / 100) * 360;
+
+                        const startX =
+                          96 + 80 * Math.cos((startAngle * Math.PI) / 180);
+                        const startY =
+                          96 + 80 * Math.sin((startAngle * Math.PI) / 180);
+                        const endX =
+                          96 + 80 * Math.cos((endAngle * Math.PI) / 180);
+                        const endY =
+                          96 + 80 * Math.sin((endAngle * Math.PI) / 180);
+
+                        const largeArcFlag = percentage > 50 ? 1 : 0;
+
+                        return (
+                          <motion.path
+                            key={item.name}
+                            d={`M 96 96 L ${startX} ${startY} A 80 80 0 ${largeArcFlag} 1 ${endX} ${endY} Z`}
+                            fill={item.color}
+                            stroke="rgba(0, 0, 0, 0.2)"
+                            strokeWidth="2"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 0.8 }}
+                            transition={{ duration: 1.5, delay: index * 0.2 }}
+                            style={{
+                              filter: `drop-shadow(0 0 8px ${item.color}60)`,
+                            }}
+                          />
+                        );
+                      })}
+
+                      {/* Center circle */}
+                      <circle
+                        cx="96"
+                        cy="96"
+                        r="30"
+                        fill="rgba(0, 0, 0, 0.8)"
+                        stroke="rgba(255, 255, 255, 0.1)"
+                        strokeWidth="2"
+                      />
+                    </svg>
+
+                    {/* Center text */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">
+                          {networkActivity
+                            .reduce((sum, item) => sum + item.value, 0)
+                            .toFixed(0)}
+                        </div>
+                        <div className="text-xs text-gray-400">Total TX/s</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="absolute right-0 top-0 space-y-2">
+                    {networkActivity.map((item, index) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{
+                            backgroundColor: item.color,
+                            boxShadow: `0 0 8px ${item.color}60`,
+                          }}
+                        />
+                        <span className="text-gray-300">{item.name}</span>
+                        <span className="text-white font-mono">
+                          {item.value.toFixed(1)}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </StaggeredReveal>
+
+        {/* Security Metrics Radar Chart */}
+        <StaggeredReveal>
+          <Card className="bg-black/50 border-green-500/30 mb-6">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-green-400 font-mono flex items-center gap-2">
+                <Radar className="h-5 w-5" />
+                SECURITY POSTURE ANALYSIS
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Radar Chart */}
+                <div className="h-64 flex items-center justify-center">
+                  <div className="relative w-56 h-56">
+                    <svg width="224" height="224" className="absolute inset-0">
+                      {/* Radar background rings */}
+                      {[1, 2, 3, 4, 5].map((ring) => (
+                        <polygon
+                          key={`ring-${ring}`}
+                          points={Array.from({ length: 6 }, (_, i) => {
+                            const angle = (i * 60 - 90) * (Math.PI / 180);
+                            const radius = ring * 20;
+                            const x = 112 + radius * Math.cos(angle);
+                            const y = 112 + radius * Math.sin(angle);
+                            return `${x},${y}`;
+                          }).join(" ")}
+                          fill="none"
+                          stroke="rgba(0, 255, 136, 0.1)"
+                          strokeWidth="1"
+                        />
+                      ))}
+
+                      {/* Radar axes */}
+                      {Array.from({ length: 6 }, (_, i) => {
+                        const angle = (i * 60 - 90) * (Math.PI / 180);
+                        const x = 112 + 100 * Math.cos(angle);
+                        const y = 112 + 100 * Math.sin(angle);
+                        return (
+                          <line
+                            key={`axis-${i}`}
+                            x1="112"
+                            y1="112"
+                            x2={x}
+                            y2={y}
+                            stroke="rgba(0, 255, 136, 0.2)"
+                            strokeWidth="1"
+                          />
+                        );
+                      })}
+
+                      {/* Security metrics polygon */}
+                      <motion.polygon
+                        points={Object.values(securityMetrics)
+                          .map((value, i) => {
+                            const angle = (i * 60 - 90) * (Math.PI / 180);
+                            const radius = (value / 100) * 100;
+                            const x = 112 + radius * Math.cos(angle);
+                            const y = 112 + radius * Math.sin(angle);
+                            return `${x},${y}`;
+                          })
+                          .join(" ")}
+                        fill="rgba(0, 255, 136, 0.2)"
+                        stroke="#00ff88"
+                        strokeWidth="2"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 1.5 }}
+                        style={{
+                          filter: "drop-shadow(0 0 8px rgba(0, 255, 136, 0.6))",
+                        }}
+                      />
+
+                      {/* Data points */}
+                      {Object.values(securityMetrics).map((value, i) => {
+                        const angle = (i * 60 - 90) * (Math.PI / 180);
+                        const radius = (value / 100) * 100;
+                        const x = 112 + radius * Math.cos(angle);
+                        const y = 112 + radius * Math.sin(angle);
+                        return (
+                          <motion.circle
+                            key={`point-${i}`}
+                            cx={x}
+                            cy={y}
+                            r="4"
+                            fill="#00ff88"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: i * 0.2 }}
+                            style={{
+                              filter:
+                                "drop-shadow(0 0 4px rgba(0, 255, 136, 0.8))",
+                            }}
+                          />
+                        );
+                      })}
+                    </svg>
+
+                    {/* Labels */}
+                    {Object.keys(securityMetrics).map((key, i) => {
+                      const angle = (i * 60 - 90) * (Math.PI / 180);
+                      const x = 112 + 120 * Math.cos(angle);
+                      const y = 112 + 120 * Math.sin(angle);
+                      return (
+                        <div
+                          key={key}
+                          className="absolute text-xs text-green-400 font-mono uppercase"
+                          style={{
+                            left: x - 30,
+                            top: y - 8,
+                            textAlign: "center",
+                            width: 60,
+                          }}
+                        >
+                          {key}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Metrics List */}
+                <div className="space-y-4">
+                  {Object.entries(securityMetrics).map(
+                    ([key, value], index) => (
+                      <motion.div
+                        key={key}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-500/20"
+                      >
+                        <span className="text-green-400 font-mono uppercase text-sm">
+                          {key}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <div className="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full bg-gradient-to-r from-green-500 to-green-400"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${value}%` }}
+                              transition={{ duration: 1, delay: index * 0.1 }}
+                              style={{
+                                boxShadow: "0 0 8px rgba(0, 255, 136, 0.5)",
+                              }}
+                            />
+                          </div>
+                          <span className="text-white font-mono text-sm min-w-[3rem]">
+                            {value.toFixed(1)}%
+                          </span>
+                        </div>
+                      </motion.div>
+                    ),
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </StaggeredReveal>
+
+        {/* System Performance Chart */}
+        <StaggeredReveal>
+          <Card className="bg-black/50 border-purple-500/30 mb-6">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-purple-400 font-mono flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                SYSTEM PERFORMANCE METRICS
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-48 relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-purple-500/10 to-transparent" />
+                <svg width="100%" height="100%">
+                  {/* Grid lines */}
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <line
+                      key={`perf-grid-${i}`}
+                      x1="0"
+                      y1={i * 38}
+                      x2="100%"
+                      y2={i * 38}
+                      stroke="rgba(168, 85, 247, 0.1)"
+                      strokeWidth="1"
+                    />
+                  ))}
+
+                  {/* Performance bars */}
+                  {performanceData.map((value, index) => (
+                    <motion.rect
+                      key={`bar-${index}`}
+                      x={`${(index / performanceData.length) * 100}%`}
+                      y={192 - (value / 100) * 150}
+                      width={`${100 / performanceData.length - 1}%`}
+                      height={(value / 100) * 150}
+                      fill="url(#performanceGradient)"
+                      initial={{ height: 0 }}
+                      animate={{ height: (value / 100) * 150 }}
+                      transition={{ duration: 0.8, delay: index * 0.05 }}
+                      style={{
+                        filter: "drop-shadow(0 0 4px rgba(168, 85, 247, 0.6))",
+                      }}
+                    />
+                  ))}
+
+                  {/* Gradient definition */}
+                  <defs>
+                    <linearGradient
+                      id="performanceGradient"
+                      x1="0%"
+                      y1="100%"
+                      x2="0%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" stopColor="rgba(168, 85, 247, 0.8)" />
+                      <stop offset="100%" stopColor="rgba(168, 85, 247, 0.3)" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Performance indicator */}
+                <div className="absolute top-2 right-2 bg-purple-500/20 px-3 py-1 rounded-lg border border-purple-500/30">
+                  <span className="text-purple-400 font-mono text-sm">
+                    {performanceData[performanceData.length - 1]?.toFixed(1) ||
+                      "0"}
+                    % efficiency
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </StaggeredReveal>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Recent Activity */}
           <ScrollReveal>
