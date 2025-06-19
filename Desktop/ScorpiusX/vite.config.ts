@@ -10,6 +10,11 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     hmr: {
       port: 8080,
+      host: "localhost",
+      overlay: false, // Disable error overlay to prevent WebSocket conflicts
+    },
+    watch: {
+      usePolling: false, // Use native file watching for better performance
     },
   },
   plugins: [react()],
