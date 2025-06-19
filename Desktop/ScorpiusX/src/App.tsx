@@ -15,7 +15,7 @@ import TopNavigation from "@/components/TopNavigation";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
-import Scanner from "@/pages/Scanner";
+import SmartContractScanner from "@/pages/SmartContractScanner";
 import TimeMachine from "@/pages/TimeMachine";
 import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
