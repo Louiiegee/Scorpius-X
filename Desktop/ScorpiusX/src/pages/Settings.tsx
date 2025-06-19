@@ -844,7 +844,7 @@ export const Settings = () => {
           <Button
             onClick={handleSaveSettings}
             disabled={isLoading}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2"
+            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 px-6 py-2 backdrop-blur-sm"
           >
             {isLoading ? (
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
