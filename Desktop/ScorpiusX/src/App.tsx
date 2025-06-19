@@ -17,7 +17,7 @@ import Settings from "@/pages/Settings";
 
 // Contexts (existing)
 import { AuthProvider } from "@/contexts/AuthContext";
-import { SubscriptionContext } from "@/contexts/SubscriptionContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 
 import "./App.css";
 
