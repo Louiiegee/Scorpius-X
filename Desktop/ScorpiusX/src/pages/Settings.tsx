@@ -388,9 +388,9 @@ export const Settings = () => {
                     </Label>
                     <Input
                       id="username"
-                      value={userData?.profile?.username || ""}
+                      value={currentUserData?.profile?.username || ""}
                       onChange={(e) => {
-                        // Handle username change if needed
+                        updateProfile({ username: e.target.value });
                       }}
                       className="bg-black/50 border-red-500/30 text-white"
                     />
@@ -402,9 +402,9 @@ export const Settings = () => {
                     <Input
                       id="email"
                       type="email"
-                      value={userData?.profile?.email || ""}
+                      value={currentUserData?.profile?.email || ""}
                       onChange={(e) => {
-                        // Handle email change if needed
+                        updateProfile({ email: e.target.value });
                       }}
                       className="bg-black/50 border-red-500/30 text-white"
                     />
