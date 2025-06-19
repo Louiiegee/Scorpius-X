@@ -1722,6 +1722,8 @@ const SmartContractScanner = () => {
                           Environment Type
                         </label>
                         <select
+                          value={environmentType}
+                          onChange={(e) => setEnvironmentType(e.target.value)}
                           style={{
                             width: "100%",
                             padding: "10px 12px",
