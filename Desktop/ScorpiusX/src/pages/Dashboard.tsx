@@ -166,8 +166,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono overflow-x-hidden">
-      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
+    <div className="min-h-screen bg-black text-white font-mono overflow-x-hidden ios-vh-fix">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 mobile-scroll">
         {/* Mobile-Responsive Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
