@@ -136,7 +136,16 @@ export const Settings = () => {
 
   useEffect(() => {
     setStorageStats(getStorageStats());
-  }, []);
+
+    // Initialize user profile if it's empty
+    if (userData?.profile && !userData.profile.username) {
+      updateProfile({
+        username: "user",
+        email: "user@example.com",
+        role: "user",
+      });
+    }
+  }, [getStorageStats, userData, updateProfile]);
 
   const togglePasswordVisibility = (field) => {
     setShowPasswords((prev) => ({
