@@ -110,17 +110,35 @@ const WebChat = () => {
   if (!isOpen) {
     return (
       <motion.div
+        drag
+        dragMomentum={false}
+        dragElastic={0.1}
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={(event, info) => {
+          setIsDragging(false);
+          setPosition({ x: info.point.x, y: info.point.y });
+        }}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-6 right-6 z-50 cursor-move"
+        style={{
+          x: position.x,
+          y: position.y,
+        }}
       >
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(true)}
+          whileHover={!isDragging ? { scale: 1.1 } : {}}
+          whileTap={!isDragging ? { scale: 0.9 } : {}}
+          onClick={(e) => {
+            if (!isDragging) {
+              setIsOpen(true);
+            }
+            e.preventDefault();
+          }}
           className="relative p-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-lg"
           style={{
             boxShadow: "0 0 30px rgba(0, 255, 255, 0.5)",
+            pointerEvents: isDragging ? "none" : "auto",
           }}
         >
           <MessageCircle className="w-6 h-6" />
