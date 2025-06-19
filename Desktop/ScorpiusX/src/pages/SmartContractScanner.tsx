@@ -1792,6 +1792,8 @@ const SmartContractScanner = () => {
                         </label>
                         <input
                           type="number"
+                          value={forkBlockNumber}
+                          onChange={(e) => setForkBlockNumber(e.target.value)}
                           placeholder="18500000"
                           style={{
                             width: "100%",
