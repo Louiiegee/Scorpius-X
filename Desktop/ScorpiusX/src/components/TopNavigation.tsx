@@ -67,7 +67,7 @@ const navigationItems = [
     href: "/",
     icon: LayoutDashboard,
     description: "Central command center and system overview",
-    emoji: "����",
+    emoji: "🚀",
     category: "core",
   },
   {
@@ -573,280 +573,231 @@ const TopNavigation = () => {
           </div>
 
           {/* Mobile-Responsive Navigation */}
-          <div className="flex items-center justify-between w-full relative mt-2 sm:mt-3 lg:mt-4 px-2 sm:px-4">
-            {/* Left side - Hamburger Menu */}
-            <div className="flex items-center gap-4">
-              {/* Hamburger Menu Button */}
-              <motion.div
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
-                style={{
-                  background: isMenuOpen
-                    ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
-                    : "rgba(26, 26, 26, 0.8)",
-                  border: isMenuOpen
-                    ? "2px solid rgba(0, 255, 255, 0.6)"
-                    : "1px solid rgba(0, 255, 255, 0.4)",
-                  boxShadow: isMenuOpen
-                    ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
-                    : "0 0 8px rgba(255, 255, 255, 0.1)",
-                }}
-              >
-                <motion.div
-                  animate={{ rotate: isMenuOpen ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {isMenuOpen ? (
-                    <X
-                      className="w-4 h-4"
-                      style={{
-                        color: "#00ffff",
-                        filter: "drop-shadow(0 0 4px #00ffff)",
-                      }}
-                    />
-                  ) : (
-                    <Menu
-                      className="w-4 h-4"
-                      style={{
-                        color: "#00ffff",
-                        filter: "drop-shadow(0 0 4px #00ffff)",
-                      }}
-                    />
-                  )}
-                </motion.div>
-
-                {/* Active indicator */}
-                {isMenuOpen && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-2 w-2 h-2 rounded-full"
-                    style={{
-                      backgroundColor: "#00ffff",
-                      boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
-                    }}
-                  />
-                )}
-              </motion.div>
-
-              {/* Expanded Navigation Icons */}
-              <AnimatePresence>
-                {isMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3, staggerChildren: 0.05 }}
-                    className="flex items-center justify-evenly w-full px-2 overflow-x-auto scrollbar-hide"
-                    style={{
-                      minWidth: "calc(100vw - 180px)",
-                      gap: "clamp(6px, 1.8vw, 20px)",
-                    }}
-                  >
-                    {navigationItems.map((item, index) => {
-                      const isActive = location.pathname === item.href;
-                      const isHovered = hoveredItem === item.name;
-                      const specialStyle = getSpecialStyle(item);
-
-                      return (
-                        <motion.div
-                          key={item.name}
-                          initial={{ opacity: 0, scale: 0.8, x: -10 }}
-                          animate={{ opacity: 1, scale: 1, x: 0 }}
-                          exit={{ opacity: 0, scale: 0.8, x: -10 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="relative"
-                        >
-                          <NavLink
-                            to={item.href}
-                            onMouseEnter={() => setHoveredItem(item.name)}
-                            onMouseLeave={() => setHoveredItem(null)}
-                            className="block"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            <motion.div
-                              ref={(el) => (iconRefs.current[item.name] = el)}
-                              whileHover={{ scale: 1.1, y: -2 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 touch-manipulation"
-                              style={{
-                                background: isActive
-                                  ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
-                                  : "rgba(26, 26, 26, 0.8)",
-                                border: isActive
-                                  ? `2px solid ${specialStyle.borderColor}`
-                                  : `1px solid ${specialStyle.iconColor}40`,
-                                boxShadow: isActive
-                                  ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
-                                  : isHovered
-                                    ? `0 0 20px ${specialStyle.glowColor}`
-                                    : "0 0 8px rgba(255, 255, 255, 0.1)",
-                              }}
-                            >
-                              <item.icon
-                                className="w-4 h-4"
-                                style={{
-                                  color: isActive
-                                    ? specialStyle.iconColor
-                                    : "#cccccc",
-                                  filter: isActive
-                                    ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
-                                    : "none",
-                                }}
-                              />
-
-                              {/* Active indicator */}
-                              {isActive && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
-                                  style={{
-                                    backgroundColor: specialStyle.iconColor,
-                                    boxShadow: `0 0 12px ${specialStyle.glowColor}`,
-                                  }}
-                                />
-                              )}
-
-                              {/* Special effects for Zero Day Alert */}
-                              {item.name === "Zero Day Alert" && (
-                                <motion.div
-                                  className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
-                                  animate={{
-                                    opacity: [0.3, 1, 0.3],
-                                    scale: [1, 1.05, 1],
-                                  }}
-                                  transition={{
-                                    duration: 1.5,
-                                    repeat: Infinity,
-                                  }}
-                                />
-                              )}
-
-                              {/* Notification indicator for Notifications icon */}
-                              {item.name === "Notifications" && (
-                                <motion.div
-                                  className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
-                                  animate={{ scale: [1, 1.2, 1] }}
-                                  transition={{ duration: 2, repeat: Infinity }}
-                                  style={{
-                                    boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
-                                  }}
-                                />
-                              )}
-                            </motion.div>
-                          </NavLink>
-                        </motion.div>
-                      );
-                    })}
-
-                    {/* Profile Icon in Mobile Menu */}
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8, x: -10 }}
-                      animate={{ opacity: 1, scale: 1, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.8, x: -10 }}
-                      transition={{ delay: navigationItems.length * 0.05 }}
-                      className="relative"
-                    >
-                      <motion.div
-                        ref={(el) => (iconRefs.current["Profile"] = el)}
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          setShowProfileDropdown(!showProfileDropdown);
-                          setIsMenuOpen(false);
-                        }}
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
-                        style={{
-                          background: showProfileDropdown
-                            ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
-                            : "rgba(26, 26, 26, 0.8)",
-                          border: showProfileDropdown
-                            ? "2px solid rgba(0, 255, 255, 0.6)"
-                            : "1px solid rgba(0, 255, 255, 0.4)",
-                          boxShadow: showProfileDropdown
-                            ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
-                            : "0 0 8px rgba(255, 255, 255, 0.1)",
-                        }}
-                      >
-                        <User
-                          className="w-4 h-4"
-                          style={{
-                            color: showProfileDropdown ? "#00ffff" : "#cccccc",
-                            filter: showProfileDropdown
-                              ? "drop-shadow(0 0 4px #00ffff)"
-                              : "none",
-                          }}
-                        />
-
-                        {/* Active indicator */}
-                        {showProfileDropdown && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
-                            style={{
-                              backgroundColor: "#00ffff",
-                              boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
-                            }}
-                          />
-                        )}
-                      </motion.div>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Right side - Profile Icon (moved further right) */}
-            <div
-              className="relative ml-auto"
-              ref={profileIconRef}
-              style={{ marginRight: "clamp(8px, 3vw, 32px)" }}
+          <div className="flex items-center justify-center w-full relative mt-2 sm:mt-3 lg:mt-4 px-2 sm:px-4">
+            {/* Hamburger Menu Button */}
+            <motion.div
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+              style={{
+                background: isMenuOpen
+                  ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
+                  : "rgba(26, 26, 26, 0.8)",
+                border: isMenuOpen
+                  ? "2px solid rgba(0, 255, 255, 0.6)"
+                  : "1px solid rgba(0, 255, 255, 0.4)",
+                boxShadow: isMenuOpen
+                  ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                  : "0 0 8px rgba(255, 255, 255, 0.1)",
+              }}
             >
               <motion.div
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
-                style={{
-                  background: showProfileDropdown
-                    ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
-                    : "rgba(26, 26, 26, 0.8)",
-                  border: showProfileDropdown
-                    ? "2px solid rgba(0, 255, 255, 0.6)"
-                    : "1px solid rgba(0, 255, 255, 0.4)",
-                  boxShadow: showProfileDropdown
-                    ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
-                    : "0 0 8px rgba(255, 255, 255, 0.1)",
-                }}
+                animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <User
-                  className="w-4 h-4"
-                  style={{
-                    color: showProfileDropdown ? "#00ffff" : "#cccccc",
-                    filter: showProfileDropdown
-                      ? "drop-shadow(0 0 4px #00ffff)"
-                      : "none",
-                  }}
-                />
-
-                {/* Active indicator */}
-                {showProfileDropdown && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-2 w-2 h-2 rounded-full"
+                {isMenuOpen ? (
+                  <X
+                    className="w-4 h-4"
                     style={{
-                      backgroundColor: "#00ffff",
-                      boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                      color: "#00ffff",
+                      filter: "drop-shadow(0 0 4px #00ffff)",
+                    }}
+                  />
+                ) : (
+                  <Menu
+                    className="w-4 h-4"
+                    style={{
+                      color: "#00ffff",
+                      filter: "drop-shadow(0 0 4px #00ffff)",
                     }}
                   />
                 )}
               </motion.div>
-            </div>
+
+              {/* Active indicator */}
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -bottom-2 w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: "#00ffff",
+                    boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                  }}
+                />
+              )}
+            </motion.div>
+
+            {/* Expanded Navigation Icons */}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, staggerChildren: 0.03 }}
+                  className="absolute top-12 left-0 right-0 flex items-center justify-evenly w-full px-4 py-2 overflow-x-auto scrollbar-hide"
+                  style={{
+                    background: "rgba(0, 0, 0, 0.95)",
+                    border: "1px solid rgba(0, 255, 255, 0.3)",
+                    borderRadius: "16px",
+                    backdropFilter: "blur(20px)",
+                    boxShadow:
+                      "0 8px 32px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 255, 255, 0.3)",
+                  }}
+                >
+                  {navigationItems.map((item, index) => {
+                    const isActive = location.pathname === item.href;
+                    const isHovered = hoveredItem === item.name;
+                    const specialStyle = getSpecialStyle(item);
+
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                        transition={{ delay: index * 0.03 }}
+                        className="relative flex-shrink-0"
+                      >
+                        <NavLink
+                          to={item.href}
+                          onMouseEnter={() => setHoveredItem(item.name)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                          className="block"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <motion.div
+                            ref={(el) => (iconRefs.current[item.name] = el)}
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 touch-manipulation"
+                            style={{
+                              background: isActive
+                                ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
+                                : "rgba(26, 26, 26, 0.8)",
+                              border: isActive
+                                ? `2px solid ${specialStyle.borderColor}`
+                                : `1px solid ${specialStyle.iconColor}40`,
+                              boxShadow: isActive
+                                ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
+                                : isHovered
+                                  ? `0 0 20px ${specialStyle.glowColor}`
+                                  : "0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          >
+                            <item.icon
+                              className="w-4 h-4"
+                              style={{
+                                color: isActive
+                                  ? specialStyle.iconColor
+                                  : "#cccccc",
+                                filter: isActive
+                                  ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
+                                  : "none",
+                              }}
+                            />
+
+                            {/* Active indicator */}
+                            {isActive && (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                                style={{
+                                  backgroundColor: specialStyle.iconColor,
+                                  boxShadow: `0 0 12px ${specialStyle.glowColor}`,
+                                }}
+                              />
+                            )}
+
+                            {/* Special effects for Zero Day Alert */}
+                            {item.name === "Zero Day Alert" && (
+                              <motion.div
+                                className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
+                                animate={{
+                                  opacity: [0.3, 1, 0.3],
+                                  scale: [1, 1.05, 1],
+                                }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
+                              />
+                            )}
+
+                            {/* Notification indicator for Notifications icon */}
+                            {item.name === "Notifications" && (
+                              <motion.div
+                                className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                style={{
+                                  boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
+                                }}
+                              />
+                            )}
+                          </motion.div>
+                        </NavLink>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Profile Icon in Mobile Menu */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                    transition={{ delay: navigationItems.length * 0.03 }}
+                    className="relative flex-shrink-0"
+                    ref={profileIconRef}
+                  >
+                    <motion.div
+                      ref={(el) => (iconRefs.current["Profile"] = el)}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        setShowProfileDropdown(!showProfileDropdown);
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+                      style={{
+                        background: showProfileDropdown
+                          ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
+                          : "rgba(26, 26, 26, 0.8)",
+                        border: showProfileDropdown
+                          ? "2px solid rgba(0, 255, 255, 0.6)"
+                          : "1px solid rgba(0, 255, 255, 0.4)",
+                        boxShadow: showProfileDropdown
+                          ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                          : "0 0 8px rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <User
+                        className="w-4 h-4"
+                        style={{
+                          color: showProfileDropdown ? "#00ffff" : "#cccccc",
+                          filter: showProfileDropdown
+                            ? "drop-shadow(0 0 4px #00ffff)"
+                            : "none",
+                        }}
+                      />
+
+                      {/* Active indicator */}
+                      {showProfileDropdown && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                          style={{
+                            backgroundColor: "#00ffff",
+                            boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                          }}
+                        />
+                      )}
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>
