@@ -23,16 +23,23 @@
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"]
+        "arch": ["x64"]
       },
       {
         "target": "portable",
         "arch": ["x64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64"]
       }
     ],
     "icon": "electron/assets/icon.ico",
-    "artifactName": "Scorpius-${version}-${arch}.${ext}",
-    "requestedExecutionLevel": "asInvoker"
+    "artifactName": "Scorpius-Cybersecurity-Dashboard-${version}-Windows-${arch}.${ext}",
+    "requestedExecutionLevel": "asInvoker",
+    "publisherName": "Scorpius Security",
+    "verifyUpdateCodeSignature": false,
+    "forceCodeSigning": false
   },
   "nsis": {
     "oneClick": false,
