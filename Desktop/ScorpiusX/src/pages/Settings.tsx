@@ -58,6 +58,15 @@ export const Settings = () => {
   const { clearAllData, getStorageStats } = useStorage();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({});
+  const [showClearDataDialog, setShowClearDataDialog] = useState(false);
+  const [storageStats, setStorageStats] = useState(null);
+  const [activeTab, setActiveTab] = useState("profile");
+
+  // Initialize storage stats when component mounts
+  React.useEffect(() => {
+    setStorageStats(getStorageStats());
+  }, [getStorageStats]);
 
   // Show loading only if userData is truly not available
   if (!userData) {
@@ -70,10 +79,6 @@ export const Settings = () => {
       </div>
     );
   }
-  const [showPasswords, setShowPasswords] = useState({});
-  const [showClearDataDialog, setShowClearDataDialog] = useState(false);
-  const [storageStats, setStorageStats] = useState(getStorageStats());
-  const [activeTab, setActiveTab] = useState("profile");
 
   // RPC Configuration
   const [rpcConfig, setRpcConfig] = useState({
