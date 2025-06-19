@@ -664,7 +664,7 @@ const TopNavigation = () => {
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer"
+                className="w-10 h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer"
                 style={{
                   background: showProfileDropdown
                     ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
@@ -678,7 +678,7 @@ const TopNavigation = () => {
                 }}
               >
                 <User
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                   style={{
                     color: showProfileDropdown ? "#00ffff" : "#cccccc",
                     filter: showProfileDropdown
@@ -692,7 +692,7 @@ const TopNavigation = () => {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                    className="absolute -bottom-2 w-2 h-2 rounded-full"
                     style={{
                       backgroundColor: "#00ffff",
                       boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
