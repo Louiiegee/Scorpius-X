@@ -639,7 +639,11 @@ const TopNavigation = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3, staggerChildren: 0.05 }}
-                    className="flex items-center gap-2 sm:gap-3 flex-wrap max-w-[calc(100vw-120px)] overflow-x-auto scrollbar-hide"
+                    className="flex items-center justify-evenly w-full px-2 overflow-x-auto scrollbar-hide"
+                    style={{
+                      minWidth: "calc(100vw - 140px)",
+                      gap: "clamp(8px, 2vw, 24px)",
+                    }}
                   >
                     {navigationItems.map((item, index) => {
                       const isActive = location.pathname === item.href;
