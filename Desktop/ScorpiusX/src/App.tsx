@@ -34,9 +34,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 // Root app component
 export default function App() {
   return (
-    <AuthContext.Provider
-      value={{ user: null, login: async () => {}, logout: async () => {} }}
-    >
+    <AuthProvider>
       <SubscriptionContext.Provider
         value={{ subscription: null, updateSubscription: () => {} }}
       >
@@ -54,6 +52,6 @@ export default function App() {
           </AppLayout>
         </Router>
       </SubscriptionContext.Provider>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
