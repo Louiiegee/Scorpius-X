@@ -156,24 +156,10 @@ export const AppShell = ({ children }: AppShellProps) => {
             background: linear-gradient(45deg, rgba(0, 255, 136, 0.8), rgba(0, 255, 255, 0.8));
           }
 
-          /* Cyberpunk background */
+          /* Clean black background */
           .cyberpunk-bg {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            background: #000000;
             position: relative;
-          }
-
-          .cyberpunk-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-              radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 40% 80%, rgba(255, 170, 0, 0.02) 0%, transparent 50%);
-            pointer-events: none;
           }
         `}
       </style>
