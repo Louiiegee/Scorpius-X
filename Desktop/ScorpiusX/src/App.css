@@ -58,3 +58,62 @@ body:not(.electron-app) #root {
 .read-the-docs {
   color: #888;
 }
+
+/* Electron App Specific Styles - Ensure Web Parity */
+.electron-app {
+  /* Ensure no scroll bars interfere with frameless design */
+  overflow: hidden;
+}
+
+.electron-app body {
+  /* Full window coverage */
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  overflow: hidden;
+}
+
+/* Window dragging area for Electron frameless window */
+.electron-app .app-header {
+  -webkit-app-region: drag;
+}
+
+.electron-app .app-header button,
+.electron-app .app-header a,
+.electron-app .app-header input {
+  -webkit-app-region: no-drag;
+}
+
+/* Ensure scrolling works within the app content */
+.electron-app main {
+  overflow-y: auto;
+  height: calc(100vh - 140px); /* Account for header height */
+}
+
+/* Platform-specific adjustments */
+.electron-app.platform-darwin {
+  /* macOS specific styles if needed */
+}
+
+.electron-app.platform-win32 {
+  /* Windows specific styles if needed */
+}
+
+.electron-app.platform-linux {
+  /* Linux specific styles if needed */
+}
+
+/* Development mode indicators for Electron */
+.electron-app.dev-mode::before {
+  content: "🔧 DEV";
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  z-index: 99999;
+  pointer-events: none;
+}
