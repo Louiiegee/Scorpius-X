@@ -68,8 +68,25 @@ export const Settings = () => {
     setStorageStats(getStorageStats());
   }, [getStorageStats]);
 
-  // Show loading only if userData is truly not available
-  if (!userData) {
+  // Initialize default user data if not provided
+  const currentUserData = userData || {
+    profile: {
+      username: "alice",
+      email: "alice@scorpius.com",
+      role: "admin",
+      preferences: {
+        theme: "cyberpunk",
+        notifications: true,
+        autoScan: false,
+        soundEffects: true,
+      },
+    },
+    lastLogin: new Date().toISOString(),
+    sessionCount: 1,
+  };
+
+  // Only show loading if still loading
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
         <div className="text-center">
