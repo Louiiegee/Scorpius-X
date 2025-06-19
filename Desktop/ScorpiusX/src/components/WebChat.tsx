@@ -224,12 +224,18 @@ const WebChat = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-cyan-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMinimized(!isMinimized);
+              }}
+              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-cyan-400 transition-colors cursor-pointer"
             >
               {isMinimized ? (
                 <Maximize2 className="w-4 h-4" />
@@ -240,8 +246,11 @@ const WebChat = () => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsOpen(false)}
-              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-red-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </motion.button>
