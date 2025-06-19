@@ -67,7 +67,7 @@ const navigationItems = [
     href: "/",
     icon: LayoutDashboard,
     description: "Central command center and system overview",
-    emoji: "🚀",
+    emoji: "����",
     category: "core",
   },
   {
@@ -641,8 +641,8 @@ const TopNavigation = () => {
                     transition={{ duration: 0.3, staggerChildren: 0.05 }}
                     className="flex items-center justify-evenly w-full px-2 overflow-x-auto scrollbar-hide"
                     style={{
-                      minWidth: "calc(100vw - 140px)",
-                      gap: "clamp(8px, 2vw, 24px)",
+                      minWidth: "calc(100vw - 180px)",
+                      gap: "clamp(6px, 1.8vw, 20px)",
                     }}
                   >
                     {navigationItems.map((item, index) => {
@@ -741,13 +741,71 @@ const TopNavigation = () => {
                         </motion.div>
                       );
                     })}
+
+                    {/* Profile Icon in Mobile Menu */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                      animate={{ opacity: 1, scale: 1, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, x: -10 }}
+                      transition={{ delay: navigationItems.length * 0.05 }}
+                      className="relative"
+                    >
+                      <motion.div
+                        ref={(el) => (iconRefs.current["Profile"] = el)}
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          setShowProfileDropdown(!showProfileDropdown);
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+                        style={{
+                          background: showProfileDropdown
+                            ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
+                            : "rgba(26, 26, 26, 0.8)",
+                          border: showProfileDropdown
+                            ? "2px solid rgba(0, 255, 255, 0.6)"
+                            : "1px solid rgba(0, 255, 255, 0.4)",
+                          boxShadow: showProfileDropdown
+                            ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                            : "0 0 8px rgba(255, 255, 255, 0.1)",
+                        }}
+                      >
+                        <User
+                          className="w-4 h-4"
+                          style={{
+                            color: showProfileDropdown ? "#00ffff" : "#cccccc",
+                            filter: showProfileDropdown
+                              ? "drop-shadow(0 0 4px #00ffff)"
+                              : "none",
+                          }}
+                        />
+
+                        {/* Active indicator */}
+                        {showProfileDropdown && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                            style={{
+                              backgroundColor: "#00ffff",
+                              boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                            }}
+                          />
+                        )}
+                      </motion.div>
+                    </motion.div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Right side - Profile Icon */}
-            <div className="relative" ref={profileIconRef}>
+            {/* Right side - Profile Icon (moved further right) */}
+            <div
+              className="relative ml-auto"
+              ref={profileIconRef}
+              style={{ marginRight: "clamp(8px, 3vw, 32px)" }}
+            >
               <motion.div
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
