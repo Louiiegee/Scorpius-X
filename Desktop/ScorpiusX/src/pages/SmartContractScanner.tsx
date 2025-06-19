@@ -98,6 +98,26 @@ const SmartContractScanner = () => {
   // Enhanced toast notifications
   const toast = useToastActions();
 
+  // Tab system state
+  const [activeTab, setActiveTab] = useState<"scanner" | "simulations">(
+    "scanner",
+  );
+
+  // Simulation state
+  const [simulations, setSimulations] = useState<any[]>([]);
+  const [activeSimulations, setActiveSimulations] = useState<any[]>([]);
+  const [simulationEnvironments, setSimulationEnvironments] = useState<any[]>(
+    [],
+  );
+  const [selectedSimulation, setSelectedSimulation] = useState<any>(null);
+  const [isCreatingSimulation, setIsCreatingSimulation] = useState(false);
+  const [simulationStats, setSimulationStats] = useState({
+    totalSimulations: 234,
+    activeEnvironments: 12,
+    completedTests: 1847,
+    aiAnalysisRuns: 456,
+  });
+
   // Security analysis tools state with enhanced UX
   const [securityTools, setSecurityTools] = useState({
     slither: true,
