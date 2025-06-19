@@ -489,8 +489,8 @@ const TopNavigation = () => {
             </div>
           </div>
 
-          {/* Hamburger Menu Navigation */}
-          <div className="flex items-center justify-between w-full relative mt-4 px-4">
+          {/* Mobile-Responsive Navigation */}
+          <div className="flex items-center justify-between w-full relative mt-2 sm:mt-3 lg:mt-4 px-2 sm:px-4">
             {/* Left side - Hamburger Menu */}
             <div className="flex items-center gap-4">
               {/* Hamburger Menu Button */}
