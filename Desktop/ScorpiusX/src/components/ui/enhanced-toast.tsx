@@ -444,7 +444,7 @@ export const EnhancedToast = ({
           boxShadow: `0 0 15px ${color}30`,
         }}
       >
-        <Icon className="w-5 h-5" style={{ color }} />
+        {Icon && <Icon className="w-5 h-5" style={{ color }} />}
       </div>
 
       {/* Content */}
