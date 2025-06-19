@@ -1214,14 +1214,11 @@ const Monitoring = () => {
                     key={alert.id}
                     variants={itemVariants}
                     whileHover={{ scale: 1.02, x: 10 }}
-                    className="p-6 rounded-2xl"
+                    className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300"
                     style={{
-                      background:
-                        "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                      border: `2px solid ${getSeverityColor(alert.severity)}40`,
                       borderLeft: `6px solid ${getSeverityColor(alert.severity)}`,
+                      boxShadow: `0 0 20px ${getSeverityColor(alert.severity)}20`,
                       backdropFilter: "blur(10px)",
-                      boxShadow: `0 8px 32px rgba(${getSeverityColor(alert.severity)}, 0.1)`,
                     }}
                   >
                     <div className="flex items-start justify-between mb-4">
