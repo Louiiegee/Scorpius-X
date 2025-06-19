@@ -58,7 +58,8 @@ const Dashboard = () => {
     removeAlert,
     removeActivity,
   } = useDashboardData();
-  const { liveMetrics, isConnected, websocket, sendCustomMessage } = useWebSocket();
+  const { liveMetrics, isConnected, websocket, sendCustomMessage } =
+    useWebSocket();
 
   const [isLive, setIsLive] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
@@ -75,7 +76,7 @@ const Dashboard = () => {
     }, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [dashboardData.stats, updateStats]);
+  }, [updateStats]); // Removed dashboardData.stats to prevent infinite loop
 
   // WebSocket connection for live data
   useEffect(() => {
@@ -126,7 +127,13 @@ const Dashboard = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isLive, isConnected, sendCustomMessage, dashboardData.stats, updateStats]);
+  }, [
+    isLive,
+    isConnected,
+    sendCustomMessage,
+    dashboardData.stats,
+    updateStats,
+  ]);
 
   // Initialize stats if empty (first time user)
   useEffect(() => {
