@@ -1757,6 +1757,8 @@ const SmartContractScanner = () => {
                           Network
                         </label>
                         <select
+                          value={networkType}
+                          onChange={(e) => setNetworkType(e.target.value)}
                           style={{
                             width: "100%",
                             padding: "10px 12px",
