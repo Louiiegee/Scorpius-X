@@ -858,3 +858,5 @@ export const Settings = () => {
     </div>
   );
 };
+
+export default Settings;
