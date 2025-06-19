@@ -1,4 +1,22 @@
-#root {
+/* Electron-specific styling for frameless window */
+.electron-app {
+  /* Remove default margins and padding for frameless window */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.electron-app #root {
+  /* Full window coverage for Electron */
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  min-height: 100vh;
+  background: #000000;
+}
+
+/* Web version styling */
+body:not(.electron-app) #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
