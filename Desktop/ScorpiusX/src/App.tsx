@@ -88,7 +88,7 @@ function AppContent() {
                 <AppLayout>
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
-                    <Route path="/scanner" element={<Scanner />} />
+                    <Route path="/scanner" element={<SmartContractScanner />} />
                     <Route path="/time-machine" element={<TimeMachine />} />
                     <Route path="/settings" element={<Settings />} />
 
