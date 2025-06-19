@@ -359,14 +359,15 @@ const ProfileDropdown = ({ isOpen, onClose, iconRef }) => {
   );
 };
 
-export const TopNavigation = () => {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+const TopNavigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const iconRefs = useRef({});
   const profileIconRef = useRef(null);
-
-  const getCategoryColor = (category: string) => {
     switch (category) {
       case "core":
         return "#00ffff";
