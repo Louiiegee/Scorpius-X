@@ -127,7 +127,7 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, [isLive, isConnected, sendCustomMessage, updateStats]); // Removed dashboardData.stats to prevent infinite loop
 
-  // Initialize stats if empty (first time user)
+  // Initialize stats if empty (first time user) - run only once
   useEffect(() => {
     if (
       dashboardData.stats.threatsDetected === 0 &&
@@ -141,7 +141,7 @@ const Dashboard = () => {
         systemUptime: 0,
       });
     }
-  }, [dashboardData.stats, updateStats]);
+  }, []); // Empty dependency array to run only once on mount
 
   const formatUptime = (seconds: number): string => {
     const days = Math.floor(seconds / 86400);
