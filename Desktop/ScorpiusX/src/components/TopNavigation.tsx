@@ -549,7 +549,7 @@ const TopNavigation = () => {
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
                 style={{
                   background: isMenuOpen
                     ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
