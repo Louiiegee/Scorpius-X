@@ -118,6 +118,12 @@ const SmartContractScanner = () => {
     aiAnalysisRuns: 456,
   });
 
+  // Simulation form state - ensure controlled inputs
+  const [environmentType, setEnvironmentType] = useState("mainnet_fork");
+  const [networkType, setNetworkType] = useState("ethereum");
+  const [forkBlockNumber, setForkBlockNumber] = useState("");
+  const [targetContract, setTargetContract] = useState("");
+
   // Mock scan results for demonstration
   const mockScanResults = [
     {
