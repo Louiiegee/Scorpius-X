@@ -1,5 +1,41 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Typewriter Effect Component
+const TypewriterText = ({ text, delay = 100, className = "", style = {} }) => {
+  const [displayText, setDisplayText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, delay);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text, delay]);
+
+  useEffect(() => {
+    // Reset when text changes
+    setDisplayText("");
+    setCurrentIndex(0);
+  }, [text]);
+
+  return (
+    <span className={className} style={style}>
+      {displayText}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+        className="inline-block ml-1"
+      >
+        |
+      </motion.span>
+    </span>
+  );
+};
 import {
   LayoutDashboard,
   Shield,
