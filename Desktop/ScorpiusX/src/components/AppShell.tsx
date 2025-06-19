@@ -37,7 +37,7 @@ const pageTransition = {
   duration: 0.5,
 };
 
-// Stagger children animation for cohesive cascade
+// Professional stagger animation for smooth content loading
 const containerVariants = {
   initial: {
     opacity: 0,
@@ -45,17 +45,19 @@ const containerVariants = {
   in: {
     opacity: 1,
     transition: {
-      duration: 0.3,
-      staggerChildren: 0.15, // 150ms stagger as recommended
-      delayChildren: 0.1,
+      duration: 0.4,
+      staggerChildren: 0.08, // Faster, more subtle stagger
+      delayChildren: 0.15,
+      ease: [0.25, 0.1, 0.25, 1],
     },
   },
   out: {
     opacity: 0,
     transition: {
-      duration: 0.2,
-      staggerChildren: 0.05,
+      duration: 0.25,
+      staggerChildren: 0.03,
       staggerDirection: -1,
+      ease: [0.4, 0, 0.6, 1],
     },
   },
 };
