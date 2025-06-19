@@ -447,11 +447,8 @@ const TopNavigation = () => {
 
       {/* Main Header */}
       <header
+        className="w-full relative z-[1000] px-4 py-3 sm:px-6 sm:py-4 lg:px-8 lg:py-5"
         style={{
-          width: "100%",
-          padding: "20px 32px",
-          position: "relative",
-          zIndex: 1000,
           fontFamily: "JetBrains Mono, Space Mono, monospace",
           background: "#000000",
         }}
