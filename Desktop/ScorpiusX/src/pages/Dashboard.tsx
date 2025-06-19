@@ -338,7 +338,9 @@ const Dashboard = () => {
                 textShadow: "0 0 20px rgba(255, 68, 68, 0.6)",
               }}
             >
-              <span className="hidden sm:inline">THREAT INTELLIGENCE</span>
+              <span className="hidden sm:inline">
+                <p>MAIN DASHBOARD</p>
+              </span>
               <span className="sm:hidden">THREATS</span>
             </h1>
           </div>
