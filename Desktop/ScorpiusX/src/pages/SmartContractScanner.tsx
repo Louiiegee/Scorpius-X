@@ -2301,6 +2301,787 @@ const SmartContractScanner = () => {
               </div>
             </div>
           </ScrollReveal>
+            </motion.div>
+          )}
+
+          {activeTab === "simulations" && (
+            <motion.div
+              key="simulations"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Simulation Engine Content */}
+              <ScrollReveal delay={0.2}>
+                <div
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(0, 255, 255, 0.3)",
+                    borderRadius: "16px",
+                    padding: "24px",
+                    marginBottom: "24px",
+                    boxShadow: "0 0 30px rgba(0, 255, 255, 0.2)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <div>
+                      <h2
+                        style={{
+                          fontSize: "24px",
+                          fontWeight: "700",
+                          color: "#00ffff",
+                          margin: "0 0 8px 0",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <Activity size={24} />
+                        Simulation Engine
+                      </h2>
+                      <p
+                        style={{
+                          fontSize: "14px",
+                          color: "#999999",
+                          margin: "0",
+                        }}
+                      >
+                        Advanced blockchain simulation and testing environment
+                      </p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsCreatingSimulation(true)}
+                      style={{
+                        padding: "12px 24px",
+                        backgroundColor: "rgba(0, 255, 255, 0.2)",
+                        border: "1px solid rgba(0, 255, 255, 0.3)",
+                        borderRadius: "12px",
+                        color: "#00ffff",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <Plus size={16} />
+                      New Simulation
+                    </motion.button>
+                  </div>
+
+                  {/* Simulation Stats */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                      gap: "16px",
+                      marginBottom: "32px",
+                    }}
+                  >
+                    {[
+                      {
+                        label: "Total Simulations",
+                        value: simulationStats.totalSimulations,
+                        icon: Activity,
+                        color: "#00ffff",
+                      },
+                      {
+                        label: "Active Environments",
+                        value: simulationStats.activeEnvironments,
+                        icon: Cpu,
+                        color: "#00ff88",
+                      },
+                      {
+                        label: "Tests Completed",
+                        value: simulationStats.completedTests,
+                        icon: CheckCircle,
+                        color: "#ffaa00",
+                      },
+                      {
+                        label: "AI Analysis Runs",
+                        value: simulationStats.aiAnalysisRuns,
+                        icon: TrendingUp,
+                        color: "#ff4444",
+                      },
+                    ].map((stat, index) => (
+                      <motion.div
+                        key={stat.label}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 * index }}
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.4)",
+                          backdropFilter: "blur(10px)",
+                          border: `1px solid ${stat.color}30`,
+                          borderRadius: "12px",
+                          padding: "16px",
+                          boxShadow: `0 0 20px ${stat.color}20`,
+                          position: "relative",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+                            background: `linear-gradient(135deg, ${stat.color}05, transparent)`,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                            position: "relative",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              borderRadius: "8px",
+                              backgroundColor: `${stat.color}20`,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              border: `1px solid ${stat.color}60`,
+                            }}
+                          >
+                            <stat.icon size={16} color={stat.color} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div
+                              style={{
+                                fontSize: "20px",
+                                fontWeight: "700",
+                                color: stat.color,
+                                lineHeight: 1,
+                              }}
+                            >
+                              <LiveCounter
+                                value={stat.value}
+                                duration={2000}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "11px",
+                                color: "#999999",
+                                textTransform: "uppercase",
+                                letterSpacing: "1px",
+                                marginTop: "4px",
+                              }}
+                            >
+                              {stat.label}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Simulation Environment Control */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "24px",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    {/* Environment Management */}
+                    <div
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
+                        border: "1px solid rgba(0, 255, 136, 0.3)",
+                        borderRadius: "12px",
+                        padding: "20px",
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          color: "#00ff88",
+                          margin: "0 0 16px 0",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <Cpu size={16} />
+                        Environment Control
+                      </h3>
+
+                      {/* Environment Types */}
+                      <div style={{ marginBottom: "16px" }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontSize: "12px",
+                            color: "#cccccc",
+                            marginBottom: "8px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          Environment Type
+                        </label>
+                        <select
+                          style={{
+                            width: "100%",
+                            padding: "10px 12px",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            border: "1px solid rgba(0, 255, 136, 0.3)",
+                            borderRadius: "8px",
+                            color: "#ffffff",
+                            fontSize: "13px",
+                            outline: "none",
+                          }}
+                        >
+                          <option value="mainnet_fork">Mainnet Fork</option>
+                          <option value="custom_network">Custom Network</option>
+                          <option value="historical">Historical Recreation</option>
+                          <option value="testnet">Testnet Environment</option>
+                        </select>
+                      </div>
+
+                      {/* Network Configuration */}
+                      <div style={{ marginBottom: "16px" }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontSize: "12px",
+                            color: "#cccccc",
+                            marginBottom: "8px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          Network
+                        </label>
+                        <select
+                          style={{
+                            width: "100%",
+                            padding: "10px 12px",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            border: "1px solid rgba(0, 255, 136, 0.3)",
+                            borderRadius: "8px",
+                            color: "#ffffff",
+                            fontSize: "13px",
+                            outline: "none",
+                          }}
+                        >
+                          <option value="ethereum">Ethereum</option>
+                          <option value="polygon">Polygon</option>
+                          <option value="bsc">Binance Smart Chain</option>
+                          <option value="avalanche">Avalanche</option>
+                          <option value="arbitrum">Arbitrum</option>
+                        </select>
+                      </div>
+
+                      {/* Fork Block */}
+                      <div style={{ marginBottom: "16px" }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontSize: "12px",
+                            color: "#cccccc",
+                            marginBottom: "8px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          Fork Block Number
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="18500000"
+                          style={{
+                            width: "100%",
+                            padding: "10px 12px",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            border: "1px solid rgba(0, 255, 136, 0.3)",
+                            borderRadius: "8px",
+                            color: "#ffffff",
+                            fontSize: "13px",
+                            fontFamily: "monospace",
+                            outline: "none",
+                          }}
+                        />
+                      </div>
+
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                          width: "100%",
+                          padding: "12px",
+                          backgroundColor: "rgba(0, 255, 136, 0.2)",
+                          border: "1px solid rgba(0, 255, 136, 0.3)",
+                          borderRadius: "8px",
+                          color: "#00ff88",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <Play size={16} />
+                        Create Environment
+                      </motion.button>
+                    </div>
+
+                    {/* Simulation Scenarios */}
+                    <div
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
+                        border: "1px solid rgba(255, 170, 0, 0.3)",
+                        borderRadius: "12px",
+                        padding: "20px",
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          color: "#ffaa00",
+                          margin: "0 0 16px 0",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <Target size={16} />
+                        Scenario Builder
+                      </h3>
+
+                      {/* Scenario Types */}
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "8px",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        {[
+                          { name: "Flash Loan Attack", color: "#ff4444" },
+                          { name: "Reentrancy Test", color: "#ff6600" },
+                          { name: "Oracle Manipulation", color: "#ffaa00" },
+                          { name: "Governance Attack", color: "#00ffff" },
+                          { name: "MEV Simulation", color: "#9966ff" },
+                          { name: "Custom Scenario", color: "#00ff88" },
+                        ].map((scenario, index) => (
+                          <motion.button
+                            key={scenario.name}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            style={{
+                              padding: "8px 12px",
+                              backgroundColor: `${scenario.color}20`,
+                              border: `1px solid ${scenario.color}30`,
+                              borderRadius: "6px",
+                              color: scenario.color,
+                              fontSize: "11px",
+                              fontWeight: "600",
+                              cursor: "pointer",
+                              textAlign: "center",
+                            }}
+                          >
+                            {scenario.name}
+                          </motion.button>
+                        ))}
+                      </div>
+
+                      {/* Custom Parameters */}
+                      <div style={{ marginBottom: "16px" }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontSize: "12px",
+                            color: "#cccccc",
+                            marginBottom: "8px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          Target Contract
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="0x... or contract name"
+                          style={{
+                            width: "100%",
+                            padding: "10px 12px",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            border: "1px solid rgba(255, 170, 0, 0.3)",
+                            borderRadius: "8px",
+                            color: "#ffffff",
+                            fontSize: "13px",
+                            fontFamily: "monospace",
+                            outline: "none",
+                          }}
+                        />
+                      </div>
+
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                          width: "100%",
+                          padding: "12px",
+                          backgroundColor: "rgba(255, 170, 0, 0.2)",
+                          border: "1px solid rgba(255, 170, 0, 0.3)",
+                          borderRadius: "8px",
+                          color: "#ffaa00",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <Zap size={16} />
+                        Start Simulation
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Active Simulations */}
+                  <div
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.4)",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                      borderRadius: "12px",
+                      padding: "20px",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        color: "#ff4444",
+                        margin: "0 0 16px 0",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <Activity size={16} />
+                      Active Simulations
+                    </h3>
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gap: "12px",
+                      }}
+                    >
+                      {[
+                        {
+                          id: "sim_001",
+                          name: "Flash Loan Attack on Uniswap V3",
+                          status: "running",
+                          progress: 67,
+                          startTime: "2 minutes ago",
+                          type: "Security Test",
+                          environment: "Ethereum Mainnet Fork",
+                        },
+                        {
+                          id: "sim_002",
+                          name: "Reentrancy Vulnerability Analysis",
+                          status: "completed",
+                          progress: 100,
+                          startTime: "15 minutes ago",
+                          type: "Vulnerability Test",
+                          environment: "Custom Network",
+                        },
+                        {
+                          id: "sim_003",
+                          name: "Oracle Price Manipulation",
+                          status: "queued",
+                          progress: 0,
+                          startTime: "Pending",
+                          type: "Economic Test",
+                          environment: "Polygon Fork",
+                        },
+                      ].map((sim, index) => (
+                        <motion.div
+                          key={sim.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          style={{
+                            padding: "16px",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            borderRadius: "8px",
+                            display: "grid",
+                            gridTemplateColumns: "1fr auto",
+                            gap: "16px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "12px",
+                                marginBottom: "8px",
+                              }}
+                            >
+                              <h4
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "600",
+                                  color: "#ffffff",
+                                  margin: "0",
+                                }}
+                              >
+                                {sim.name}
+                              </h4>
+                              <span
+                                style={{
+                                  padding: "2px 8px",
+                                  borderRadius: "4px",
+                                  fontSize: "10px",
+                                  fontWeight: "600",
+                                  textTransform: "uppercase",
+                                  backgroundColor:
+                                    sim.status === "running"
+                                      ? "rgba(255, 170, 0, 0.2)"
+                                      : sim.status === "completed"
+                                      ? "rgba(0, 255, 136, 0.2)"
+                                      : "rgba(100, 100, 100, 0.2)",
+                                  color:
+                                    sim.status === "running"
+                                      ? "#ffaa00"
+                                      : sim.status === "completed"
+                                      ? "#00ff88"
+                                      : "#999999",
+                                }}
+                              >
+                                {sim.status}
+                              </span>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "16px",
+                                fontSize: "12px",
+                                color: "#999999",
+                              }}
+                            >
+                              <span>Type: {sim.type}</span>
+                              <span>Environment: {sim.environment}</span>
+                              <span>Started: {sim.startTime}</span>
+                            </div>
+                            {sim.status === "running" && (
+                              <div
+                                style={{
+                                  marginTop: "8px",
+                                  width: "100%",
+                                  height: "4px",
+                                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                  borderRadius: "2px",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${sim.progress}%` }}
+                                  style={{
+                                    height: "100%",
+                                    backgroundColor: "#ffaa00",
+                                    borderRadius: "2px",
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "8px",
+                            }}
+                          >
+                            {sim.status === "running" && (
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                style={{
+                                  padding: "6px",
+                                  backgroundColor: "rgba(255, 68, 68, 0.2)",
+                                  border: "1px solid rgba(255, 68, 68, 0.3)",
+                                  borderRadius: "6px",
+                                  color: "#ff4444",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <Pause size={12} />
+                              </motion.button>
+                            )}
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              style={{
+                                padding: "6px",
+                                backgroundColor: "rgba(0, 255, 255, 0.2)",
+                                border: "1px solid rgba(0, 255, 255, 0.3)",
+                                borderRadius: "6px",
+                                color: "#00ffff",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Eye size={12} />
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* AI Analysis Results */}
+                  <div
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.4)",
+                      border: "1px solid rgba(153, 102, 255, 0.3)",
+                      borderRadius: "12px",
+                      padding: "20px",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        color: "#9966ff",
+                        margin: "0 0 16px 0",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <TrendingUp size={16} />
+                      AI Analysis & Insights
+                    </h3>
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "16px",
+                      }}
+                    >
+                      {/* ML Model Performance */}
+                      <div
+                        style={{
+                          padding: "16px",
+                          backgroundColor: "rgba(153, 102, 255, 0.1)",
+                          border: "1px solid rgba(153, 102, 255, 0.2)",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <h4
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            color: "#9966ff",
+                            margin: "0 0 12px 0",
+                          }}
+                        >
+                          Model Performance
+                        </h4>
+                        <div style={{ fontSize: "12px", color: "#cccccc" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            <span>Exploit Detection Accuracy:</span>
+                            <span style={{ color: "#00ff88" }}>94.7%</span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            <span>False Positive Rate:</span>
+                            <span style={{ color: "#ffaa00" }}>2.1%</span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <span>Pattern Recognition:</span>
+                            <span style={{ color: "#00ffff" }}>87.3%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Recent Discoveries */}
+                      <div
+                        style={{
+                          padding: "16px",
+                          backgroundColor: "rgba(0, 255, 136, 0.1)",
+                          border: "1px solid rgba(0, 255, 136, 0.2)",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <h4
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            color: "#00ff88",
+                            margin: "0 0 12px 0",
+                          }}
+                        >
+                          Recent Discoveries
+                        </h4>
+                        <div style={{ fontSize: "12px", color: "#cccccc" }}>
+                          <div style={{ marginBottom: "6px" }}>
+                            • Novel reentrancy pattern detected
+                          </div>
+                          <div style={{ marginBottom: "6px" }}>
+                            • Flash loan vulnerability in DeFi protocol
+                          </div>
+                          <div>
+                            • Oracle manipulation attack vector
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </motion.div>
+          )}
+        </AnimatePresence>
         )}
       </motion.div>
     </>
