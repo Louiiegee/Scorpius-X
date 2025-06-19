@@ -368,6 +368,8 @@ const TopNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const iconRefs = useRef({});
   const profileIconRef = useRef(null);
+
+  const getCategoryColor = (category: string) => {
     switch (category) {
       case "core":
         return "#00ffff";
