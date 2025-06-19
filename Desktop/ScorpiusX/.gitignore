@@ -1,87 +1,30 @@
-# Logs
-logs
-*.log
+# Dependencies
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Build files
+# Production builds
 dist/
-dist-ssr/
+dist-electron/
 build/
 out/
-.next/
 
-# Environment variables
+# Environment files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# IDE and Editor
-.vscode/*
-!.vscode/extensions.json
+# IDE and editor files
+.vscode/
 .idea/
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.ropeproject
-
-# Local development
-.local/
-*.local
-
-# Testing
-coverage/
-.nyc_output/
-
-# Debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Misc
-.cache/
-.temp/
-temp/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
+*.swp
+*.swo
+*~
 
 # OS generated files
 .DS_Store
@@ -91,3 +34,154 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache/
+.parcel-cache/
+
+# Next.js build output
+.next/
+
+# Nuxt.js build / generate output
+.nuxt/
+
+# Gatsby files
+.cache/
+public/
+
+# Storybook build outputs
+.out/
+.storybook-out/
+
+# Temporary folders
+tmp/
+temp/
+
+# Electron
+app/
+packages/
+
+# Local development
+.local/
+
+# Test artifacts
+test-results/
+playwright-report/
+test-results.xml
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Local configuration files
+.env.local
+config.local.js
+config.local.json
+
+# Build artifacts
+stats.html
+bundle-analyzer/
+
+# Security and sensitive files
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# Package manager locks (keep one)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Husky
+.husky/_/
+
+# MSW (Mock Service Worker)
+public/mockServiceWorker.js
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Redis dumps
+dump.rdb
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Kubernetes
+*.kubeconfig
+
+# Custom application directories
+uploads/
+storage/
+cache/
+
+# Application specific
+reports/
+scans/
+logs/
+exports/
+
+# Development tools
+.eslintcache
+.stylelintcache
+.sass-cache/
+
+# Temporary files
+*~
+*.tmp
+*.temp
