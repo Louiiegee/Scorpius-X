@@ -67,12 +67,10 @@ const Dashboard = () => {
   // Auto-update stats periodically when not in live mode
   useEffect(() => {
     const interval = setInterval(() => {
-      updateStats({
-        systemUptime: dashboardData.stats.systemUptime + 60,
-        threatsDetected: dashboardData.stats.threatsDetected,
-        activeScans: dashboardData.stats.activeScans,
-        activeBots: dashboardData.stats.activeBots,
-      });
+      updateStats((currentStats) => ({
+        ...currentStats,
+        systemUptime: currentStats.systemUptime + 60,
+      }));
     }, 60000); // Update every minute
 
     return () => clearInterval(interval);
