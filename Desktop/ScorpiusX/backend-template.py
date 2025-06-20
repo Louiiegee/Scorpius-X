@@ -412,7 +412,7 @@ if __name__ == '__main__':
     print("   GET  /health")
     print("")
     print("🌐 Frontend URL: http://localhost:8080")
-    print("🔗 Backend URL: http://localhost:8000")
+    print("🔗 Backend URL: http://localhost:8005")
     print("")
     print("🔑 Test Login:")
     print("   Username: demo")
@@ -422,7 +422,7 @@ if __name__ == '__main__':
     # Run the Flask development server
     app.run(
         host='0.0.0.0',
-        port=8000,
+        port=8005,
         debug=True,
         threaded=True
     )
