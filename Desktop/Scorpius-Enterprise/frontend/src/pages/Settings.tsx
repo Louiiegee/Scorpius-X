@@ -1,334 +1,862 @@
-/**
- * Settings Page
- * Comprehensive settings management with tabbed interface
- */
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings as SettingsIcon,
-  Network,
-  Key,
-  Monitor,
+  User,
   Shield,
-  Zap,
-  FileText,
-  HelpCircle,
+  Bell,
+  Monitor,
+  Key,
   Save,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Smartphone,
+  Zap,
+  Globe,
+  Database,
+  Clock,
+  AlertTriangle,
+  Trash2,
+  Download,
+  Upload,
+  HardDrive,
+  BarChart3,
+  FileText,
   AlertCircle,
   CheckCircle,
+  Link,
+  Server,
+  Webhook,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useStorage, useUserData } from "@/hooks/useStorage";
+import { toast } from "@/components/ui/use-toast";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSettings } from "@/context/SettingsContext";
-import { NetworkSettings } from "@/components/settings/NetworkSettings";
-import { APIKeysSettings } from "@/components/settings/APIKeysSettings";
-import { GeneralSettings } from "@/components/settings/GeneralSettings";
-import { toast } from "sonner";
-import { useLicense } from "@/hooks/useLicense";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-interface SettingsTabInfo {
-  id: string;
-  label: string;
-  icon: React.ElementType;
-  description: string;
-  badge?: string;
-  component: React.ComponentType;
-}
+export const Settings = () => {
+  const { userData, updateProfile, updatePreferences } = useUserData();
+  const { clearAllData, getStorageStats } = useStorage();
 
-export function SettingsPage() {
-  const { settings, saveSettings, isLoading } = useSettings();
-  const { tier } = useLicense();
-  const { hasFeature } = useFeatureFlags();
-  const [activeTab, setActiveTab] = useState("general");
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({});
+  const [showClearDataDialog, setShowClearDataDialog] = useState(false);
+  const [storageStats, setStorageStats] = useState(null);
+  const [activeTab, setActiveTab] = useState("profile");
 
-  const settingsTabs: SettingsTabInfo[] = [
-    {
-      id: "general",
-      label: "General",
-      icon: Monitor,
-      description: "Theme, notifications, and basic preferences",
-      component: GeneralSettings,
+  // Initialize storage stats when component mounts
+  React.useEffect(() => {
+    setStorageStats(getStorageStats());
+  }, [getStorageStats]);
+
+  // Initialize default user data if not provided
+  const currentUserData = userData || {
+    profile: {
+      username: "alice",
+      email: "alice@scorpius.com",
+      role: "admin",
+      preferences: {
+        theme: "cyberpunk",
+        notifications: true,
+        autoScan: false,
+        soundEffects: true,
+      },
     },
-    {
-      id: "network",
-      label: "Networks",
-      icon: Network,
-      description: "RPC endpoints and blockchain connections",
-      component: NetworkSettings,
-    },
-    {
-      id: "api-keys",
-      label: "API Keys",
-      icon: Key,
-      description: "Third-party service API keys and integrations",
-      badge: "Secure",
-      component: APIKeysSettings,
-    },
-  ];
-
-  const handleSaveAll = () => {
-    saveSettings();
-    setHasUnsavedChanges(false);
+    lastLogin: new Date().toISOString(),
+    sessionCount: 1,
   };
 
-  const getTabIcon = (IconComponent: React.ElementType, isActive: boolean) => (
-    <IconComponent className={`h-4 w-4 ${isActive ? "text-blue-600" : ""}`} />
-  );
-
-  const getConfigurationStatus = () => {
-    const rpcConfigured = Object.values(settings.rpcUrls).filter(
-      Boolean,
-    ).length;
-    const apiKeysConfigured = Object.values(settings.apiKeys).filter(
-      Boolean,
-    ).length;
-    const totalRpcs = Object.keys(settings.rpcUrls).length;
-    const totalApiKeys = Object.keys(settings.apiKeys).length;
-
-    return {
-      rpc: `${rpcConfigured}/${totalRpcs}`,
-      apiKeys: `${apiKeysConfigured}/${totalApiKeys}`,
-      overall: Math.round(
-        ((rpcConfigured + apiKeysConfigured) / (totalRpcs + totalApiKeys)) *
-          100,
-      ),
-    };
-  };
-
-  const status = getConfigurationStatus();
-
+  // Only show loading if still loading
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto"></div>
-          <p className="text-blue-400 text-lg">Loading Settings...</p>
+      <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-400 mx-auto mb-4"></div>
+          <p className="text-red-400">Loading Settings...</p>
         </div>
       </div>
     );
   }
 
+  // RPC Configuration
+  const [rpcConfig, setRpcConfig] = useState({
+    ethereum: "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+    bsc: "https://bsc-dataseed.binance.org/",
+    polygon: "https://polygon-rpc.com/",
+    arbitrum: "https://arb1.arbitrum.io/rpc",
+    avalanche: "https://api.avax.network/ext/bc/C/rpc",
+    fantom: "https://rpc.ftm.tools/",
+  });
+
+  // API Configuration
+  const [apiConfig, setApiConfig] = useState({
+    etherscan: "",
+    bscscan: "",
+    polygonscan: "",
+    arbiscan: "",
+    snowtrace: "",
+    ftmscan: "",
+    coingecko: "",
+    dexscreener: "",
+    moralis: "",
+    alchemy: "",
+  });
+
+  // Notification Configuration
+  const [notificationConfig, setNotificationConfig] = useState({
+    telegram: {
+      enabled: false,
+      botToken: "",
+      chatId: "",
+    },
+    slack: {
+      enabled: false,
+      webhookUrl: "",
+      channel: "",
+    },
+    discord: {
+      enabled: false,
+      webhookUrl: "",
+    },
+    email: {
+      enabled: false,
+      smtp: "",
+      username: "",
+      password: "",
+      to: "",
+    },
+    webhook: {
+      enabled: false,
+      url: "",
+      secret: "",
+    },
+  });
+
+  useEffect(() => {
+    setStorageStats(getStorageStats());
+
+    // Initialize user profile if it's empty
+    if (currentUserData?.profile && !currentUserData.profile.username) {
+      updateProfile({
+        username: "alice",
+        email: "alice@scorpius.com",
+        role: "admin",
+      });
+    }
+  }, [getStorageStats, updateProfile]);
+
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const handleSaveSettings = async () => {
+    setIsLoading(true);
+
+    try {
+      // Save to localStorage for frontend
+      localStorage.setItem("scorpius_rpc_config", JSON.stringify(rpcConfig));
+      localStorage.setItem("scorpius_api_config", JSON.stringify(apiConfig));
+      localStorage.setItem(
+        "scorpius_notification_config",
+        JSON.stringify(notificationConfig),
+      );
+
+      // Send configuration to backend to update .env file
+      const configPayload = {
+        rpc: rpcConfig,
+        api: apiConfig,
+        notifications: notificationConfig,
+      };
+
+      const response = await fetch("/api/config/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(configPayload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update backend configuration");
+      }
+
+      const result = await response.json();
+
+      // Update user profile
+      await updateProfile({
+        username: userData?.profile?.username || "User",
+        email: userData?.profile?.email || "user@scorpius.net",
+        role: userData?.profile?.role || "Security Analyst",
+      });
+
+      // Update preferences
+      await updatePreferences(userData?.profile?.preferences || {});
+
+      toast({
+        title: "Settings Saved",
+        description: `Configuration updated successfully. Backend modules will use new settings: ${result.updated_sections.join(", ")}`,
+      });
+    } catch (error) {
+      console.error("Settings save error:", error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save settings. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const testConnection = async (type, config) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/config/test-connection", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service_type: type,
+          config_data: config,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        toast({
+          title: "Connection Test",
+          description: `${type} connection successful!`,
+        });
+      } else {
+        toast({
+          title: "Connection Failed",
+          description:
+            result.message ||
+            `Failed to connect to ${type}. Check your configuration.`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Connection Failed",
+        description: `Failed to test ${type} connection. Check your configuration.`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClearAllData = async () => {
+    setIsLoading(true);
+
+    try {
+      await clearAllData();
+      setShowClearDataDialog(false);
+      setStorageStats(getStorageStats());
+
+      toast({
+        title: "Data Cleared",
+        description: "All application data has been cleared.",
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      toast({
+        title: "Clear Failed",
+        description: "Failed to clear data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-black text-white font-mono p-6">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <SettingsIcon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-800 bg-clip-text text-transparent">
-                    Scorpius Settings
-                  </h1>
-                  <p className="text-gray-600">
-                    Configure your blockchain analysis platform
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="text-xs">
-                {tier.toUpperCase()} Plan
-              </Badge>
-              <Button onClick={handleSaveAll} disabled={!hasUnsavedChanges}>
-                <Save className="h-4 w-4 mr-2" />
-                Save All
-              </Button>
-            </div>
-          </div>
-
-          {/* Configuration Status */}
-          <Card>
-            <CardContent className="pt-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">
-                      Configuration Status:
-                    </span>
-                    <div className="flex items-center space-x-4 mt-1">
-                      <div className="flex items-center space-x-1">
-                        <Network className="h-4 w-4 text-blue-600" />
-                        <span className="font-medium">{status.rpc}</span>
-                        <span className="text-muted-foreground">RPCs</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Key className="h-4 w-4 text-green-600" />
-                        <span className="font-medium">{status.apiKeys}</span>
-                        <span className="text-muted-foreground">API Keys</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="text-sm text-muted-foreground">Overall:</div>
-                  <Badge
-                    variant={
-                      status.overall >= 80
-                        ? "default"
-                        : status.overall >= 50
-                          ? "secondary"
-                          : "destructive"
-                    }
-                    className="text-xs"
-                  >
-                    {status.overall >= 80 ? (
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                    ) : (
-                      <AlertCircle className="h-3 w-3 mr-1" />
-                    )}
-                    {status.overall}% Complete
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Settings Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          className="mb-8"
         >
-          <TooltipProvider>
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="space-y-6"
+          <div className="flex items-center gap-4 mb-6">
+            <motion.div
+              className="p-3 rounded-xl bg-red-500/20 border border-red-500/30"
+              whileHover={{ scale: 1.05 }}
             >
-              {/* Tabs Navigation */}
-              <Card>
-                <CardContent className="pt-6">
-                  <TabsList className="grid w-full grid-cols-3 lg:grid-cols-3">
-                    {settingsTabs.map((tab) => (
-                      <TabsTrigger
-                        key={tab.id}
-                        value={tab.id}
-                        className="flex items-center space-x-2 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700"
-                      >
-                        {getTabIcon(tab.icon, activeTab === tab.id)}
-                        <span className="hidden sm:inline">{tab.label}</span>
-                        {tab.badge && (
-                          <Badge variant="secondary" className="text-xs ml-1">
-                            {tab.badge}
-                          </Badge>
-                        )}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-
-                  {/* Tab Description */}
-                  <div className="mt-4 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      {
-                        settingsTabs.find((tab) => tab.id === activeTab)
-                          ?.description
-                      }
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Tab Content */}
-              <AnimatePresence mode="wait">
-                {settingsTabs.map((tab) => (
-                  <TabsContent
-                    key={tab.id}
-                    value={tab.id}
-                    className="space-y-6"
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center space-x-2">
-                            <tab.icon className="h-5 w-5 text-blue-600" />
-                            <span>{tab.label} Settings</span>
-                            {tab.badge && (
-                              <Badge variant="outline" className="text-xs">
-                                {tab.badge}
-                              </Badge>
-                            )}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <ScrollArea className="h-[calc(100vh-300px)] pr-4">
-                            <tab.component />
-                          </ScrollArea>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </TabsContent>
-                ))}
-              </AnimatePresence>
-            </Tabs>
-          </TooltipProvider>
+              <SettingsIcon className="h-8 w-8 text-red-400" />
+            </motion.div>
+            <div>
+              <h1 className="text-3xl font-bold text-red-400">
+                SYSTEM CONFIGURATION
+              </h1>
+              <p className="text-gray-400">
+                Configure RPC endpoints, API keys, and notifications
+              </p>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Footer */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-6 bg-black/50 border border-red-500/30">
+            <TabsTrigger
+              value="profile"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <User className="h-4 w-4 mr-2" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger
+              value="rpc"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              RPC Config
+            </TabsTrigger>
+            <TabsTrigger
+              value="api"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <Key className="h-4 w-4 mr-2" />
+              API Keys
+            </TabsTrigger>
+            <TabsTrigger
+              value="notifications"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <Bell className="h-4 w-4 mr-2" />
+              Notifications
+            </TabsTrigger>
+            <TabsTrigger
+              value="security"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <Shield className="h-4 w-4 mr-2" />
+              Security
+            </TabsTrigger>
+            <TabsTrigger
+              value="data"
+              className="data-[state=active]:bg-red-500/20 text-red-400"
+            >
+              <Database className="h-4 w-4 mr-2" />
+              Data
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Profile Settings */}
+          <TabsContent value="profile" className="space-y-6">
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  User Profile
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="username" className="text-red-400">
+                      Username
+                    </Label>
+                    <Input
+                      id="username"
+                      value={currentUserData?.profile?.username || ""}
+                      onChange={(e) => {
+                        updateProfile({ username: e.target.value });
+                      }}
+                      className="bg-black/50 border-red-500/30 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-red-400">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={currentUserData?.profile?.email || ""}
+                      onChange={(e) => {
+                        updateProfile({ email: e.target.value });
+                      }}
+                      className="bg-black/50 border-red-500/30 text-white"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* RPC Configuration */}
+          <TabsContent value="rpc" className="space-y-6">
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Server className="h-5 w-5" />
+                  RPC Endpoints Configuration
+                </CardTitle>
+                <p className="text-gray-400 text-sm">
+                  Configure blockchain RPC endpoints for real-time data access
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {Object.entries(rpcConfig).map(([network, url]) => (
+                  <div key={network} className="space-y-2">
+                    <Label className="text-red-400 capitalize">
+                      {network} RPC URL
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={url}
+                        onChange={(e) =>
+                          setRpcConfig((prev) => ({
+                            ...prev,
+                            [network]: e.target.value,
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder={`Enter ${network} RPC URL...`}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          testConnection(network.toUpperCase(), url)
+                        }
+                        className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                        disabled={isLoading}
+                      >
+                        Test
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* API Configuration */}
+          <TabsContent value="api" className="space-y-6">
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Key className="h-5 w-5" />
+                  API Keys Configuration
+                </CardTitle>
+                <p className="text-gray-400 text-sm">
+                  Configure API keys for enhanced data access and features
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {Object.entries(apiConfig).map(([service, key]) => (
+                  <div key={service} className="space-y-2">
+                    <Label className="text-red-400 capitalize">
+                      {service} API Key
+                    </Label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Input
+                          type={showPasswords[service] ? "text" : "password"}
+                          value={key}
+                          onChange={(e) =>
+                            setApiConfig((prev) => ({
+                              ...prev,
+                              [service]: e.target.value,
+                            }))
+                          }
+                          className="bg-black/50 border-red-500/30 text-white pr-10"
+                          placeholder={`Enter ${service} API key...`}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 text-gray-400"
+                          onClick={() => togglePasswordVisibility(service)}
+                        >
+                          {showPasswords[service] ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          testConnection(service.toUpperCase(), key)
+                        }
+                        className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                        disabled={isLoading || !key}
+                      >
+                        Test
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notifications Configuration */}
+          <TabsContent value="notifications" className="space-y-6">
+            {/* Telegram */}
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Smartphone className="h-5 w-5" />
+                  Telegram Notifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-red-400">Enable Telegram</Label>
+                  <Switch
+                    checked={notificationConfig.telegram.enabled}
+                    onCheckedChange={(checked) =>
+                      setNotificationConfig((prev) => ({
+                        ...prev,
+                        telegram: { ...prev.telegram, enabled: checked },
+                      }))
+                    }
+                  />
+                </div>
+                {notificationConfig.telegram.enabled && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-red-400">Bot Token</Label>
+                      <Input
+                        type="password"
+                        value={notificationConfig.telegram.botToken}
+                        onChange={(e) =>
+                          setNotificationConfig((prev) => ({
+                            ...prev,
+                            telegram: {
+                              ...prev.telegram,
+                              botToken: e.target.value,
+                            },
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder="Enter Telegram bot token..."
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-red-400">Chat ID</Label>
+                      <Input
+                        value={notificationConfig.telegram.chatId}
+                        onChange={(e) =>
+                          setNotificationConfig((prev) => ({
+                            ...prev,
+                            telegram: {
+                              ...prev.telegram,
+                              chatId: e.target.value,
+                            },
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder="Enter chat ID..."
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        testConnection("Telegram", notificationConfig.telegram)
+                      }
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      disabled={isLoading}
+                    >
+                      Test Telegram
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Slack */}
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Webhook className="h-5 w-5" />
+                  Slack Notifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-red-400">Enable Slack</Label>
+                  <Switch
+                    checked={notificationConfig.slack.enabled}
+                    onCheckedChange={(checked) =>
+                      setNotificationConfig((prev) => ({
+                        ...prev,
+                        slack: { ...prev.slack, enabled: checked },
+                      }))
+                    }
+                  />
+                </div>
+                {notificationConfig.slack.enabled && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-red-400">Webhook URL</Label>
+                      <Input
+                        type="password"
+                        value={notificationConfig.slack.webhookUrl}
+                        onChange={(e) =>
+                          setNotificationConfig((prev) => ({
+                            ...prev,
+                            slack: {
+                              ...prev.slack,
+                              webhookUrl: e.target.value,
+                            },
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder="Enter Slack webhook URL..."
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-red-400">Channel</Label>
+                      <Input
+                        value={notificationConfig.slack.channel}
+                        onChange={(e) =>
+                          setNotificationConfig((prev) => ({
+                            ...prev,
+                            slack: { ...prev.slack, channel: e.target.value },
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder="Enter channel name..."
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        testConnection("Slack", notificationConfig.slack)
+                      }
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      disabled={isLoading}
+                    >
+                      Test Slack
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Discord */}
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Monitor className="h-5 w-5" />
+                  Discord Notifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-red-400">Enable Discord</Label>
+                  <Switch
+                    checked={notificationConfig.discord.enabled}
+                    onCheckedChange={(checked) =>
+                      setNotificationConfig((prev) => ({
+                        ...prev,
+                        discord: { ...prev.discord, enabled: checked },
+                      }))
+                    }
+                  />
+                </div>
+                {notificationConfig.discord.enabled && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-red-400">Webhook URL</Label>
+                      <Input
+                        type="password"
+                        value={notificationConfig.discord.webhookUrl}
+                        onChange={(e) =>
+                          setNotificationConfig((prev) => ({
+                            ...prev,
+                            discord: {
+                              ...prev.discord,
+                              webhookUrl: e.target.value,
+                            },
+                          }))
+                        }
+                        className="bg-black/50 border-red-500/30 text-white"
+                        placeholder="Enter Discord webhook URL..."
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        testConnection("Discord", notificationConfig.discord)
+                      }
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      disabled={isLoading}
+                    >
+                      Test Discord
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Security Settings */}
+          <TabsContent value="security" className="space-y-6">
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Security Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert className="border-red-500/30 bg-red-500/10">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription className="text-red-400">
+                    All sensitive data is encrypted and stored securely.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Data Management */}
+          <TabsContent value="data" className="space-y-6">
+            <Card className="bg-black/50 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Database className="h-5 w-5" />
+                  Data Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 border border-red-500/30 rounded-lg">
+                    <HardDrive className="h-8 w-8 text-red-400 mx-auto mb-2" />
+                    <p className="text-white font-semibold">
+                      {storageStats?.totalSize || "0 KB"}
+                    </p>
+                    <p className="text-gray-400 text-sm">Total Storage</p>
+                  </div>
+                  <div className="text-center p-4 border border-red-500/30 rounded-lg">
+                    <FileText className="h-8 w-8 text-red-400 mx-auto mb-2" />
+                    <p className="text-white font-semibold">
+                      {storageStats?.totalItems || "0"}
+                    </p>
+                    <p className="text-gray-400 text-sm">Total Items</p>
+                  </div>
+                  <div className="text-center p-4 border border-red-500/30 rounded-lg">
+                    <Clock className="h-8 w-8 text-red-400 mx-auto mb-2" />
+                    <p className="text-white font-semibold">
+                      {storageStats?.lastUpdated || "Never"}
+                    </p>
+                    <p className="text-gray-400 text-sm">Last Updated</p>
+                  </div>
+                </div>
+
+                <Separator className="bg-red-500/30" />
+
+                <div className="space-y-4">
+                  <h3 className="text-red-400 font-semibold">Danger Zone</h3>
+                  <Alert className="border-red-500/50 bg-red-500/10">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription className="text-red-400">
+                      This action cannot be undone. All your data will be
+                      permanently deleted.
+                    </AlertDescription>
+                  </Alert>
+                  <AlertDialog
+                    open={showClearDataDialog}
+                    onOpenChange={setShowClearDataDialog}
+                  >
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 backdrop-blur-sm"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Clear All Data
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="bg-black border-red-500/30">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-red-400">
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-gray-400">
+                          This action cannot be undone. This will permanently
+                          delete all your data.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="border-red-500/30 text-red-400">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleClearAllData}
+                          className="bg-red-600 hover:bg-red-700"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? "Clearing..." : "Clear All Data"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        {/* Save Button */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8 flex justify-end"
         >
-          <Card className="border-gray-200">
-            <CardContent className="pt-4">
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center space-x-4">
-                  <span>
-                    Last updated:{" "}
-                    {new Date(settings.lastUpdated).toLocaleString()}
-                  </span>
-                  <Separator orientation="vertical" className="h-4" />
-                  <span>Version: 1.0.0</span>
-                  <Separator orientation="vertical" className="h-4" />
-                  <span>Plan: {tier.toUpperCase()}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        Settings are automatically saved and encrypted locally
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <span>Settings secured with encryption</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Button
+            onClick={handleSaveSettings}
+            disabled={isLoading}
+            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 px-6 py-2 backdrop-blur-sm"
+          >
+            {isLoading ? (
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            {isLoading ? "Saving..." : "Save All Settings"}
+          </Button>
         </motion.div>
       </div>
     </div>
   );
-}
+};
 
-export default SettingsPage;
+export default Settings;

@@ -1,524 +1,423 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Shield,
   Eye,
   EyeOff,
+  Shield,
+  Zap,
+  AlertTriangle,
   Lock,
-  User,
-  Mail,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Fingerprint,
+  Activity,
+  Wifi,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import { TextEffect } from "@/components/ui/text-effect";
-import { useAuth } from "@/hooks/useAuth";
-import { useLicense } from "@/hooks/useLicense";
 
-interface LoginFormData {
-  email: string;
-  password: string;
-  licenseKey?: string;
-  rememberMe: boolean;
+interface LoginProps {
+  onLogin: (username: string, password: string) => Promise<boolean>;
 }
 
-interface TierInfo {
-  name: string;
-  color: string;
-  features: string[];
-  limits: {
-    maxConcurrentScans: number;
-    exportLevel: string;
-    accessWasm: boolean;
-    apiCallsPerHour: number;
-  };
-}
-
-const TIER_INFO: Record<string, TierInfo> = {
-  community: {
-    name: "Community",
-    color: "rgb(107, 114, 128)",
-    features: ["Basic scanning", "Public reports", "Community support"],
-    limits: {
-      maxConcurrentScans: 1,
-      exportLevel: "basic",
-      accessWasm: false,
-      apiCallsPerHour: 100,
-    },
-  },
-  starter: {
-    name: "Starter",
-    color: "rgb(59, 130, 246)",
-    features: [
-      "Advanced scanning",
-      "PDF exports",
-      "Email support",
-      "Basic integrations",
-    ],
-    limits: {
-      maxConcurrentScans: 3,
-      exportLevel: "standard",
-      accessWasm: true,
-      apiCallsPerHour: 1000,
-    },
-  },
-  pro: {
-    name: "Pro",
-    color: "rgb(16, 185, 129)",
-    features: [
-      "All Starter features",
-      "MEV analysis",
-      "Advanced exports",
-      "Priority support",
-      "Custom integrations",
-    ],
-    limits: {
-      maxConcurrentScans: 10,
-      exportLevel: "advanced",
-      accessWasm: true,
-      apiCallsPerHour: 5000,
-    },
-  },
-  enterprise: {
-    name: "Enterprise",
-    color: "rgb(245, 158, 11)",
-    features: [
-      "All Pro features",
-      "White-label dashboard",
-      "Dedicated support",
-      "Custom deployment",
-      "SLA guarantees",
-    ],
-    limits: {
-      maxConcurrentScans: 50,
-      exportLevel: "enterprise",
-      accessWasm: true,
-      apiCallsPerHour: 25000,
-    },
-  },
-};
-
-export function LoginPage() {
-  const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+export const Login = ({ onLogin }: LoginProps) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-    licenseKey: "",
-    rememberMe: false,
-  });
+  const [error, setError] = useState("");
+  const [showWelcome, setShowWelcome] = useState(true);
 
-  const { login, register, loginWithFIDO2, isAuthenticated } = useAuth();
-  const { validateLicense, getLicenseInfo } = useLicense();
-
-  // Redirect to dashboard if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
+    setError("");
 
-    console.log('📝 Form submission started with data:', formData);
-
-    try {      if (isLogin) {
-        // Validate license if provided
-        let licenseInfo = null;
-        if (formData.licenseKey && formData.licenseKey.trim()) {
-          console.log('🔑 Validating license key...');
-          licenseInfo = await validateLicense(formData.licenseKey);
-          if (!licenseInfo.valid) {
-            throw new Error("Invalid license key");
-          }
-        } else {
-          console.log('⏭️ Skipping license validation (no license key provided)');
-        }
-
-        console.log('🚀 Calling login function...');
-        
-        // Perform login
-        const result = await login({
-          email: formData.email,
-          password: formData.password,
-          licenseKey: formData.licenseKey,
-          rememberMe: formData.rememberMe,
-        });        console.log('📤 Login result:', result);        if (result.success) {
-          console.log('✅ Login successful, navigating to dashboard...');
-          // Give a small delay to ensure auth state is updated
-          setTimeout(() => {
-            console.log('⏰ Delayed navigation executing...');
-            navigate("/", { replace: true });
-          }, 100);
-        } else {
-          console.error('❌ Login failed:', result.error);
-          setError(result.error || "Login failed");
-        }
-      } else {
-        // Registration flow
-        if (!formData.licenseKey) {
-          setError("License key is required for registration");
-          return;
-        }
-
-        const licenseInfo = await validateLicense(formData.licenseKey);
-        if (!licenseInfo.valid) {
-          setError("Invalid license key");
-          return;
-        }
-
-        const result = await register({
-          email: formData.email,
-          password: formData.password,
-          licenseKey: formData.licenseKey,
-        });
-
-        if (result.success) {
-          setIsLogin(true);
-          setError(null);
-          // Show success message
-        } else {
-          setError(result.error || "Registration failed");
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFIDO2Login = async () => {
-    setIsLoading(true);
     try {
-      const result = await loginWithFIDO2();      if (result.success) {
-        navigate("/", { replace: true });
-      } else {
-        setError(result.error || "FIDO2 authentication failed");
+      const success = await onLogin(username, password);
+      if (!success) {
+        setError("Invalid credentials. Access denied.");
       }
     } catch (err) {
-      setError("FIDO2 authentication is not available");
+      setError("System error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getTierFromLicense = (licenseKey: string): string => {
-    // Simple tier detection based on license key format
-    if (!licenseKey) return "community";
-    if (licenseKey.startsWith("ENT-")) return "enterprise";
-    if (licenseKey.startsWith("PRO-")) return "pro";
-    if (licenseKey.startsWith("STR-")) return "starter";
-    return "community";
-  };
-
-  const currentTier = getTierFromLicense(formData.licenseKey || "");
-  const tierInfo = TIER_INFO[currentTier];
+  // Auto-hide welcome screen after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowWelcome(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center">
-      <FlickeringGrid
-        color="rgb(59, 130, 246)"
-        maxOpacity={0.3}
-        flickerChance={0.1}
-        width={1400}
-        height={900}
-        className="absolute inset-0"
-      />
-
-      <div className="relative z-10 w-full max-w-6xl mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left Side - Branding */}
+    <div
+      className="min-h-screen flex items-center justify-center relative"
+      style={{
+        background: "#000000",
+        fontFamily: "JetBrains Mono, Space Mono, monospace",
+      }}
+    >
+      <AnimatePresence>
+        {showWelcome && (
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute inset-0 z-20 flex items-center justify-center"
+            style={{
+              background: "rgba(0, 0, 0, 0.95)",
+              backdropFilter: "blur(20px)",
+            }}
           >
-            <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
-              <div className="relative">
-                <Shield className="h-16 w-16 text-blue-400 drop-shadow-[0_0_20px_rgba(59,130,246,0.8)] animate-pulse" />
-              </div>
-              <div>
-                <TextEffect
-                  per="char"
-                  className="text-4xl font-bold text-white"
+            <motion.div
+              initial={{ scale: 0.5, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="text-center"
+            >
+              {/* Cyberpunk Scorpion Logo */}
+              <motion.div
+                className="w-32 h-32 mx-auto mb-8 relative"
+                animate={{
+                  rotateY: [0, 360],
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <div
+                  className="w-full h-full rounded-2xl flex items-center justify-center relative"
+                  style={{
+                    background: "#000000",
+                    border: "3px solid #00ffff",
+                    boxShadow:
+                      "0 0 50px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.1)",
+                  }}
                 >
-                  Scorpius
-                </TextEffect>
-                <p className="text-blue-400 text-sm mt-1">
-                  Analyze. Simulate. Exploit.
-                </p>
-              </div>
-            </div>
+                  {/* Scorpius Logo */}
+                  <img
+                    src="https://cdn.builder.io/api/v1/assets/2a927ea4537f4619981ed56eb0a0c31e/official-7c4d5c?format=webp&width=800"
+                    alt="Scorpius Logo"
+                    className="w-20 h-20"
+                    style={{
+                      filter:
+                        "drop-shadow(0 0 20px #00ffff) drop-shadow(0 0 30px #00cccc) drop-shadow(0 0 40px #008080)",
+                    }}
+                  />
 
-            <div className="space-y-4 text-gray-300">
-              <h2 className="text-2xl font-semibold text-white">
-                Blockchain Security Analysis Platform
-              </h2>
-              <p className="text-lg">
-                Advanced vulnerability detection, MEV analysis, and smart
-                contract security with enterprise-grade protection.
-              </p>
+                  {/* Pulsing border effect */}
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl border-2 border-[#00ff88]"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </div>
+              </motion.div>
 
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="text-center p-4 bg-white/5 rounded-lg border border-blue-500/20">
-                  <div className="text-2xl font-bold text-blue-400">10M+</div>
-                  <div className="text-sm text-gray-400">
-                    Contracts Analyzed
-                  </div>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg border border-blue-500/20">
-                  <div className="text-2xl font-bold text-blue-400">99.9%</div>
-                  <div className="text-sm text-gray-400">Accuracy Rate</div>
-                </div>
+              <motion.h1
+                className="text-5xl font-bold mb-4"
+                style={{
+                  background:
+                    "linear-gradient(45deg, #00ffff, #00ff88, #ffaa00)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "0 0 30px rgba(0, 255, 255, 0.5)",
+                }}
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                SCORPIUS
+              </motion.h1>
+
+              <motion.div
+                className="text-xl text-[#00ffff] font-mono mb-2"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                NEURAL INTERFACE INITIALIZING
+              </motion.div>
+
+              {/* Loading bar */}
+              <div className="w-64 h-1 mx-auto bg-[#1a1a1a] rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#00ffff] to-[#00ff88]"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 2.5, ease: "easeInOut" }}
+                  style={{
+                    boxShadow: "0 0 15px rgba(0, 255, 255, 0.8)",
+                  }}
+                />
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main login container */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 50 }}
+        animate={{
+          opacity: showWelcome ? 0 : 1,
+          scale: showWelcome ? 0.9 : 1,
+          y: showWelcome ? 50 : 0,
+        }}
+        transition={{ delay: 3.2, type: "spring", stiffness: 300, damping: 25 }}
+        className="relative z-10 w-full max-w-md p-8"
+        style={{
+          background: "rgba(0, 0, 0, 0.95)",
+          border: "2px solid rgba(0, 255, 255, 0.4)",
+          borderRadius: "32px",
+          boxShadow:
+            "0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.05)",
+          backdropFilter: "blur(20px)",
+        }}
+      >
+        {/* Header with Logo */}
+        <div className="text-center mb-8">
+          {/* Scorpion Logo */}
+          <motion.div
+            className="w-20 h-20 mx-auto mb-6 relative"
+            whileHover={{ scale: 1.1, rotateY: 180 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div
+              className="w-full h-full rounded-2xl flex items-center justify-center relative"
+              style={{
+                background: "#000000",
+                border: "3px solid rgba(0, 255, 255, 0.7)",
+                boxShadow: "0 0 30px rgba(0, 255, 255, 0.5)",
+              }}
+            >
+              {/* Scorpius Logo */}
+              <img
+                src="https://cdn.builder.io/api/v1/assets/2a927ea4537f4619981ed56eb0a0c31e/official-7c4d5c?format=webp&width=800"
+                alt="Scorpius Logo"
+                className="w-14 h-14"
+                style={{
+                  filter:
+                    "drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00cccc) drop-shadow(0 0 35px #008080)",
+                }}
+              />
+
+              {/* Animated glow rings */}
+              <motion.div
+                className="absolute inset-0 rounded-2xl border-2 border-[#00ff88]"
+                animate={{
+                  opacity: [0, 0.8, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
             </div>
           </motion.div>
 
-          {/* Right Side - Login Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <motion.h1
+            className="text-3xl font-bold mb-2"
+            style={{
+              background: "linear-gradient(135deg, #00ffff, #00ff88)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontFamily: "Space Mono, monospace",
+            }}
+            animate={{
+              textShadow: [
+                "0 0 20px rgba(0, 255, 255, 0.5)",
+                "0 0 30px rgba(0, 255, 136, 0.8)",
+                "0 0 20px rgba(0, 255, 255, 0.5)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
           >
-            <Card className="bg-white/10 backdrop-blur-xl border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.3)]">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-bold text-white">
-                  {isLogin ? "Sign In" : "Create Account"}
-                </CardTitle>
-                <p className="text-gray-400">
-                  {isLogin
-                    ? "Access your Scorpius dashboard"
-                    : "Join the Scorpius security platform"}
-                </p>
-              </CardHeader>
+            SCORPIUS
+          </motion.h1>
 
-              <CardContent className="space-y-6">
-                {error && (
-                  <Alert className="border-red-500/50 bg-red-500/10">
-                    <AlertCircle className="h-4 w-4 text-red-400" />
-                    <AlertDescription className="text-red-300">
-                      {error}
-                    </AlertDescription>
-                  </Alert>
-                )}
+          <p className="text-gray-400 font-mono text-sm mb-2">
+            Security Operations Center
+          </p>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-white">
-                      Email Address
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        className="pl-10 bg-white/5 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-blue-400"
-                        placeholder="your@email.com"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-white">
-                      Password
-                    </Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={formData.password}
-                        onChange={(e) =>
-                          setFormData({ ...formData, password: e.target.value })
-                        }
-                        className="pl-10 pr-10 bg-white/5 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-blue-400"
-                        placeholder="Enter your password"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-gray-400 hover:text-white"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {(!isLogin || formData.licenseKey) && (
-                    <div className="space-y-2">
-                      <Label htmlFor="licenseKey" className="text-white">
-                        License Key {!isLogin && "*"}
-                      </Label>
-                      <div className="relative">
-                        <Shield className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                        <Input
-                          id="licenseKey"
-                          type="text"
-                          value={formData.licenseKey}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              licenseKey: e.target.value,
-                            })
-                          }
-                          className="pl-10 bg-white/5 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-blue-400"
-                          placeholder="ENT-XXXX-XXXX-XXXX or leave empty for Community"
-                          required={!isLogin}
-                        />
-                      </div>
-
-                      {formData.licenseKey && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-3 p-3 bg-white/5 rounded-lg border border-gray-600"
-                        >
-                          <div className="flex items-center gap-2 mb-2">
-                            <div
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: tierInfo.color }}
-                            />
-                            <span
-                              className="font-semibold"
-                              style={{ color: tierInfo.color }}
-                            >
-                              {tierInfo.name} Tier
-                            </span>
-                          </div>
-                          <div className="text-xs text-gray-400 space-y-1">
-                            <div>
-                              Max Scans: {tierInfo.limits.maxConcurrentScans}
-                            </div>
-                            <div>
-                              API Calls: {tierInfo.limits.apiCallsPerHour}/hour
-                            </div>
-                            <div>
-                              WASM Access:{" "}
-                              {tierInfo.limits.accessWasm ? "Yes" : "No"}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  )}
-
-                  {isLogin && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="rememberMe"
-                          type="checkbox"
-                          checked={formData.rememberMe}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              rememberMe: e.target.checked,
-                            })
-                          }
-                          className="rounded border-gray-600 bg-white/5 text-blue-400 focus:ring-blue-400"
-                        />
-                        <Label
-                          htmlFor="rememberMe"
-                          className="text-sm text-gray-400"
-                        >
-                          Remember me
-                        </Label>
-                      </div>
-                      <button
-                        type="button"
-                        className="text-sm text-blue-400 hover:text-blue-300"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
-                  )}                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 rounded-lg transition-all duration-200 hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] text-lg"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    ) : null}
-                    🔑 {isLogin ? "Sign In with Password" : "Create Account"}
-                  </Button>
-                </form>
-
-                <div className="relative">
-                  <Separator className="bg-gray-600" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="bg-black/80 px-3 text-gray-400 text-sm">
-                      or
-                    </span>
-                  </div>
-                </div>                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleFIDO2Login}
-                  disabled={true}
-                  className="w-full border-gray-600 text-gray-500 bg-gray-800 cursor-not-allowed opacity-50"
-                >
-                  <Fingerprint className="w-4 h-4 mr-2" />
-                  FIDO2 / WebAuthn (Not Available)
-                </Button>
-
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="text-blue-400 hover:text-blue-300 text-sm"
-                  >
-                    {isLogin
-                      ? "Don't have an account? Sign up"
-                      : "Already have an account? Sign in"}
-                  </button>
-                </div>
-
-                {!isLogin && (
-                  <div className="text-xs text-gray-500 text-center">
-                    By creating an account, you agree to our{" "}
-                    <a href="/terms" className="text-blue-400 hover:underline">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a
-                      href="/privacy"
-                      className="text-blue-400 hover:underline"
-                    >
-                      Privacy Policy
-                    </a>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+          <div className="flex items-center justify-center gap-2 text-xs text-[#00ffff]">
+            <Activity className="w-3 h-3" />
+            <span className="font-mono">v4.0.0 | Neural Interface</span>
+            <motion.div
+              className="w-2 h-2 bg-[#00ff88] rounded-full"
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              style={{
+                boxShadow: "0 0 8px rgba(0, 255, 136, 0.8)",
+              }}
+            />
+          </div>
         </div>
-      </div>
+
+        {/* System Status */}
+        <motion.div
+          className="mb-6 p-3 rounded-xl border border-[#00ffff40] bg-[#00ffff10]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 3.5 }}
+        >
+          <div className="flex items-center gap-2 text-xs font-mono">
+            <Wifi className="w-3 h-3 text-[#00ff88]" />
+            <span className="text-[#00ff88]">NEURAL LINK:</span>
+            <span className="text-white">ACTIVE</span>
+            <div className="flex-1" />
+            <Lock className="w-3 h-3 text-[#ffaa00]" />
+            <span className="text-[#ffaa00]">ENCRYPTED</span>
+          </div>
+        </motion.div>
+
+        {/* Error alert */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -10 }}
+              className="mb-6 p-4 rounded-2xl border-2 border-red-500/40 bg-red-500/10 flex items-center gap-3"
+              style={{ boxShadow: "0 0 20px rgba(255, 68, 68, 0.2)" }}
+            >
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+              <span className="text-red-400 text-sm font-mono">{error}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Login form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Username field */}
+          <motion.div
+            className="space-y-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 3.6 }}
+          >
+            <label className="text-sm font-semibold text-white font-mono">
+              AGENT ID
+            </label>
+            <div className="relative">
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter neural interface ID..."
+                required
+                className="w-full bg-black/60 border-2 border-[#00ffff]/40 rounded-2xl px-4 py-3 text-white placeholder-gray-500 font-mono text-sm focus:border-[#00ffff] transition-all duration-300"
+                style={{
+                  boxShadow: "inset 0 0 20px rgba(0, 255, 255, 0.1)",
+                }}
+              />
+              <motion.div
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-[#00ffff] rounded-full"
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{ boxShadow: "0 0 10px rgba(0, 255, 255, 0.8)" }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Password field */}
+          <motion.div
+            className="space-y-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 3.7 }}
+          >
+            <label className="text-sm font-semibold text-white font-mono">
+              NEURAL KEY
+            </label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter quantum encryption key..."
+                required
+                className="w-full bg-black/60 border-2 border-[#00ffff]/40 rounded-2xl px-4 py-3 pr-12 text-white placeholder-gray-500 font-mono text-sm focus:border-[#00ffff] transition-all duration-300"
+                style={{
+                  boxShadow: "inset 0 0 20px rgba(0, 255, 255, 0.1)",
+                }}
+              />
+              <motion.button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00ffff] transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Login button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.8 }}
+          >
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 rounded-2xl font-mono font-bold transition-all duration-300"
+              style={{
+                background: isLoading
+                  ? "linear-gradient(135deg, #666666, #888888)"
+                  : "linear-gradient(135deg, #00ffff, #00ff88)",
+                color: isLoading ? "#ccc" : "#000",
+                boxShadow: isLoading
+                  ? "0 0 20px rgba(102, 102, 102, 0.4)"
+                  : "0 0 30px rgba(0, 255, 255, 0.5)",
+                border: "2px solid rgba(0, 255, 255, 0.6)",
+              }}
+              whileHover={!isLoading ? { scale: 1.02, y: -2 } : {}}
+              whileTap={!isLoading ? { scale: 0.98 } : {}}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-3">
+                  <motion.div
+                    className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  />
+                  <span>ACCESSING NEURAL NETWORK...</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-3">
+                  <Zap className="w-4 h-4" />
+                  <span>INITIALIZE CONNECTION</span>
+                </div>
+              )}
+            </Button>
+          </motion.div>
+        </form>
+
+        {/* Footer */}
+        <motion.div
+          className="mt-8 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 4 }}
+        >
+          <div className="text-xs text-gray-500 font-mono mb-2">
+            Secure Neural Interface Protocol v4.0.0
+          </div>
+          <div className="text-xs text-[#00ffff] bg-[#00ffff20] rounded-lg p-2 border border-[#00ffff40]">
+            <div className="font-mono">DEFAULT ACCESS:</div>
+            <div className="font-mono">
+              ID: <span className="text-[#00ff88]">alice</span> | KEY:{" "}
+              <span className="text-[#00ff88]">admin123</span>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
-}
+};

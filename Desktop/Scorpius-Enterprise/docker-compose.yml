@@ -82,22 +82,22 @@ services:
     restart: unless-stopped
     command: redis-server --appendonly yes
 
-  # Nginx Reverse Proxy
-  scorpius-nginx:
-    image: nginx:alpine
-    container_name: scorpius-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docker/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/ssl:/etc/nginx/ssl
-    depends_on:
-      - scorpius-frontend
-      - scorpius-backend
-    networks:
-      - scorpius-network
-    restart: unless-stopped
+  # Nginx Reverse Proxy (commented out for initial testing)
+  # scorpius-nginx:
+  #   image: nginx:alpine
+  #   container_name: scorpius-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./docker/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./docker/ssl:/etc/nginx/ssl
+  #   depends_on:
+  #     - scorpius-frontend
+  #     - scorpius-backend
+  #   networks:
+  #     - scorpius-network
+  #   restart: unless-stopped
 
   # Foundry/Anvil for Blockchain Simulation
   scorpius-anvil:

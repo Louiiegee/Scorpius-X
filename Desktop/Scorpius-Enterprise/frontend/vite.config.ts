@@ -1,22 +1,97 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-    headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; style-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: https: http: blob:; font-src 'self' data: blob:; connect-src 'self' ws: wss: http://localhost:3001 http://localhost:8001 http://localhost:8545 http://localhost:* ws://localhost:* http: https:; worker-src 'self' blob: data:; child-src 'self' blob: data:; object-src 'none';"
-    }
-  },
-  plugins: [
-    react(),
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
+  return {
+    plugins: [react()],
+
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
     },
-  },
-}));
+
+    define: {
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    },
+
+    // Development server configuration
+    server: {
+      port: 8080,
+      host: true,
+      cors: true,
+      open: false,
+    },
+
+    // Preview server configuration
+    preview: {
+      port: 8080,
+      host: true,
+    },
+
+    // Build configuration
+    build: {
+      target: "esnext",
+      outDir: "dist",
+      assetsDir: "assets",
+      sourcemap: mode !== "production",
+      minify: mode === "production" ? "esbuild" : false,
+
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ["react", "react-dom"],
+            ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
+            charts: ["recharts"],
+            motion: ["framer-motion"],
+            query: ["@tanstack/react-query"],
+          },
+        },
+      },
+
+      // Chunk size warnings
+      chunkSizeWarningLimit: 1000,
+    },
+
+    // Dependency optimization
+    optimizeDeps: {
+      include: [
+        "react",
+        "react-dom",
+        "react-router-dom",
+        "framer-motion",
+        "@tanstack/react-query",
+      ],
+      exclude: ["@vite/client", "@vite/env"],
+    },
+
+    // CSS configuration
+    css: {
+      postcss: "./postcss.config.js",
+      devSourcemap: mode !== "production",
+    },
+
+    // Environment variables
+    envPrefix: "VITE_",
+
+    // Worker configuration
+    worker: {
+      format: "es",
+    },
+
+    // Security headers for preview
+    ...(command === "serve" && {
+      server: {
+        headers: {
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
+        },
+      },
+    }),
+  };
+});
