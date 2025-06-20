@@ -565,7 +565,7 @@ const TimeMachine = () => {
                     style={{
                       fontSize: "32px",
                       fontWeight: "700",
-                      color: "#9966ff",
+                      color: "#e8e6e3",
                       margin: "0",
                       letterSpacing: "2px",
                       textShadow: "0 0 20px rgba(153, 102, 255, 0.6)",

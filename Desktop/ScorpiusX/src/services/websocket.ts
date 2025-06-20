@@ -53,7 +53,9 @@ class WebSocketService {
         };
 
         this.ws.onerror = (error) => {
-          console.error("❌ WebSocket error:", error);
+          console.warn(
+            "WebSocket backend connection failed - service not available",
+          );
           this.isConnecting = false;
           reject(error);
         };

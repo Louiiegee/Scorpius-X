@@ -58,9 +58,35 @@ export const Settings = () => {
   const { clearAllData, getStorageStats } = useStorage();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({});
+  const [showClearDataDialog, setShowClearDataDialog] = useState(false);
+  const [storageStats, setStorageStats] = useState(null);
+  const [activeTab, setActiveTab] = useState("profile");
 
-  // Show loading while userData is not available
-  if (!userData || !userData.profile) {
+  // Initialize storage stats when component mounts
+  React.useEffect(() => {
+    setStorageStats(getStorageStats());
+  }, [getStorageStats]);
+
+  // Initialize default user data if not provided
+  const currentUserData = userData || {
+    profile: {
+      username: "alice",
+      email: "alice@scorpius.com",
+      role: "admin",
+      preferences: {
+        theme: "cyberpunk",
+        notifications: true,
+        autoScan: false,
+        soundEffects: true,
+      },
+    },
+    lastLogin: new Date().toISOString(),
+    sessionCount: 1,
+  };
+
+  // Only show loading if still loading
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black text-white font-mono flex items-center justify-center">
         <div className="text-center">
@@ -70,10 +96,6 @@ export const Settings = () => {
       </div>
     );
   }
-  const [showPasswords, setShowPasswords] = useState({});
-  const [showClearDataDialog, setShowClearDataDialog] = useState(false);
-  const [storageStats, setStorageStats] = useState(getStorageStats());
-  const [activeTab, setActiveTab] = useState("profile");
 
   // RPC Configuration
   const [rpcConfig, setRpcConfig] = useState({
@@ -131,7 +153,16 @@ export const Settings = () => {
 
   useEffect(() => {
     setStorageStats(getStorageStats());
-  }, []);
+
+    // Initialize user profile if it's empty
+    if (currentUserData?.profile && !currentUserData.profile.username) {
+      updateProfile({
+        username: "alice",
+        email: "alice@scorpius.com",
+        role: "admin",
+      });
+    }
+  }, [getStorageStats, updateProfile]);
 
   const togglePasswordVisibility = (field) => {
     setShowPasswords((prev) => ({
@@ -357,9 +388,9 @@ export const Settings = () => {
                     </Label>
                     <Input
                       id="username"
-                      value={userData?.profile?.username || ""}
+                      value={currentUserData?.profile?.username || ""}
                       onChange={(e) => {
-                        // Handle username change if needed
+                        updateProfile({ username: e.target.value });
                       }}
                       className="bg-black/50 border-red-500/30 text-white"
                     />
@@ -371,9 +402,9 @@ export const Settings = () => {
                     <Input
                       id="email"
                       type="email"
-                      value={userData?.profile?.email || ""}
+                      value={currentUserData?.profile?.email || ""}
                       onChange={(e) => {
-                        // Handle email change if needed
+                        updateProfile({ email: e.target.value });
                       }}
                       className="bg-black/50 border-red-500/30 text-white"
                     />
@@ -419,7 +450,7 @@ export const Settings = () => {
                         onClick={() =>
                           testConnection(network.toUpperCase(), url)
                         }
-                        className="border-red-500/30 text-red-400"
+                        className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                         disabled={isLoading}
                       >
                         Test
@@ -482,7 +513,7 @@ export const Settings = () => {
                         onClick={() =>
                           testConnection(service.toUpperCase(), key)
                         }
-                        className="border-red-500/30 text-red-400"
+                        className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                         disabled={isLoading || !key}
                       >
                         Test
@@ -559,7 +590,7 @@ export const Settings = () => {
                       onClick={() =>
                         testConnection("Telegram", notificationConfig.telegram)
                       }
-                      className="border-red-500/30 text-red-400"
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                       disabled={isLoading}
                     >
                       Test Telegram
@@ -629,7 +660,7 @@ export const Settings = () => {
                       onClick={() =>
                         testConnection("Slack", notificationConfig.slack)
                       }
-                      className="border-red-500/30 text-red-400"
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                       disabled={isLoading}
                     >
                       Test Slack
@@ -685,7 +716,7 @@ export const Settings = () => {
                       onClick={() =>
                         testConnection("Discord", notificationConfig.discord)
                       }
-                      className="border-red-500/30 text-red-400"
+                      className="bg-black/50 border-red-500/30 text-red-400 hover:bg-red-500/10"
                       disabled={isLoading}
                     >
                       Test Discord
@@ -730,21 +761,21 @@ export const Settings = () => {
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <HardDrive className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.totalSize}
+                      {storageStats?.totalSize || "0 KB"}
                     </p>
                     <p className="text-gray-400 text-sm">Total Storage</p>
                   </div>
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <FileText className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.totalItems}
+                      {storageStats?.totalItems || "0"}
                     </p>
                     <p className="text-gray-400 text-sm">Total Items</p>
                   </div>
                   <div className="text-center p-4 border border-red-500/30 rounded-lg">
                     <Clock className="h-8 w-8 text-red-400 mx-auto mb-2" />
                     <p className="text-white font-semibold">
-                      {storageStats.lastUpdated}
+                      {storageStats?.lastUpdated || "Never"}
                     </p>
                     <p className="text-gray-400 text-sm">Last Updated</p>
                   </div>
@@ -768,7 +799,7 @@ export const Settings = () => {
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="destructive"
-                        className="bg-red-600 hover:bg-red-700"
+                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 backdrop-blur-sm"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Clear All Data
@@ -813,7 +844,7 @@ export const Settings = () => {
           <Button
             onClick={handleSaveSettings}
             disabled={isLoading}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2"
+            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-400 px-6 py-2 backdrop-blur-sm"
           >
             {isLoading ? (
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -827,3 +858,5 @@ export const Settings = () => {
     </div>
   );
 };
+
+export default Settings;

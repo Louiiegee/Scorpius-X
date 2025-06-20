@@ -93,12 +93,12 @@ export const Login = ({ onLogin }: LoginProps) => {
                 >
                   {/* Scorpius Logo */}
                   <img
-                    src="/scorpius-logo.svg"
+                    src="https://cdn.builder.io/api/v1/assets/2a927ea4537f4619981ed56eb0a0c31e/official-7c4d5c?format=webp&width=800"
                     alt="Scorpius Logo"
                     className="w-20 h-20"
                     style={{
                       filter:
-                        "drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00ff88)",
+                        "drop-shadow(0 0 20px #00ffff) drop-shadow(0 0 30px #00cccc) drop-shadow(0 0 40px #008080)",
                     }}
                   />
 
@@ -188,10 +188,16 @@ export const Login = ({ onLogin }: LoginProps) => {
                 boxShadow: "0 0 30px rgba(0, 255, 255, 0.5)",
               }}
             >
-              {/* Empty logo area */}
-              <div className="w-full h-full flex items-center justify-center">
-                {/* Logo area - currently empty */}
-              </div>
+              {/* Scorpius Logo */}
+              <img
+                src="https://cdn.builder.io/api/v1/assets/2a927ea4537f4619981ed56eb0a0c31e/official-7c4d5c?format=webp&width=800"
+                alt="Scorpius Logo"
+                className="w-14 h-14"
+                style={{
+                  filter:
+                    "drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px #00cccc) drop-shadow(0 0 35px #008080)",
+                }}
+              />
 
               {/* Animated glow rings */}
               <motion.div

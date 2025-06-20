@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { TopNavigation } from "./TopNavigation";
+import TopNavigation from "./TopNavigation";
 import WebChat from "./WebChat";
 import Footer from "./Footer";
 
@@ -9,32 +9,35 @@ interface AppShellProps {
   children: ReactNode;
 }
 
-// Global animation variants for Fortune-500 polish
+// Professional page transition variants
 const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,
-    scale: 0.98,
+    scale: 0.95,
+    filter: "blur(4px)",
   },
   in: {
     opacity: 1,
     y: 0,
     scale: 1,
+    filter: "blur(0px)",
   },
   out: {
     opacity: 0,
-    y: -20,
+    y: -10,
     scale: 1.02,
+    filter: "blur(2px)",
   },
 };
 
 const pageTransition = {
   type: "tween",
-  ease: "anticipate",
-  duration: 0.4,
+  ease: [0.25, 0.1, 0.25, 1], // Professional cubic-bezier curve
+  duration: 0.5,
 };
 
-// Stagger children animation for cohesive cascade
+// Professional stagger animation for smooth content loading
 const containerVariants = {
   initial: {
     opacity: 0,
@@ -42,17 +45,19 @@ const containerVariants = {
   in: {
     opacity: 1,
     transition: {
-      duration: 0.3,
-      staggerChildren: 0.15, // 150ms stagger as recommended
-      delayChildren: 0.1,
+      duration: 0.4,
+      staggerChildren: 0.08, // Faster, more subtle stagger
+      delayChildren: 0.15,
+      ease: [0.25, 0.1, 0.25, 1],
     },
   },
   out: {
     opacity: 0,
     transition: {
-      duration: 0.2,
-      staggerChildren: 0.05,
+      duration: 0.25,
+      staggerChildren: 0.03,
       staggerDirection: -1,
+      ease: [0.4, 0, 0.6, 1],
     },
   },
 };
@@ -97,6 +102,27 @@ export const AppShell = ({ children }: AppShellProps) => {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+          }
+
+          /* Mobile viewport fixes */
+          @media (max-width: 768px) {
+            body {
+              overflow-x: hidden;
+              -webkit-text-size-adjust: 100%;
+              -webkit-overflow-scrolling: touch;
+            }
+
+            /* Prevent zoom on form inputs */
+            input, select, textarea {
+              font-size: 16px !important;
+            }
+          }
+
+          /* iOS Safari fixes */
+          @supports (-webkit-touch-callout: none) {
+            .mobile-app {
+              min-height: -webkit-fill-available;
+            }
           }
 
           /* Professional focus rings */
@@ -156,30 +182,16 @@ export const AppShell = ({ children }: AppShellProps) => {
             background: linear-gradient(45deg, rgba(0, 255, 136, 0.8), rgba(0, 255, 255, 0.8));
           }
 
-          /* Cyberpunk background */
+          /* Clean black background */
           .cyberpunk-bg {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            background: #000000;
             position: relative;
-          }
-
-          .cyberpunk-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-              radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 40% 80%, rgba(255, 170, 0, 0.02) 0%, transparent 50%);
-            pointer-events: none;
           }
         `}
       </style>
 
       <motion.div
-        className="cyberpunk-bg"
+        className="cyberpunk-bg mobile-app ios-vh-fix android-fix"
         style={{
           minHeight: "100vh",
           color: "#e5e5e5",
@@ -194,15 +206,41 @@ export const AppShell = ({ children }: AppShellProps) => {
         {/* Top Navigation */}
         <TopNavigation />
 
-        {/* Main Content Area */}
+        {/* Mobile-Responsive Main Content Area */}
         <main
+          className="flex-1 relative w-full overflow-x-hidden"
           style={{
-            flex: "1",
-            position: "relative",
-            minHeight: "calc(100vh - 140px)", // Account for header height
-            width: "100%",
+            minHeight: "calc(100vh - 120px)", // Responsive header height
+            paddingBottom: "env(safe-area-inset-bottom)", // iOS safe area
           }}
         >
+          {/* Professional transition overlay */}
+          <AnimatePresence>
+            <motion.div
+              key={`overlay-${location.pathname}`}
+              initial={{ scaleY: 0, transformOrigin: "top" }}
+              animate={{ scaleY: 0, transformOrigin: "top" }}
+              exit={{
+                scaleY: 1,
+                transformOrigin: "top",
+                transition: {
+                  duration: 0.3,
+                  ease: [0.4, 0, 0.2, 1],
+                },
+              }}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "#000000",
+                zIndex: 9999,
+                pointerEvents: "none",
+              }}
+            />
+          </AnimatePresence>
+
           {/* Global route wrapper with AnimatePresence */}
           <AnimatePresence
             mode="wait"

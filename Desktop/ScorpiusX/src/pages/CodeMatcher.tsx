@@ -305,7 +305,7 @@ const CodeMatcher = () => {
                 style={{
                   fontSize: "32px",
                   fontWeight: "700",
-                  color: "#00ff88",
+                  color: "#e8e6e3",
                   margin: "0",
                   letterSpacing: "2px",
                   textShadow: "0 0 20px rgba(0, 255, 136, 0.6)",

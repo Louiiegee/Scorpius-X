@@ -1,5 +1,41 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Typewriter Effect Component
+const TypewriterText = ({ text, delay = 100, className = "", style = {} }) => {
+  const [displayText, setDisplayText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, delay);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text, delay]);
+
+  useEffect(() => {
+    // Reset when text changes
+    setDisplayText("");
+    setCurrentIndex(0);
+  }, [text]);
+
+  return (
+    <span className={className} style={style}>
+      {displayText}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+        className="inline-block ml-1"
+      >
+        |
+      </motion.span>
+    </span>
+  );
+};
 import {
   LayoutDashboard,
   Shield,
@@ -19,6 +55,8 @@ import {
   Edit,
   LogOut,
   Bell,
+  Menu,
+  X,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -357,10 +395,13 @@ const ProfileDropdown = ({ isOpen, onClose, iconRef }) => {
   );
 };
 
-export const TopNavigation = () => {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+const TopNavigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const iconRefs = useRef({});
   const profileIconRef = useRef(null);
 
@@ -438,301 +479,322 @@ export const TopNavigation = () => {
         {`
           @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-          .scorpion-pulse {
-            animation: scorpion-pulse 2s ease-in-out infinite alternate;
-          }
-
-          @keyframes scorpion-pulse {
-            from { filter: drop-shadow(0 0 8px #00ff88); }
-            to { filter: drop-shadow(0 0 16px #00ffff); }
-          }
-
-          .cyberspace-header {
-            background: linear-gradient(180deg,
-              rgba(0, 0, 0, 0.95) 0%,
-              rgba(10, 10, 10, 0.90) 20%,
-              rgba(20, 20, 20, 0.85) 40%,
-              rgba(30, 5, 5, 0.75) 60%,
-              rgba(40, 10, 10, 0.60) 80%,
-              rgba(0, 0, 0, 0.0) 100%
-            );
-            backdrop-filter: blur(20px);
-            animation: cyberspace-shift 8s ease-in-out infinite;
-          }
-
-          .cyberspace-flow {
-            background: linear-gradient(45deg,
-              transparent 0%,
-              rgba(30, 30, 30, 0.03) 20%,
-              rgba(50, 50, 50, 0.05) 40%,
-              rgba(70, 20, 20, 0.04) 60%,
-              rgba(90, 30, 30, 0.03) 80%,
-              transparent 100%
-            );
-            animation: flow-diagonal 6s linear infinite;
-          }
-
-          .cyberspace-grid {
-            background-image:
-              linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: grid-flow 12s linear infinite;
-            opacity: 0.3;
-          }
-
-          .cyberspace-particles {
-            background-image:
-              radial-gradient(circle at 20% 50%, rgba(80, 80, 80, 0.2) 1px, transparent 1px),
-              radial-gradient(circle at 80% 50%, rgba(120, 60, 60, 0.3) 1px, transparent 1px),
-              radial-gradient(circle at 40% 70%, rgba(150, 80, 80, 0.2) 1px, transparent 1px);
-            background-size: 200px 100px, 300px 150px, 250px 120px;
-            animation: particles-drift 15s ease-in-out infinite;
-          }
-
-          @keyframes cyberspace-shift {
-            0%, 100% {
-              background-position: 0% 0%;
-              filter: hue-rotate(0deg);
+          @keyframes metallicShine {
+            0% {
+              background: linear-gradient(135deg, #C0C0C0 0%, #F8F8FF 20%, #E5E4E2 40%, #BCC6CC 60%, #98FB98 80%, #C0C0C0 100%);
+              filter: drop-shadow(0 0 10px rgba(192, 192, 192, 0.5)) drop-shadow(0 0 20px rgba(248, 248, 255, 0.3)) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
             }
             50% {
-              background-position: 100% 100%;
-              filter: hue-rotate(30deg);
+              background: linear-gradient(135deg, #F8F8FF 0%, #E5E4E2 20%, #C0C0C0 40%, #F0F0F0 60%, #D3D3D3 80%, #F8F8FF 100%);
+              filter: drop-shadow(0 0 15px rgba(248, 248, 255, 0.7)) drop-shadow(0 0 25px rgba(192, 192, 192, 0.4)) drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6));
+            }
+            100% {
+              background: linear-gradient(135deg, #E5E4E2 0%, #C0C0C0 20%, #F8F8FF 40%, #BCC6CC 60%, #F0F0F0 80%, #E5E4E2 100%);
+              filter: drop-shadow(0 0 12px rgba(229, 228, 226, 0.6)) drop-shadow(0 0 22px rgba(192, 192, 192, 0.3)) drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.7));
             }
           }
 
-          @keyframes flow-diagonal {
-            0% { transform: translate(-100%, -100%); }
-            100% { transform: translate(100%, 100%); }
-          }
-
-          @keyframes grid-flow {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-          }
-
-          @keyframes particles-drift {
-            0%, 100% { transform: translate(0, 0); }
-            33% { transform: translate(-50px, 20px); }
-            66% { transform: translate(30px, -15px); }
+          .metallic-title {
+            background-clip: text !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
           }
         `}
       </style>
 
       {/* Main Header */}
       <header
-        className="cyberspace-header"
+        className="w-full relative z-[1000] px-4 py-3 sm:px-6 sm:py-4 lg:px-8 lg:py-5"
         style={{
-          width: "100%",
-          padding: "20px 32px",
-          position: "relative",
-          zIndex: 1000,
           fontFamily: "JetBrains Mono, Space Mono, monospace",
-          overflow: "hidden",
+          background: "#000000",
         }}
       >
-        {/* Flowing cyberspace background */}
-        <div className="cyberspace-flow absolute inset-0" />
-        <div className="cyberspace-grid absolute inset-0" />
-        <div className="cyberspace-particles absolute inset-0" />
-
         {/* Content wrapper */}
         <div className="relative z-10">
-          {/* Centered SCORPIUS Title */}
-          <div className="flex flex-col items-center mb-6">
+          {/* Responsive SCORPIUS Title */}
+          <div className="flex flex-col items-center mb-3 sm:mb-4 lg:mb-6">
             <h1
-              className="text-6xl mb-2"
+              className="mb-1 sm:mb-2 text-center"
               style={{
                 fontFamily: "Orbitron, sans-serif",
-                fontWeight: "700",
-                letterSpacing: "8px",
-                color: "#ffffff",
-                backgroundColor: "#000000",
-                padding: "20px 30px",
-                borderRadius: "8px",
-                border: "2px solid #333333",
+                fontWeight: "900",
+                fontSize: "clamp(2.5rem, 8vw, 5rem)",
+                letterSpacing: "4px",
+                lineHeight: "1",
+                background:
+                  "linear-gradient(135deg, #C0C0C0 0%, #F8F8FF 20%, #E5E4E2 40%, #BCC6CC 60%, #98FB98 80%, #C0C0C0 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+
+                textShadow:
+                  "0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.15), 0 0 8px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.3), 0 3px 6px rgba(0,0,0,.25), 0 5px 12px rgba(0,0,0,.3)",
+                transform: "perspective(600px) rotateX(12deg)",
+                animation: "metallicShine 3s ease-in-out infinite alternate",
+                position: "relative",
+                zIndex: 10,
+                margin: "0",
+                padding: "15px 0",
               }}
+              className="responsive-title metallic-title"
             >
               SCORPIUS
             </h1>
 
-            {/* SCAN. SIMULATE. STRIKE. with scanning effect */}
-            <div className="relative overflow-hidden">
-              <div
-                className="text-lg font-mono text-[#00ffff] tracking-widest"
-                style={{
-                  fontFamily: "JetBrains Mono, Space Mono, monospace",
-                  letterSpacing: "4px",
-                }}
-              >
-                SIMULATE. EXPLOIT. CONTROL.
-              </div>
-
-              {/* Scanning line effect */}
-              <motion.div
-                className="absolute top-0 left-0 w-full h-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.8) 50%, transparent 100%)",
-                  width: "30%",
-                }}
-                animate={{
-                  x: ["-100%", "350%"],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatDelay: 4,
-                }}
-              />
-
-              {/* Additional scanning bars */}
-              <motion.div
-                className="absolute top-0 left-0 w-0.5 h-full bg-[#00ff88]"
-                animate={{
-                  x: [0, 300],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 6,
-                }}
-              />
+            {/* Typewriter Tagline - Smaller than SCORPIUS */}
+            <div
+              className="text-xs sm:text-sm md:text-base font-mono text-[#00ffff] text-center px-2 mt-1"
+              style={{
+                fontFamily: "JetBrains Mono, Space Mono, monospace",
+                letterSpacing: "1px",
+                fontSize: "clamp(10px, 2.5vw, 14px)", // Much smaller than SCORPIUS
+              }}
+            >
+              <span className="hidden sm:inline">
+                <TypewriterText
+                  text="SIMULATE. EXPLOIT. CONTROL."
+                  delay={150}
+                  style={{
+                    textShadow: "0 0 10px rgba(0, 255, 255, 0.8)",
+                  }}
+                />
+              </span>
+              <span className="sm:hidden">
+                <TypewriterText
+                  text="CYBER SECURITY"
+                  delay={200}
+                  style={{
+                    textShadow: "0 0 10px rgba(0, 255, 255, 0.8)",
+                  }}
+                />
+              </span>
             </div>
           </div>
 
-          {/* Navigation Icons - Smaller and spread evenly across full width */}
-          <div className="flex items-center justify-between w-full relative mt-4 px-4">
-            {navigationItems.map((item, index) => {
-              const isActive = location.pathname === item.href;
-              const isHovered = hoveredItem === item.name;
-              const specialStyle = getSpecialStyle(item);
+          {/* Mobile-Responsive Navigation */}
+          <div className="flex items-center justify-center w-full relative mt-2 sm:mt-3 lg:mt-4 px-2 sm:px-4">
+            {/* War Room Menu Button */}
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="px-4 py-2 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
+              style={{
+                background: isMenuOpen
+                  ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
+                  : "rgba(26, 26, 26, 0.8)",
+                border: isMenuOpen
+                  ? "2px solid rgba(0, 255, 255, 0.6)"
+                  : "1px solid rgba(0, 255, 255, 0.4)",
+                boxShadow: isMenuOpen
+                  ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                  : "0 0 8px rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <motion.div
+                animate={{
+                  scale: isMenuOpen ? 1.1 : 1,
+                  textShadow: isMenuOpen
+                    ? "0 0 8px rgba(0, 255, 255, 1)"
+                    : "0 0 4px rgba(0, 255, 255, 0.6)",
+                }}
+                transition={{ duration: 0.3 }}
+                className="font-mono font-bold text-sm tracking-wider"
+                style={{
+                  color: "#00ffff",
+                  textShadow: isMenuOpen
+                    ? "0 0 8px rgba(0, 255, 255, 1), 0 0 4px rgba(0, 255, 255, 0.8)"
+                    : "0 0 4px rgba(0, 255, 255, 0.6)",
+                  fontFamily: "JetBrains Mono, Space Mono, monospace",
+                }}
+              >
+                {isMenuOpen ? "CLOSE" : "WAR ROOM"}
+              </motion.div>
 
-              return (
-                <div key={item.name} className="relative">
-                  <NavLink
-                    to={item.href}
-                    onMouseEnter={() => setHoveredItem(item.name)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    className="block"
+              {/* Active indicator */}
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -bottom-2 w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: "#00ffff",
+                    boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
+                  }}
+                />
+              )}
+            </motion.div>
+
+            {/* Expanded Navigation Icons */}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, staggerChildren: 0.03 }}
+                  className="absolute top-12 left-0 right-0 flex items-center justify-evenly w-full px-4 py-2 overflow-x-auto scrollbar-hide"
+                  style={{
+                    background: "rgba(0, 0, 0, 0.95)",
+                    border: "1px solid rgba(0, 255, 255, 0.3)",
+                    borderRadius: "16px",
+                    backdropFilter: "blur(20px)",
+                    boxShadow:
+                      "0 8px 32px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 255, 255, 0.3)",
+                  }}
+                >
+                  {navigationItems.map((item, index) => {
+                    const isActive = location.pathname === item.href;
+                    const isHovered = hoveredItem === item.name;
+                    const specialStyle = getSpecialStyle(item);
+
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                        transition={{ delay: index * 0.03 }}
+                        className="relative flex-shrink-0"
+                      >
+                        <NavLink
+                          to={item.href}
+                          onMouseEnter={() => setHoveredItem(item.name)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                          className="block"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <motion.div
+                            ref={(el) => (iconRefs.current[item.name] = el)}
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 touch-manipulation"
+                            style={{
+                              background: isActive
+                                ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
+                                : "rgba(26, 26, 26, 0.8)",
+                              border: isActive
+                                ? `2px solid ${specialStyle.borderColor}`
+                                : `1px solid ${specialStyle.iconColor}40`,
+                              boxShadow: isActive
+                                ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
+                                : isHovered
+                                  ? `0 0 20px ${specialStyle.glowColor}`
+                                  : "0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          >
+                            <item.icon
+                              className="w-4 h-4"
+                              style={{
+                                color: isActive
+                                  ? specialStyle.iconColor
+                                  : "#cccccc",
+                                filter: isActive
+                                  ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
+                                  : "none",
+                              }}
+                            />
+
+                            {/* Active indicator */}
+                            {isActive && (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
+                                style={{
+                                  backgroundColor: specialStyle.iconColor,
+                                  boxShadow: `0 0 12px ${specialStyle.glowColor}`,
+                                }}
+                              />
+                            )}
+
+                            {/* Special effects for Zero Day Alert */}
+                            {item.name === "Zero Day Alert" && (
+                              <motion.div
+                                className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
+                                animate={{
+                                  opacity: [0.3, 1, 0.3],
+                                  scale: [1, 1.05, 1],
+                                }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
+                              />
+                            )}
+
+                            {/* Notification indicator for Notifications icon */}
+                            {item.name === "Notifications" && (
+                              <motion.div
+                                className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                style={{
+                                  boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
+                                }}
+                              />
+                            )}
+                          </motion.div>
+                        </NavLink>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Profile Icon in Mobile Menu */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                    transition={{ delay: navigationItems.length * 0.03 }}
+                    className="relative flex-shrink-0"
+                    ref={profileIconRef}
                   >
                     <motion.div
-                      ref={(el) => (iconRefs.current[item.name] = el)}
+                      ref={(el) => (iconRefs.current["Profile"] = el)}
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300"
+                      onClick={() => {
+                        setShowProfileDropdown(!showProfileDropdown);
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer touch-manipulation"
                       style={{
-                        background: isActive
-                          ? `linear-gradient(135deg, ${specialStyle.iconColor}20, ${specialStyle.iconColor}40)`
+                        background: showProfileDropdown
+                          ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
                           : "rgba(26, 26, 26, 0.8)",
-                        border: isActive
-                          ? `2px solid ${specialStyle.borderColor}`
-                          : `1px solid ${specialStyle.iconColor}40`,
-                        boxShadow: isActive
-                          ? `0 0 25px ${specialStyle.glowColor}, inset 0 0 10px ${specialStyle.iconColor}20`
-                          : isHovered
-                            ? `0 0 20px ${specialStyle.glowColor}`
-                            : "0 0 8px rgba(255, 255, 255, 0.1)",
+                        border: showProfileDropdown
+                          ? "2px solid rgba(0, 255, 255, 0.6)"
+                          : "1px solid rgba(0, 255, 255, 0.4)",
+                        boxShadow: showProfileDropdown
+                          ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
+                          : "0 0 8px rgba(255, 255, 255, 0.1)",
                       }}
                     >
-                      <item.icon
+                      <User
                         className="w-4 h-4"
                         style={{
-                          color: isActive ? specialStyle.iconColor : "#cccccc",
-                          filter: isActive
-                            ? `drop-shadow(0 0 4px ${specialStyle.iconColor})`
+                          color: showProfileDropdown ? "#00ffff" : "#cccccc",
+                          filter: showProfileDropdown
+                            ? "drop-shadow(0 0 4px #00ffff)"
                             : "none",
                         }}
                       />
 
                       {/* Active indicator */}
-                      {isActive && (
+                      {showProfileDropdown && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
                           style={{
-                            backgroundColor: specialStyle.iconColor,
-                            boxShadow: `0 0 12px ${specialStyle.glowColor}`,
-                          }}
-                        />
-                      )}
-
-                      {/* Special effects for Zero Day Alert */}
-                      {item.name === "Zero Day Alert" && (
-                        <motion.div
-                          className="absolute inset-0 rounded-xl border-2 border-[#ff4444]"
-                          animate={{
-                            opacity: [0.3, 1, 0.3],
-                            scale: [1, 1.05, 1],
-                          }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        />
-                      )}
-
-                      {/* Notification indicator for Notifications icon */}
-                      {item.name === "Notifications" && (
-                        <motion.div
-                          className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] rounded-full"
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          style={{
-                            boxShadow: "0 0 8px rgba(255, 68, 68, 0.8)",
+                            backgroundColor: "#00ffff",
+                            boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
                           }}
                         />
                       )}
                     </motion.div>
-                  </NavLink>
-                </div>
-              );
-            })}
-
-            {/* Profile Icon with Dropdown */}
-            <div className="relative" ref={profileIconRef}>
-              <motion.div
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all duration-300 cursor-pointer"
-                style={{
-                  background: showProfileDropdown
-                    ? "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4))"
-                    : "rgba(26, 26, 26, 0.8)",
-                  border: showProfileDropdown
-                    ? "2px solid rgba(0, 255, 255, 0.6)"
-                    : "1px solid rgba(0, 255, 255, 0.4)",
-                  boxShadow: showProfileDropdown
-                    ? "0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.2)"
-                    : "0 0 8px rgba(255, 255, 255, 0.1)",
-                }}
-              >
-                <User
-                  className="w-4 h-4"
-                  style={{
-                    color: showProfileDropdown ? "#00ffff" : "#cccccc",
-                    filter: showProfileDropdown
-                      ? "drop-shadow(0 0 4px #00ffff)"
-                      : "none",
-                  }}
-                />
-
-                {/* Active indicator */}
-                {showProfileDropdown && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-2 w-1.5 h-1.5 rounded-full"
-                    style={{
-                      backgroundColor: "#00ffff",
-                      boxShadow: "0 0 12px rgba(0, 255, 255, 0.6)",
-                    }}
-                  />
-                )}
-              </motion.div>
-            </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>
@@ -768,3 +830,5 @@ export const TopNavigation = () => {
     </>
   );
 };
+
+export default TopNavigation;

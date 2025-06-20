@@ -601,13 +601,10 @@ const Monitoring = () => {
                 y: -5,
                 transition: { type: "spring", stiffness: 400 },
               }}
-              className="bg-surface border-2 border-[#333] rounded-2xl p-6 text-center hover:border-[#00ffff] transition-all duration-300 group"
+              className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300 text-center group"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
+                boxShadow: `0 0 20px ${metric.color}20`,
                 backdropFilter: "blur(10px)",
-                boxShadow:
-                  "0 8px 32px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
               }}
             >
               <motion.div
@@ -699,14 +696,11 @@ const Monitoring = () => {
 
         {/* Main Content */}
         <motion.div
-          className="bg-surface border-2 border-[#333] rounded-3xl p-6"
+          className="p-6 rounded-2xl border border-gray-700 bg-black/40"
           variants={itemVariants}
           style={{
-            background:
-              "linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(42, 42, 42, 0.9) 100%)",
+            boxShadow: "0 0 20px rgba(0, 255, 255, 0.1)",
             backdropFilter: "blur(10px)",
-            boxShadow:
-              "0 8px 32px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
           }}
         >
           {/* Tab Navigation */}
@@ -762,14 +756,11 @@ const Monitoring = () => {
                         y: -5,
                         transition: { type: "spring", stiffness: 400 },
                       }}
-                      className="relative p-6 rounded-2xl group cursor-pointer"
+                      className="relative p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300 group cursor-pointer"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                        border: `2px solid ${getStatusColor(service.status)}40`,
                         borderLeft: `6px solid ${getStatusColor(service.status)}`,
+                        boxShadow: `0 0 20px ${getStatusColor(service.status)}20`,
                         backdropFilter: "blur(10px)",
-                        boxShadow: `0 8px 32px rgba(${getStatusColor(service.status)}, 0.1)`,
                       }}
                       onClick={() => setSelectedService(service)}
                     >
@@ -1020,14 +1011,11 @@ const Monitoring = () => {
                       key={component.component}
                       variants={itemVariants}
                       whileHover={{ scale: 1.02, y: -5 }}
-                      className="p-6 rounded-2xl"
+                      className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                        border: `2px solid ${getStatusColor(component.status)}40`,
                         borderLeft: `6px solid ${getStatusColor(component.status)}`,
+                        boxShadow: `0 0 20px ${getStatusColor(component.status)}20`,
                         backdropFilter: "blur(10px)",
-                        boxShadow: `0 8px 32px rgba(${getStatusColor(component.status)}, 0.1)`,
                       }}
                     >
                       <div className="flex items-start justify-between mb-4">
@@ -1226,14 +1214,11 @@ const Monitoring = () => {
                     key={alert.id}
                     variants={itemVariants}
                     whileHover={{ scale: 1.02, x: 10 }}
-                    className="p-6 rounded-2xl"
+                    className="p-6 rounded-2xl border border-gray-700 bg-black/40 hover:border-cyan-500/50 transition-all duration-300"
                     style={{
-                      background:
-                        "linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%)",
-                      border: `2px solid ${getSeverityColor(alert.severity)}40`,
                       borderLeft: `6px solid ${getSeverityColor(alert.severity)}`,
+                      boxShadow: `0 0 20px ${getSeverityColor(alert.severity)}20`,
                       backdropFilter: "blur(10px)",
-                      boxShadow: `0 8px 32px rgba(${getSeverityColor(alert.severity)}, 0.1)`,
                     }}
                   >
                     <div className="flex items-start justify-between mb-4">

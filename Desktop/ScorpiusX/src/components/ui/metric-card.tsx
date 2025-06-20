@@ -44,8 +44,8 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   return (
     <motion.div
       className={cn(
-        "p-6 rounded-xl border border-gray-800 bg-black/40 backdrop-blur-sm",
-        "hover:bg-black/60 transition-colors duration-300",
+        "p-3 sm:p-4 lg:p-6 rounded-xl border border-gray-800 bg-black/40 backdrop-blur-sm",
+        "hover:bg-black/60 transition-colors duration-300 mobile-card touch-manipulation",
         className,
       )}
       initial={{ opacity: 0, y: 20 }}

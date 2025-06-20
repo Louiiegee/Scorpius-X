@@ -34,31 +34,33 @@ interface User {
 
 const WebChat = () => {
   const { user } = useAuth();
-  const { 
-    isConnected, 
-    messages: wsMessages, 
-    onlineUsers: wsOnlineUsers, 
-    sendMessage, 
-    sendTyping 
+  const {
+    isConnected,
+    messages: wsMessages,
+    onlineUsers: wsOnlineUsers,
+    sendMessage,
+    sendTyping,
   } = useWebSocket();
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [message, setMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Convert WebSocket messages to local format
-  const messages: Message[] = wsMessages.map(msg => ({
+  const messages: Message[] = wsMessages.map((msg) => ({
     ...msg,
-    timestamp: new Date(msg.timestamp)
+    timestamp: new Date(msg.timestamp),
   }));
 
   // Convert WebSocket users to local format
-  const onlineUsers: User[] = wsOnlineUsers.map(user => ({
+  const onlineUsers: User[] = wsOnlineUsers.map((user) => ({
     ...user,
-    status: user.status as "online" | "away" | "busy" | "offline"
+    status: user.status as "online" | "away" | "busy" | "offline",
   }));
 
   const scrollToBottom = () => {
@@ -87,17 +89,17 @@ const WebChat = () => {
 
   const handleTyping = (value: string) => {
     setMessage(value);
-    
+
     if (!isTyping && value.length > 0) {
       setIsTyping(true);
       sendTyping(true);
     }
-    
+
     // Clear previous timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    
+
     // Set new timeout to stop typing indicator
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
@@ -108,17 +110,35 @@ const WebChat = () => {
   if (!isOpen) {
     return (
       <motion.div
+        drag
+        dragMomentum={false}
+        dragElastic={0.1}
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={(event, info) => {
+          setIsDragging(false);
+          setPosition({ x: info.point.x, y: info.point.y });
+        }}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-6 right-6 z-50 cursor-move"
+        style={{
+          x: position.x,
+          y: position.y,
+        }}
       >
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(true)}
+          whileHover={!isDragging ? { scale: 1.1 } : {}}
+          whileTap={!isDragging ? { scale: 0.9 } : {}}
+          onClick={(e) => {
+            if (!isDragging) {
+              setIsOpen(true);
+            }
+            e.preventDefault();
+          }}
           className="relative p-4 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-lg"
           style={{
             boxShadow: "0 0 30px rgba(0, 255, 255, 0.5)",
+            pointerEvents: isDragging ? "none" : "auto",
           }}
         >
           <MessageCircle className="w-6 h-6" />
@@ -150,6 +170,20 @@ const WebChat = () => {
 
   return (
     <motion.div
+      drag
+      dragMomentum={false}
+      dragElastic={0.1}
+      dragConstraints={{
+        top: -window.innerHeight + 100,
+        left: -window.innerWidth + 100,
+        right: window.innerWidth - 100,
+        bottom: window.innerHeight - 100,
+      }}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={(event, info) => {
+        setIsDragging(false);
+        setPosition({ x: info.point.x, y: info.point.y });
+      }}
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
       animate={{
         opacity: 1,
@@ -163,10 +197,13 @@ const WebChat = () => {
         boxShadow:
           "0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1)",
         backdropFilter: "blur(20px)",
+        x: position.x,
+        y: position.y,
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
+      <div className="p-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800 cursor-move">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -187,12 +224,18 @@ const WebChat = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-cyan-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMinimized(!isMinimized);
+              }}
+              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-cyan-400 transition-colors cursor-pointer"
             >
               {isMinimized ? (
                 <Maximize2 className="w-4 h-4" />
@@ -203,8 +246,11 @@ const WebChat = () => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsOpen(false)}
-              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-red-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              className="p-1 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </motion.button>
@@ -221,7 +267,10 @@ const WebChat = () => {
             className="flex flex-col h-96"
           >
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div
+              className="flex-1 overflow-y-auto p-4 space-y-3"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
@@ -295,7 +344,10 @@ const WebChat = () => {
             </div>
 
             {/* Online Users */}
-            <div className="px-4 py-2 border-t border-gray-700">
+            <div
+              className="px-4 py-2 border-t border-gray-700"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center gap-2 overflow-x-auto">
                 {onlineUsers.slice(0, 6).map((user) => (
                   <div
@@ -323,7 +375,10 @@ const WebChat = () => {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-700">
+            <div
+              className="p-4 border-t border-gray-700"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center gap-2">
                 <div className="flex-1 relative">
                   <input

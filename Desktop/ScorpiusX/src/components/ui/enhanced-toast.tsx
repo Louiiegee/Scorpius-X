@@ -158,8 +158,8 @@ const ToastComponent = ({
     },
   };
 
-  const Icon = icons[toast.type];
-  const style = colors[toast.type];
+  const Icon = icons[toast.type] || Info;
+  const style = colors[toast.type] || colors.info;
 
   const handleRemove = useCallback(() => {
     if (!isExiting) {
@@ -199,16 +199,17 @@ const ToastComponent = ({
     >
       {/* Icon */}
       <div className={cn("flex-shrink-0 mt-0.5", style.icon)}>
-        {toast.type === "loading" ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
+        {Icon &&
+          (toast.type === "loading" ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            >
+              <Icon size={20} />
+            </motion.div>
+          ) : (
             <Icon size={20} />
-          </motion.div>
-        ) : (
-          <Icon size={20} />
-        )}
+          ))}
       </div>
 
       {/* Content */}
@@ -412,8 +413,9 @@ export const EnhancedToast = ({
     info: "#00ffff",
   };
 
-  const Icon = icons[type];
-  const color = colors[type];
+  // Ensure Icon is never undefined by providing fallback
+  const Icon = icons[type] || Info;
+  const color = colors[type] || "#00ffff";
 
   useEffect(() => {
     const timer = setTimeout(onClose, 4000);
@@ -443,7 +445,7 @@ export const EnhancedToast = ({
           boxShadow: `0 0 15px ${color}30`,
         }}
       >
-        <Icon className="w-5 h-5" style={{ color }} />
+        {Icon && <Icon className="w-5 h-5" style={{ color }} />}
       </div>
 
       {/* Content */}

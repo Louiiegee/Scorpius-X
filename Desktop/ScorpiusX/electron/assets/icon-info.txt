@@ -1,0 +1,38 @@
+WINDOWS ICON REQUIREMENTS FOR SCORPIUS CYBERSECURITY DASHBOARD
+================================================================
+
+For proper Windows deployment, you need to create these icon files:
+
+1. icon.ico - Main application icon (256x256, 128x128, 64x64, 48x48, 32x32, 16x16)
+   - Use a cybersecurity/shield theme with dark colors
+   - Should match the Scorpius brand (teal/cyan accents on black)
+   - Multi-resolution ICO file for Windows
+
+2. installer-header.bmp - Installer header image (150x57 pixels)
+   - Horizontal banner for NSIS installer header
+   - Should contain Scorpius logo and cybersecurity theme
+
+3. installer-wizard.bmp - Installer wizard image (164x314 pixels)
+   - Vertical banner for installer welcome/finish pages
+   - Dark theme with Scorpius branding
+
+RECOMMENDED DESIGN:
+- Primary color: #000000 (black background)
+- Accent color: #00ffff (cyan/teal)
+- Secondary: #0066cc (blue accents)
+- Font: Modern, technical font for any text
+- Theme: Cybersecurity, shield, lock, or circuit patterns
+
+TOOLS TO CREATE ICONS:
+- Online: favicon.io, iconarchive.com
+- Desktop: GIMP, Photoshop, Inkscape
+- Automated: electron-icon-builder
+
+TEMPORARY PLACEHOLDER:
+Until real icons are created, the app will use default Electron icons.
+The build process will work without custom icons but will look more professional with them.
+
+TO ADD ICONS:
+1. Save icon.ico in this folder (electron/assets/)
+2. Save installer graphics in this folder
+3. Run: npm run electron-build-win-installer

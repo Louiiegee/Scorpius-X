@@ -8,8 +8,8 @@
   },
   "files": [
     "dist/**/*",
-    "electron/main.js",
-    "electron/preload.js",
+    "electron/main.cjs",
+    "electron/preload.cjs",
     "node_modules/**/*",
     "package.json"
   ],
@@ -23,20 +23,28 @@
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"]
+        "arch": ["x64"]
       },
       {
         "target": "portable",
         "arch": ["x64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64"]
       }
     ],
     "icon": "electron/assets/icon.ico",
-    "artifactName": "Scorpius-${version}-${arch}.${ext}",
-    "requestedExecutionLevel": "asInvoker"
+    "artifactName": "Scorpius-Cybersecurity-Dashboard-${version}-Windows-${arch}.${ext}",
+    "requestedExecutionLevel": "asInvoker",
+    "publisherName": "Scorpius Security",
+    "verifyUpdateCodeSignature": false,
+    "forceCodeSigning": false
   },
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
+    "allowElevation": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
     "installerIcon": "electron/assets/icon.ico",
@@ -45,7 +53,15 @@
     "deleteAppDataOnUninstall": true,
     "runAfterFinish": true,
     "menuCategory": "Security",
-    "shortcutName": "Scorpius Dashboard"
+    "shortcutName": "Scorpius Cybersecurity Dashboard",
+    "displayLanguageSelector": false,
+    "installerLanguages": ["en_US"],
+    "language": "1033",
+    "multiLanguageInstaller": false,
+    "packElevateHelper": true,
+    "perMachine": false,
+    "allowElevation": true,
+    "include": "electron/installer/windows/installer.nsh"
   },
   "mac": {
     "target": [
